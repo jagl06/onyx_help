@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<title>ONYX Help — Notifier Field Assistant</title>
+<title>IFAS — ISELEC Fire Alarm Support</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -102,8 +102,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 <!-- ── SETUP SCREEN ── -->
 <div id="setup-screen">
   <div class="setup-logo">🔥</div>
-  <h2>ONYX Help</h2>
-  <p>Asistente técnico para paneles Notifier ONYX en campo. Ingresa tu API key de Anthropic para comenzar.</p>
+  <h2>IFAS</h2>
+  <p>ISELEC Fire Alarm Support — Asistente técnico para paneles Notifier ONYX en campo. Ingresa tu API key de Anthropic para comenzar.</p>
   <div class="setup-input-wrap">
     <div class="setup-label">API KEY DE ANTHROPIC</div>
     <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false"/>
@@ -123,8 +123,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
     <div style="display:flex;align-items:center;">
       <div class="logo">🔥</div>
       <div class="title-block">
-        <h1>ONYX Help</h1>
-        <p>Notifier Field Assistant</p>
+        <h1>IFAS</h1>
+        <p>ISELEC Fire Alarm Support</p>
       </div>
     </div>
     <div class="header-actions">
@@ -167,7 +167,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 // ─────────────────────────────────────────
 // SYSTEM PROMPT
 // ─────────────────────────────────────────
-const SYSTEM_PROMPT = `# ONYX Help — Asistente de Soporte Técnico Notifier ONYX
+const SYSTEM_PROMPT = `# IFAS — ISELEC Fire Alarm Support
 
 ## Identidad
 Eres un asistente técnico especializado en paneles de incendio Notifier serie ONYX (NFS-320, NFS2-640, NFS2-3030) y VeriFire Tools. Respondes en español técnico claro y conciso.
@@ -263,7 +263,7 @@ const MODE_CONFIG = {
 // ─────────────────────────────────────────
 // STATE
 // ─────────────────────────────────────────
-let apiKey = localStorage.getItem('onyx_api_key') || '';
+let apiKey = localStorage.getItem('ifas_api_key') || '';
 let activeMode = null;
 let messages = [];
 let pendingImageData = null;
@@ -321,13 +321,13 @@ startBtn.addEventListener('click', () => {
     return;
   }
   apiKey = val;
-  localStorage.setItem('onyx_api_key', val);
+  localStorage.setItem('ifas_api_key', val);
   showApp();
 });
 
 settingsBtn.addEventListener('click', () => {
   if (confirm('¿Cambiar o borrar la API key?\n\nPresiona OK para ir a la pantalla de configuración.')) {
-    localStorage.removeItem('onyx_api_key');
+    localStorage.removeItem('ifas_api_key');
     apiKey = '';
     messages = [];
     activeMode = null;
