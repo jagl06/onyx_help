@@ -88,8 +88,10 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 #input-area{padding:10px 16px 20px;border-top:1px solid rgba(255,255,255,0.06);flex-shrink:0;}
 #input-wrap{display:flex;gap:8px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:9px 11px;align-items:flex-end;transition:border-color 0.2s;}
 #input-wrap:focus-within{border-color:rgba(255,255,255,0.2);}
-#cam-btn{background:rgba(255,255,255,0.07);border:none;border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;color:rgba(232,232,240,0.55);transition:all 0.15s;}
-#cam-btn:hover{background:rgba(255,255,255,0.12);}
+#cam-btn,#mic-btn{background:rgba(255,255,255,0.07);border:none;border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;color:rgba(232,232,240,0.55);transition:all 0.15s;}
+#cam-btn:hover,#mic-btn:hover{background:rgba(255,255,255,0.12);}
+#mic-btn.listening{background:rgba(255,69,58,0.25);color:#FF453A;animation:pulse 1s ease infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
 #msg-input{flex:1;background:transparent;border:none;outline:none;color:#E8E8F0;font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:90px;overflow-y:auto;}
 #msg-input::placeholder{color:rgba(232,232,240,0.3);}
 #send-btn{width:34px;height:34px;border-radius:8px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;color:#fff;transition:all 0.15s;}
@@ -154,8 +156,9 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 
   <div id="input-area">
     <div id="input-wrap">
-      <input type="file" id="file-input" accept="image/*" capture="environment" style="display:none"/>
-      <button id="cam-btn" title="Adjuntar foto del panel">📷</button>
+      <input type="file" id="file-input" accept="image/*,application/pdf" style="display:none"/>
+      <button id="cam-btn" title="Adjuntar foto o PDF">📎</button>
+      <button id="mic-btn" title="Dictar mensaje">🎤</button>
       <textarea id="msg-input" placeholder="Selecciona un modo para comenzar..." rows="1"></textarea>
       <button id="send-btn" disabled>↑</button>
     </div>
@@ -364,14 +367,89 @@ fileInput.addEventListener('change', e => {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
-    pendingImageData = { dataUrl: reader.result, type: file.type, data: reader.result.split(',')[1] };
-    previewThumb.src = reader.result;
+    const isPdf = file.type === 'application/pdf';
+    pendingImageData = {
+      dataUrl: reader.result,
+      type: file.type,
+      data: reader.result.split(',')[1],
+      isPdf,
+      name: file.name
+    };
+    previewThumb.src = isPdf ? '' : reader.result;
+    previewThumb.style.display = isPdf ? 'none' : 'block';
+    document.querySelector('#img-preview span').textContent = isPdf
+      ? `📄 ${file.name}`
+      : 'Foto adjunta al mensaje';
     imgPreview.style.display = 'flex';
     updateSendBtn();
   };
   reader.readAsDataURL(file);
   e.target.value = '';
 });
+
+// Paste image support
+document.addEventListener('paste', e => {
+  const items = e.clipboardData?.items;
+  if (!items) return;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      const file = item.getAsFile();
+      const reader = new FileReader();
+      reader.onload = () => {
+        pendingImageData = { dataUrl: reader.result, type: item.type, data: reader.result.split(',')[1], isPdf: false };
+        previewThumb.src = reader.result;
+        previewThumb.style.display = 'block';
+        document.querySelector('#img-preview span').textContent = 'Imagen pegada';
+        imgPreview.style.display = 'flex';
+        updateSendBtn();
+      };
+      reader.readAsDataURL(file);
+      break;
+    }
+  }
+});
+
+// Voice dictation
+const micBtn = document.getElementById('mic-btn');
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!SpeechRecognition) {
+  micBtn.style.display = 'none';
+} else {
+  const recognition = new SpeechRecognition();
+  recognition.lang = 'es-419';
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  let listening = false;
+
+  recognition.onresult = e => {
+    const transcript = e.results[0][0].transcript;
+    inputEl.value = (inputEl.value + ' ' + transcript).trim();
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 90) + 'px';
+    updateSendBtn();
+  };
+  recognition.onend = () => {
+    listening = false;
+    micBtn.classList.remove('listening');
+    micBtn.textContent = '🎤';
+  };
+  recognition.onerror = () => {
+    listening = false;
+    micBtn.classList.remove('listening');
+    micBtn.textContent = '🎤';
+  };
+
+  micBtn.addEventListener('click', () => {
+    if (listening) {
+      recognition.stop();
+    } else {
+      recognition.start();
+      listening = true;
+      micBtn.classList.add('listening');
+      micBtn.textContent = '⏹';
+    }
+  });
+}
 
 document.getElementById('remove-img').addEventListener('click', () => {
   pendingImageData = null;
@@ -494,7 +572,11 @@ async function send() {
 
   const userContent = [];
   if (imgData) {
-    userContent.push({ type:'image', source:{ type:'base64', media_type: imgData.type, data: imgData.data } });
+    if (imgData.isPdf) {
+      userContent.push({ type:'document', source:{ type:'base64', media_type:'application/pdf', data: imgData.data } });
+    } else {
+      userContent.push({ type:'image', source:{ type:'base64', media_type: imgData.type, data: imgData.data } });
+    }
   }
   const msgText = activeMode ? `[Modo activo: ${activeMode}]\n${text}` : text;
   if (text) userContent.push({ type:'text', text: msgText });
@@ -526,7 +608,7 @@ async function send() {
         'anthropic-dangerous-direct-browser-access': 'true'
       },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: 1024,
         system: SYSTEM_PROMPT,
         messages: apiMessages
@@ -534,10 +616,11 @@ async function send() {
     });
 
     if (res.status === 401) {
-      messages.push({ role:'assistant', display:'⚠️ API key inválida. Toca ⚙️ para actualizarla.', content:'Error.' });
+      messages.push({ role:'assistant', display:'⚠️ API key inválida o expirada. Toca ⚙️ para actualizarla.', content:'Error.' });
     } else if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      messages.push({ role:'assistant', display:`⚠️ Error del servidor (${res.status}). Intenta nuevamente.`, content:'Error.' });
+      let detail = '';
+      try { const err = await res.json(); detail = err.error?.message || ''; } catch(e) {}
+      messages.push({ role:'assistant', display:`⚠️ Error ${res.status}${detail ? ': ' + detail : ''}. Intenta nuevamente.`, content:'Error.' });
     } else {
       const data = await res.json();
       const reply = data.content?.find(b => b.type==='text')?.text || 'Sin respuesta del servidor.';
