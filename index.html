@@ -15,39 +15,37 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
 
 /* ── SETUP SCREEN ── */
-#setup-screen{
-  position:fixed;inset:0;background:#08080F;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:32px 24px;z-index:100;
-}
+#setup-screen{position:fixed;inset:0;background:#08080F;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:100;overflow-y:auto;}
 .setup-logo{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#FF453A,#FF9F0A);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px;}
 #setup-screen h2{font-size:22px;font-weight:700;margin-bottom:6px;}
-#setup-screen p{font-size:13px;color:rgba(232,232,240,0.45);text-align:center;line-height:1.6;margin-bottom:28px;max-width:320px;}
-.setup-label{font-size:12px;color:rgba(232,232,240,0.5);margin-bottom:6px;align-self:flex-start;letter-spacing:0.04em;}
-.setup-input-wrap{width:100%;max-width:340px;display:flex;flex-direction:column;}
-#api-key-input{background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:12px 14px;color:#E8E8F0;font-family:'DM Mono',monospace;font-size:13px;outline:none;width:100%;transition:border-color 0.2s;letter-spacing:0.05em;}
-#api-key-input:focus{border-color:rgba(255,69,58,0.6);}
-#api-key-input::placeholder{color:rgba(232,232,240,0.25);letter-spacing:0;}
-.setup-note{font-size:11px;color:rgba(232,232,240,0.3);margin-top:8px;line-height:1.5;}
-.setup-note a{color:rgba(255,159,10,0.8);text-decoration:none;}
-#start-btn{margin-top:20px;width:100%;max-width:340px;padding:13px;border-radius:11px;background:linear-gradient(135deg,#FF453A,#FF9F0A);border:none;color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.15s;}
+#setup-screen .sub{font-size:13px;color:rgba(232,232,240,0.45);text-align:center;line-height:1.6;margin-bottom:28px;max-width:320px;}
+.setup-wrap{width:100%;max-width:340px;display:flex;flex-direction:column;gap:16px;}
+.field-group{display:flex;flex-direction:column;gap:6px;}
+.field-label{font-size:11px;color:rgba(232,232,240,0.45);letter-spacing:0.06em;text-transform:uppercase;}
+.setup-input{background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:12px 14px;color:#E8E8F0;font-family:'DM Mono',monospace;font-size:13px;outline:none;width:100%;transition:border-color 0.2s;letter-spacing:0.03em;}
+.setup-input:focus{border-color:rgba(255,69,58,0.6);}
+.setup-input::placeholder{color:rgba(232,232,240,0.2);letter-spacing:0;}
+.field-note{font-size:11px;color:rgba(232,232,240,0.28);line-height:1.5;}
+.field-note a{color:rgba(255,159,10,0.75);text-decoration:none;}
+.model-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
+.chip{padding:4px 10px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(232,232,240,0.5);font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;transition:all 0.15s;}
+.chip:hover,.chip.active{background:rgba(255,69,58,0.12);border-color:rgba(255,69,58,0.4);color:#FF453A;}
+#start-btn{margin-top:6px;width:100%;padding:13px;border-radius:11px;background:linear-gradient(135deg,#FF453A,#FF9F0A);border:none;color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.15s;}
 #start-btn:hover{opacity:0.9;}
-#start-btn:disabled{opacity:0.4;cursor:not-allowed;}
-.setup-error{font-size:12px;color:#FF453A;margin-top:8px;display:none;}
+#start-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.setup-error{font-size:12px;color:#FF453A;display:none;}
 
 /* ── MAIN APP ── */
 #app{display:none;flex-direction:column;height:100vh;max-width:520px;margin:0 auto;}
-
 #header{padding:14px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#FF453A,#FF9F0A);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
 .title-block{margin-left:10px;}
 .title-block h1{font-size:15px;font-weight:700;letter-spacing:0.02em;}
 .title-block p{font-size:11px;color:rgba(232,232,240,0.4);margin-top:1px;}
-.header-actions{display:flex;gap:7px;align-items:center;}
+.hdr-actions{display:flex;gap:7px;align-items:center;}
 .hdr-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:5px 10px;color:rgba(232,232,240,0.5);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:none;}
 .hdr-btn:hover{background:rgba(255,255,255,0.09);color:rgba(232,232,240,0.8);}
 #settings-btn{padding:5px 8px;display:flex;}
-
 #mode-bar{padding:11px 16px 9px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;}
 .mode-label{font-size:10px;color:rgba(232,232,240,0.3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
 #modes{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;}
@@ -55,12 +53,10 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 .mode-btn{padding:7px 13px;border-radius:20px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);color:rgba(232,232,240,0.55);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all 0.15s;flex-shrink:0;}
 .mode-btn:hover{transform:translateY(-1px);}
 .mode-btn.active{font-weight:600;}
-
 #messages{flex:1;overflow-y:auto;padding:14px 16px;}
 .empty-state{text-align:center;padding:52px 20px;color:rgba(232,232,240,0.28);}
 .empty-state .e-icon{font-size:42px;margin-bottom:14px;}
 .empty-state p{font-size:13px;line-height:1.7;}
-
 .bubble-row{display:flex;margin-bottom:11px;animation:fadeUp 0.2s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
 .bubble-row.user{justify-content:flex-end;}
@@ -69,10 +65,10 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 .bubble{max-width:83%;padding:10px 14px;font-size:13.5px;line-height:1.65;}
 .bubble.user-b{border-radius:16px 16px 4px 16px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);}
 .bubble.bot-b{border-radius:16px 16px 16px 4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);}
-.bubble img{max-width:100%;border-radius:8px;margin-bottom:7px;display:block;}
+.bubble-imgs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;}
+.bubble-imgs img{width:80px;height:80px;object-fit:cover;border-radius:6px;}
 .bubble strong{font-weight:600;}
 .bubble code{background:rgba(255,255,255,0.1);padding:1px 5px;border-radius:3px;font-family:'DM Mono',monospace;font-size:0.88em;}
-
 .typing-row{display:flex;align-items:center;margin-bottom:11px;}
 .typing-bubble{padding:12px 15px;border-radius:16px 16px 16px 4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);display:flex;gap:5px;align-items:center;}
 .dot{width:6px;height:6px;border-radius:50%;background:rgba(232,232,240,0.4);animation:blink 1.2s ease infinite;}
@@ -80,16 +76,20 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 .dot:nth-child(3){animation-delay:0.4s;}
 @keyframes blink{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
 
-#img-preview{margin:0 16px 8px;padding:8px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:none;align-items:center;gap:10px;}
-#img-preview img{width:46px;height:46px;object-fit:cover;border-radius:6px;}
-#img-preview span{font-size:12px;color:rgba(232,232,240,0.45);flex:1;}
-#remove-img{background:rgba(255,69,58,0.18);border:none;border-radius:6px;color:#FF453A;padding:4px 9px;cursor:pointer;font-size:12px;font-family:inherit;}
+/* ── PENDING IMAGES PREVIEW ── */
+#img-preview{margin:0 16px 8px;padding:8px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:none;gap:8px;align-items:center;flex-wrap:wrap;}
+.thumb-item{position:relative;flex-shrink:0;}
+.thumb-item img{width:48px;height:48px;object-fit:cover;border-radius:6px;display:block;}
+.thumb-item .pdf-thumb{width:48px;height:48px;background:rgba(255,255,255,0.08);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;}
+.thumb-item .pdf-name{font-size:9px;color:rgba(232,232,240,0.5);max-width:48px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;}
+.thumb-rm{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:#FF453A;border:none;color:#fff;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
 
+/* ── INPUT ── */
 #input-area{padding:10px 16px 20px;border-top:1px solid rgba(255,255,255,0.06);flex-shrink:0;}
 #input-wrap{display:flex;gap:8px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:9px 11px;align-items:flex-end;transition:border-color 0.2s;}
 #input-wrap:focus-within{border-color:rgba(255,255,255,0.2);}
-#cam-btn,#mic-btn{background:rgba(255,255,255,0.07);border:none;border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;color:rgba(232,232,240,0.55);transition:all 0.15s;}
-#cam-btn:hover,#mic-btn:hover{background:rgba(255,255,255,0.12);}
+.inp-btn{background:rgba(255,255,255,0.07);border:none;border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;color:rgba(232,232,240,0.55);transition:all 0.15s;}
+.inp-btn:hover{background:rgba(255,255,255,0.12);}
 #mic-btn.listening{background:rgba(255,69,58,0.25);color:#FF453A;animation:pulse 1s ease infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
 #msg-input{flex:1;background:transparent;border:none;outline:none;color:#E8E8F0;font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:90px;overflow-y:auto;}
@@ -101,26 +101,35 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 </head>
 <body>
 
-<!-- ── SETUP SCREEN ── -->
+<!-- ── SETUP / SETTINGS SCREEN ── -->
 <div id="setup-screen">
   <div class="setup-logo">🔥</div>
   <h2>IFAS</h2>
-  <p>ISELEC Fire Alarm Support — Asistente técnico para paneles Notifier ONYX en campo. Ingresa tu API key de Anthropic para comenzar.</p>
-  <div class="setup-input-wrap">
-    <div class="setup-label">API KEY DE ANTHROPIC</div>
-    <input type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false"/>
-    <div class="setup-note">
-      Tu key se guarda localmente en este dispositivo y nunca se comparte.<br/>
-      Obtén una en <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
+  <p class="sub">ISELEC Fire Alarm Support — Asistente técnico para paneles Notifier ONYX en campo.</p>
+  <div class="setup-wrap">
+    <div class="field-group">
+      <div class="field-label">API Key de Anthropic</div>
+      <input class="setup-input" type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false"/>
+      <div class="field-note">Se guarda localmente, nunca se comparte. Obtén una en <a href="https://platform.claude.com" target="_blank">platform.claude.com</a></div>
     </div>
-    <div class="setup-error" id="setup-error">API key inválida. Verifica que empiece con sk-ant-</div>
+    <div class="field-group">
+      <div class="field-label">Modelo</div>
+      <input class="setup-input" type="text" id="model-input" placeholder="claude-sonnet-4-6" spellcheck="false"/>
+      <div class="model-chips">
+        <span class="chip active" data-model="claude-sonnet-4-6">Sonnet 4.6 ★</span>
+        <span class="chip" data-model="claude-haiku-4-5-20251001">Haiku 4.5</span>
+        <span class="chip" data-model="claude-3-5-sonnet-20241022">Sonnet 3.5</span>
+        <span class="chip" data-model="claude-3-haiku-20240307">Haiku 3</span>
+      </div>
+      <div class="field-note">Sonnet 4.6 recomendado. Si hay error 404 prueba Haiku 3.</div>
+    </div>
+    <div class="setup-error" id="setup-error">API key inválida. Debe empezar con sk-ant-</div>
+    <button id="start-btn" disabled>Comenzar →</button>
   </div>
-  <button id="start-btn" disabled>Comenzar →</button>
 </div>
 
 <!-- ── MAIN APP ── -->
 <div id="app">
-
   <div id="header">
     <div style="display:flex;align-items:center;">
       <div class="logo">🔥</div>
@@ -129,9 +138,9 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
         <p>ISELEC Fire Alarm Support</p>
       </div>
     </div>
-    <div class="header-actions">
+    <div class="hdr-actions">
       <button class="hdr-btn" id="clear-btn">Nueva sesión</button>
-      <button class="hdr-btn" id="settings-btn" style="display:flex;" title="Cambiar API key">⚙️</button>
+      <button class="hdr-btn" id="settings-btn" style="display:flex;" title="Configuración">⚙️</button>
     </div>
   </div>
 
@@ -148,28 +157,20 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 
   <div id="messages"></div>
 
-  <div id="img-preview">
-    <img id="preview-thumb" src="" alt="Preview"/>
-    <span>Foto adjunta al mensaje</span>
-    <button id="remove-img">✕ Quitar</button>
-  </div>
+  <div id="img-preview"></div>
 
   <div id="input-area">
     <div id="input-wrap">
-      <input type="file" id="file-input" accept="image/*,application/pdf" style="display:none"/>
-      <button id="cam-btn" title="Adjuntar foto o PDF">📎</button>
-      <button id="mic-btn" title="Dictar mensaje">🎤</button>
+      <input type="file" id="file-input" accept="image/*,application/pdf" multiple style="display:none"/>
+      <button class="inp-btn" id="cam-btn" title="Adjuntar fotos o PDFs (múltiples)">📎</button>
+      <button class="inp-btn" id="mic-btn" title="Dictar mensaje">🎤</button>
       <textarea id="msg-input" placeholder="Selecciona un modo para comenzar..." rows="1"></textarea>
       <button id="send-btn" disabled>↑</button>
     </div>
   </div>
-
 </div>
 
 <script>
-// ─────────────────────────────────────────
-// SYSTEM PROMPT
-// ─────────────────────────────────────────
 const SYSTEM_PROMPT = `# IFAS — ISELEC Fire Alarm Support
 
 ## Identidad
@@ -210,25 +211,24 @@ Tabla de referencia:
 - PBL PROBLEMA BATERIA NRAM → Batería NVRAM descargada en CPU
 
 ## REGLA 4 — ANTI-ALUCINACIÓN
-NUNCA inventes versiones de firmware o VeriFire. Si no tienes el dato exacto: "Verifica en panel: MAIN MENU → READ STATUS → VERSION". No diagnostiques basándote solo en observaciones visuales sin evidencia del síntoma.
+NUNCA inventes versiones de firmware o VeriFire. Si no tienes el dato: "Verifica en panel: MAIN MENU → READ STATUS → VERSION". No diagnostiques basándote solo en observaciones visuales sin evidencia del síntoma.
 
 ## REGLA 5 — ANÁLISIS DE IMÁGENES
-Cuando recibas fotos: primero lista lo que observas (tarjetas visibles, texto en pantalla, LEDs, conexiones visibles), luego diagnostica basándote en esas observaciones.
+Cuando recibas fotos: primero lista lo que observas (tarjetas visibles, texto en pantalla, LEDs, conexiones), luego diagnostica en base a esas observaciones.
 
-## REGLA 6 — FORMATO DE RESPUESTA PARA TROUBLESHOOTING
+## REGLA 6 — FORMATO DE RESPUESTA
+Para troubleshooting:
 **Síntoma:** [texto exacto]
 **Contexto:** [cambio hw / evento / falla espontánea]
-**Causa probable:** [máx 2, ordenadas por probabilidad]
+**Causa probable:** [máx 2, ordenadas]
 **Pasos:**
 1. [Acción concreta] → Si [resultado X]: confirma causa. Si [resultado Y]: descarta, pasa al 2.
-2. ...
 **Referencia:** [Manual + sección si disponible]
 
 ## REFERENCIA DE HARDWARE VERIFICADA (Manual NOCM-1116)
 NFS2-3030 por cantidad de lazos: 2L=1LCM+1LEM | 4L=2LCM+2LEM | 6L=3LCM+3LEM | 8L=4LCM+4LEM | 10L=5LCM+5LEM
-LCM-320 = Loop Control Module (conecta al CHS-M3 junto a CPU)
-LEM-320 = Loop Expander Module (amplía capacidad del lazo)
-CPU: CPU2-3030D (con display) | CPU2-3030ND (sin display) | Fuente: AMPS-24
+LCM-320 = Loop Control Module (conecta al CHS-M3) | LEM-320 = Loop Expander Module
+CPU: CPU2-3030D (con display) | Fuente: AMPS-24
 
 ## MODOS DE OPERACIÓN
 TROUBLESHOOTING: Aplica Reglas 1-6. Diagnóstico contextual y conciso.
@@ -237,47 +237,27 @@ EXAMEN: Formula preguntas del banco de conocimiento ONYX una a la vez. No des la
 DICCIONARIO: Definición técnica + aplicación práctica + referencia manual. Máximo 5 líneas por término.
 GUIA_RAPIDA: Solo tablas con valores, límites y parámetros. Sin explicaciones largas.`;
 
-// ─────────────────────────────────────────
-// MODO CONFIG
-// ─────────────────────────────────────────
 const MODE_CONFIG = {
-  TROUBLESHOOTING: {
-    color:"#FF453A", bg:"rgba(255,69,58,0.14)", label:"Troubleshooting",
-    starter:"Modo Troubleshooting activo.\n\nDescribe el problema: modelo del panel, qué cambió recientemente y el texto exacto del error o trouble que muestra."
-  },
-  REEMPLAZO_HARDWARE: {
-    color:"#FF9F0A", bg:"rgba(255,159,10,0.14)", label:"Reemplazo HW",
-    starter:"Modo Reemplazo de Hardware activo.\n\nIndica qué componente fue reemplazado (CPU, LCM, LEM, fuente, etc.) y el modelo del panel. Te guío paso a paso incluyendo la reprogramación en VeriFire."
-  },
-  EXAMEN: {
-    color:"#0A84FF", bg:"rgba(10,132,255,0.14)", label:"Examen",
-    starter:"Modo Examen activo.\n\n¿Sobre qué modelo o tema quieres ser evaluado?\n\n• NFS-320\n• NFS2-640\n• NFS2-3030\n• VeriFire Tools\n• Operación y mantenimiento"
-  },
-  DICCIONARIO: {
-    color:"#30D158", bg:"rgba(48,209,88,0.14)", label:"Diccionario",
-    starter:"Modo Diccionario activo.\n\n¿Qué término o función quieres consultar? (ej: Alarm Verification, Drift Compensation, Walk Test, SLC, NAC, LCM, etc.)"
-  },
-  GUIA_RAPIDA: {
-    color:"#BF5AF2", bg:"rgba(191,90,242,0.14)", label:"Guía Rápida",
-    starter:"Modo Guía Rápida activo.\n\n¿Qué parámetros necesitas?\n\n• Corrientes por dispositivo\n• Resistencias de fin de línea\n• Capacidades por lazo/panel\n• Límites de cableado SLC\n• Otro — especifica"
-  }
+  TROUBLESHOOTING:{color:"#FF453A",bg:"rgba(255,69,58,0.14)",label:"Troubleshooting",starter:"Modo Troubleshooting activo.\n\nDescribe el problema: modelo del panel, qué cambió recientemente y el texto exacto del error o trouble que muestra."},
+  REEMPLAZO_HARDWARE:{color:"#FF9F0A",bg:"rgba(255,159,10,0.14)",label:"Reemplazo HW",starter:"Modo Reemplazo de Hardware activo.\n\nIndica qué componente fue reemplazado (CPU, LCM, LEM, fuente, etc.) y el modelo del panel. Te guío paso a paso incluyendo la reprogramación en VeriFire."},
+  EXAMEN:{color:"#0A84FF",bg:"rgba(10,132,255,0.14)",label:"Examen",starter:"Modo Examen activo.\n\n¿Sobre qué modelo o tema quieres ser evaluado?\n\n• NFS-320\n• NFS2-640\n• NFS2-3030\n• VeriFire Tools\n• Operación y mantenimiento"},
+  DICCIONARIO:{color:"#30D158",bg:"rgba(48,209,88,0.14)",label:"Diccionario",starter:"Modo Diccionario activo.\n\n¿Qué término o función quieres consultar? (ej: Alarm Verification, Drift Compensation, Walk Test, SLC, NAC, LCM, etc.)"},
+  GUIA_RAPIDA:{color:"#BF5AF2",bg:"rgba(191,90,242,0.14)",label:"Guía Rápida",starter:"Modo Guía Rápida activo.\n\n¿Qué parámetros necesitas?\n\n• Corrientes por dispositivo\n• Resistencias de fin de línea\n• Capacidades por lazo/panel\n• Límites de cableado SLC\n• Otro — especifica"}
 };
 
-// ─────────────────────────────────────────
-// STATE
-// ─────────────────────────────────────────
+// ── STATE ──
 let apiKey = localStorage.getItem('ifas_api_key') || '';
+let modelId = localStorage.getItem('ifas_model') || 'claude-sonnet-4-6';
 let activeMode = null;
 let messages = [];
-let pendingImageData = null;
+let pendingImages = [];
 let isLoading = false;
 
-// ─────────────────────────────────────────
-// ELEMENTS
-// ─────────────────────────────────────────
+// ── ELEMENTS ──
 const setupScreen = document.getElementById('setup-screen');
 const appEl = document.getElementById('app');
 const apiKeyInput = document.getElementById('api-key-input');
+const modelInput = document.getElementById('model-input');
 const startBtn = document.getElementById('start-btn');
 const setupError = document.getElementById('setup-error');
 const messagesEl = document.getElementById('messages');
@@ -286,122 +266,124 @@ const sendBtn = document.getElementById('send-btn');
 const clearBtn = document.getElementById('clear-btn');
 const settingsBtn = document.getElementById('settings-btn');
 const imgPreview = document.getElementById('img-preview');
-const previewThumb = document.getElementById('preview-thumb');
 const fileInput = document.getElementById('file-input');
 const modeLabelText = document.getElementById('mode-label-text');
 
-// ─────────────────────────────────────────
-// SETUP SCREEN LOGIC
-// ─────────────────────────────────────────
-function showApp() {
-  setupScreen.style.display = 'none';
-  appEl.style.display = 'flex';
+// ── SETUP SCREEN ──
+function showApp(){
+  setupScreen.style.display='none';
+  appEl.style.display='flex';
   render();
 }
 
-function showSetup() {
-  setupScreen.style.display = 'flex';
-  appEl.style.display = 'none';
-  apiKeyInput.value = '';
-  startBtn.disabled = true;
-  setupError.style.display = 'none';
+function showSetup(prefill){
+  setupScreen.style.display='flex';
+  appEl.style.display='none';
+  apiKeyInput.value = prefill ? '••••••••••••' : '';
+  modelInput.value = modelId;
+  updateChips(modelId);
+  validateSetup();
+  setupError.style.display='none';
 }
 
-apiKeyInput.addEventListener('input', () => {
-  const val = apiKeyInput.value.trim();
-  startBtn.disabled = val.length < 20;
-  setupError.style.display = 'none';
+function validateSetup(){
+  const key = apiKeyInput.value.trim();
+  const hasKey = key.length > 20 || key === '••••••••••••';
+  startBtn.disabled = !hasKey;
+}
+
+apiKeyInput.addEventListener('input',()=>{ setupError.style.display='none'; validateSetup(); });
+modelInput.addEventListener('input',()=>{ updateChips(modelInput.value.trim()); });
+
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    modelInput.value = c.dataset.model;
+    updateChips(c.dataset.model);
+  });
 });
 
-apiKeyInput.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !startBtn.disabled) startBtn.click();
-});
+function updateChips(val){
+  document.querySelectorAll('.chip').forEach(c=>{
+    c.classList.toggle('active', c.dataset.model === val);
+  });
+}
 
-startBtn.addEventListener('click', () => {
-  const val = apiKeyInput.value.trim();
-  if (!val.startsWith('sk-ant-') && !val.startsWith('sk-')) {
-    setupError.style.display = 'block';
-    return;
+startBtn.addEventListener('click',()=>{
+  const keyVal = apiKeyInput.value.trim();
+  const modelVal = modelInput.value.trim() || 'claude-sonnet-4-6';
+  if(keyVal !== '••••••••••••'){
+    if(!keyVal.startsWith('sk-')){setupError.style.display='block';return;}
+    apiKey = keyVal;
+    localStorage.setItem('ifas_api_key', apiKey);
   }
-  apiKey = val;
-  localStorage.setItem('ifas_api_key', val);
+  modelId = modelVal;
+  localStorage.setItem('ifas_model', modelId);
   showApp();
 });
 
-settingsBtn.addEventListener('click', () => {
-  if (confirm('¿Cambiar o borrar la API key?\n\nPresiona OK para ir a la pantalla de configuración.')) {
-    localStorage.removeItem('ifas_api_key');
-    apiKey = '';
-    messages = [];
-    activeMode = null;
-    showSetup();
-  }
+settingsBtn.addEventListener('click',()=>{ showSetup(true); });
+
+clearBtn.addEventListener('click',()=>{
+  messages=[];activeMode=null;pendingImages=[];
+  renderPreview();
+  inputEl.value='';inputEl.style.height='auto';
+  clearBtn.style.display='none';
+  modeLabelText.textContent='Selecciona un modo';
+  document.querySelectorAll('.mode-btn').forEach(b=>{b.classList.remove('active');b.style.background='';b.style.borderColor='';b.style.color='';});
+  inputEl.placeholder='Selecciona un modo para comenzar...';
+  render();updateSendBtn();
 });
 
-// Init
-if (apiKey) { showApp(); } else { showSetup(); }
+if(apiKey){ showApp(); } else { showSetup(false); }
 
-// ─────────────────────────────────────────
-// INPUT LOGIC
-// ─────────────────────────────────────────
-function updateSendBtn() {
-  const color = activeMode ? MODE_CONFIG[activeMode].color : '#FF453A';
-  sendBtn.style.background = color;
-  sendBtn.disabled = isLoading || (!inputEl.value.trim() && !pendingImageData);
+// ── INPUT ──
+function updateSendBtn(){
+  const cfg = activeMode ? MODE_CONFIG[activeMode] : null;
+  sendBtn.style.background = cfg ? cfg.color : '#FF453A';
+  sendBtn.disabled = isLoading || (!inputEl.value.trim() && pendingImages.length===0);
 }
 
-inputEl.addEventListener('input', () => {
-  inputEl.style.height = 'auto';
-  inputEl.style.height = Math.min(inputEl.scrollHeight, 90) + 'px';
+inputEl.addEventListener('input',()=>{
+  inputEl.style.height='auto';
+  inputEl.style.height=Math.min(inputEl.scrollHeight,90)+'px';
   updateSendBtn();
 });
+inputEl.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} });
 
-inputEl.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
-});
+// ── FILE HANDLING ──
+document.getElementById('cam-btn').addEventListener('click',()=>fileInput.click());
 
-document.getElementById('cam-btn').addEventListener('click', () => fileInput.click());
-
-fileInput.addEventListener('change', e => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    const isPdf = file.type === 'application/pdf';
-    pendingImageData = {
-      dataUrl: reader.result,
-      type: file.type,
-      data: reader.result.split(',')[1],
-      isPdf,
-      name: file.name
+fileInput.addEventListener('change',e=>{
+  const files = Array.from(e.target.files);
+  if(!files.length) return;
+  files.forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      pendingImages.push({
+        dataUrl: reader.result,
+        type: file.type,
+        data: reader.result.split(',')[1],
+        isPdf: file.type==='application/pdf',
+        name: file.name
+      });
+      renderPreview();
+      updateSendBtn();
     };
-    previewThumb.src = isPdf ? '' : reader.result;
-    previewThumb.style.display = isPdf ? 'none' : 'block';
-    document.querySelector('#img-preview span').textContent = isPdf
-      ? `📄 ${file.name}`
-      : 'Foto adjunta al mensaje';
-    imgPreview.style.display = 'flex';
-    updateSendBtn();
-  };
-  reader.readAsDataURL(file);
-  e.target.value = '';
+    reader.readAsDataURL(file);
+  });
+  e.target.value='';
 });
 
-// Paste image support
-document.addEventListener('paste', e => {
+document.addEventListener('paste',e=>{
   const items = e.clipboardData?.items;
-  if (!items) return;
-  for (const item of items) {
-    if (item.type.startsWith('image/')) {
+  if(!items) return;
+  for(const item of items){
+    if(item.type.startsWith('image/')){
       const file = item.getAsFile();
       const reader = new FileReader();
-      reader.onload = () => {
-        pendingImageData = { dataUrl: reader.result, type: item.type, data: reader.result.split(',')[1], isPdf: false };
-        previewThumb.src = reader.result;
-        previewThumb.style.display = 'block';
-        document.querySelector('#img-preview span').textContent = 'Imagen pegada';
-        imgPreview.style.display = 'flex';
-        updateSendBtn();
+      reader.onload=()=>{
+        pendingImages.push({dataUrl:reader.result,type:item.type,data:reader.result.split(',')[1],isPdf:false,name:'imagen'});
+        renderPreview();updateSendBtn();
       };
       reader.readAsDataURL(file);
       break;
@@ -409,115 +391,63 @@ document.addEventListener('paste', e => {
   }
 });
 
-// Voice dictation
+function renderPreview(){
+  if(pendingImages.length===0){imgPreview.style.display='none';imgPreview.innerHTML='';return;}
+  imgPreview.style.display='flex';
+  imgPreview.innerHTML = pendingImages.map((img,i)=>`
+    <div class="thumb-item">
+      ${img.isPdf
+        ? `<div class="pdf-thumb">📄</div><div class="pdf-name">${img.name}</div>`
+        : `<img src="${img.dataUrl}" alt="img"/>`}
+      <button class="thumb-rm" onclick="removeImg(${i})">×</button>
+    </div>`).join('') +
+    `<span style="font-size:11px;color:rgba(232,232,240,0.35);align-self:center;">${pendingImages.length} archivo${pendingImages.length>1?'s':''}</span>`;
+}
+
+window.removeImg = function(i){
+  pendingImages.splice(i,1);
+  renderPreview();updateSendBtn();
+};
+
+// ── VOICE ──
 const micBtn = document.getElementById('mic-btn');
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-if (!SpeechRecognition) {
-  micBtn.style.display = 'none';
-} else {
-  const recognition = new SpeechRecognition();
-  recognition.lang = 'es-419';
-  recognition.continuous = false;
-  recognition.interimResults = false;
-  let listening = false;
-
-  recognition.onresult = e => {
-    const transcript = e.results[0][0].transcript;
-    inputEl.value = (inputEl.value + ' ' + transcript).trim();
-    inputEl.style.height = 'auto';
-    inputEl.style.height = Math.min(inputEl.scrollHeight, 90) + 'px';
-    updateSendBtn();
-  };
-  recognition.onend = () => {
-    listening = false;
-    micBtn.classList.remove('listening');
-    micBtn.textContent = '🎤';
-  };
-  recognition.onerror = () => {
-    listening = false;
-    micBtn.classList.remove('listening');
-    micBtn.textContent = '🎤';
-  };
-
-  micBtn.addEventListener('click', () => {
-    if (listening) {
-      recognition.stop();
-    } else {
-      recognition.start();
-      listening = true;
-      micBtn.classList.add('listening');
-      micBtn.textContent = '⏹';
-    }
+const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR){ micBtn.style.display='none'; }
+else {
+  const rec = new SR();
+  rec.lang='es-419';rec.continuous=false;rec.interimResults=false;
+  let listening=false;
+  rec.onresult=e=>{ inputEl.value=(inputEl.value+' '+e.results[0][0].transcript).trim();inputEl.style.height='auto';inputEl.style.height=Math.min(inputEl.scrollHeight,90)+'px';updateSendBtn(); };
+  rec.onend=()=>{ listening=false;micBtn.classList.remove('listening');micBtn.textContent='🎤'; };
+  rec.onerror=()=>{ listening=false;micBtn.classList.remove('listening');micBtn.textContent='🎤'; };
+  micBtn.addEventListener('click',()=>{
+    if(listening){rec.stop();}
+    else{rec.start();listening=true;micBtn.classList.add('listening');micBtn.textContent='⏹';}
   });
 }
 
-document.getElementById('remove-img').addEventListener('click', () => {
-  pendingImageData = null;
-  imgPreview.style.display = 'none';
-  updateSendBtn();
+// ── MODE SELECTION ──
+document.querySelectorAll('.mode-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>selectMode(btn.dataset.id));
 });
 
-clearBtn.addEventListener('click', () => {
-  messages = [];
-  activeMode = null;
-  pendingImageData = null;
-  imgPreview.style.display = 'none';
-  inputEl.value = '';
-  inputEl.style.height = 'auto';
-  clearBtn.style.display = 'none';
-  modeLabelText.textContent = 'Selecciona un modo';
-  document.querySelectorAll('.mode-btn').forEach(b => {
-    b.classList.remove('active');
-    b.style.background = '';
-    b.style.borderColor = '';
-    b.style.color = '';
+function selectMode(id){
+  activeMode=id;
+  const cfg=MODE_CONFIG[id];
+  messages=[{role:'assistant',display:cfg.starter,content:cfg.starter}];
+  document.querySelectorAll('.mode-btn').forEach(b=>{
+    const bc=MODE_CONFIG[b.dataset.id];
+    if(b.dataset.id===id){b.classList.add('active');b.style.background=bc.bg;b.style.borderColor=bc.color;b.style.color=bc.color;}
+    else{b.classList.remove('active');b.style.background='';b.style.borderColor='';b.style.color='';}
   });
-  inputEl.placeholder = 'Selecciona un modo para comenzar...';
-  render();
-  updateSendBtn();
-});
-
-sendBtn.addEventListener('click', send);
-
-// ─────────────────────────────────────────
-// MODE SELECTION
-// ─────────────────────────────────────────
-document.querySelectorAll('.mode-btn').forEach(btn => {
-  btn.addEventListener('click', () => selectMode(btn.dataset.id));
-});
-
-function selectMode(id) {
-  activeMode = id;
-  const cfg = MODE_CONFIG[id];
-  messages = [{ role:'assistant', display: cfg.starter, content: cfg.starter }];
-
-  document.querySelectorAll('.mode-btn').forEach(b => {
-    const bcfg = MODE_CONFIG[b.dataset.id];
-    if (b.dataset.id === id) {
-      b.classList.add('active');
-      b.style.background = bcfg.bg;
-      b.style.borderColor = bcfg.color;
-      b.style.color = bcfg.color;
-    } else {
-      b.classList.remove('active');
-      b.style.background = '';
-      b.style.borderColor = '';
-      b.style.color = '';
-    }
-  });
-
-  modeLabelText.textContent = 'Modo activo: ' + cfg.label;
-  inputEl.placeholder = 'Escribe tu consulta...';
-  clearBtn.style.display = 'block';
-  render();
-  inputEl.focus();
-  updateSendBtn();
+  modeLabelText.textContent='Modo activo: '+cfg.label;
+  inputEl.placeholder='Escribe tu consulta...';
+  clearBtn.style.display='block';
+  render();inputEl.focus();updateSendBtn();
 }
 
-// ─────────────────────────────────────────
-// RENDER
-// ─────────────────────────────────────────
-function renderMarkdown(text) {
+// ── RENDER ──
+function md(text){
   return text
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
@@ -525,114 +455,75 @@ function renderMarkdown(text) {
     .replace(/\n/g,'<br/>');
 }
 
-function render() {
-  if (messages.length === 0) {
-    messagesEl.innerHTML = '<div class="empty-state"><div class="e-icon">🔥</div><p>Selecciona un modo para comenzar.<br/>Puedes adjuntar fotos del panel en campo.</p></div>';
+function render(){
+  if(messages.length===0){
+    messagesEl.innerHTML='<div class="empty-state"><div class="e-icon">🔥</div><p>Selecciona un modo para comenzar.<br/>Puedes adjuntar múltiples fotos y PDFs.</p></div>';
     return;
   }
-  let html = '';
-  messages.forEach(m => {
-    const cfg = activeMode ? MODE_CONFIG[activeMode] : null;
-    if (m.role === 'user') {
-      const accent = cfg ? cfg.color : 'rgba(232,232,240,0.85)';
-      const border = cfg ? cfg.color + '35' : 'rgba(255,255,255,0.1)';
-      html += `<div class="bubble-row user">
-        <div class="bubble user-b" style="border-color:${border};color:${accent};">
-          ${m.image ? `<img src="${m.image}" alt="Panel foto"/>` : ''}
-          ${m.display ? renderMarkdown(m.display) : ''}
-        </div>
-      </div>`;
+  let html='';
+  messages.forEach(m=>{
+    const cfg=activeMode?MODE_CONFIG[activeMode]:null;
+    if(m.role==='user'){
+      const accent=cfg?cfg.color:'rgba(232,232,240,0.85)';
+      const border=cfg?cfg.color+'35':'rgba(255,255,255,0.1)';
+      const imgs = m.images||[];
+      const imgHtml = imgs.length ? `<div class="bubble-imgs">${imgs.filter(i=>!i.isPdf).map(i=>`<img src="${i.dataUrl}" alt=""/>`).join('')}${imgs.filter(i=>i.isPdf).map(i=>`<div style="font-size:12px;color:rgba(232,232,240,0.5);">📄 ${i.name}</div>`).join('')}</div>` : '';
+      html+=`<div class="bubble-row user"><div class="bubble user-b" style="border-color:${border};color:${accent};">${imgHtml}${m.display?md(m.display):''}</div></div>`;
     } else {
-      html += `<div class="bubble-row assistant">
-        <div class="bot-avatar">🔥</div>
-        <div class="bubble bot-b">${renderMarkdown(m.display)}</div>
-      </div>`;
+      html+=`<div class="bubble-row assistant"><div class="bot-avatar">🔥</div><div class="bubble bot-b">${md(m.display)}</div></div>`;
     }
   });
-  if (isLoading) {
-    html += `<div class="typing-row">
-      <div class="bot-avatar">🔥</div>
-      <div class="typing-bubble">
-        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-      </div>
-    </div>`;
+  if(isLoading){
+    html+=`<div class="typing-row"><div class="bot-avatar">🔥</div><div class="typing-bubble"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
   }
-  messagesEl.innerHTML = html;
-  messagesEl.scrollTop = messagesEl.scrollHeight;
+  messagesEl.innerHTML=html;
+  messagesEl.scrollTop=messagesEl.scrollHeight;
 }
 
-// ─────────────────────────────────────────
-// SEND MESSAGE
-// ─────────────────────────────────────────
-async function send() {
-  if (isLoading || (!inputEl.value.trim() && !pendingImageData)) return;
+// ── SEND ──
+async function send(){
+  if(isLoading||(!inputEl.value.trim()&&pendingImages.length===0)) return;
+  const text=inputEl.value.trim();
+  const imgs=[...pendingImages];
 
-  const text = inputEl.value.trim();
-  const imgData = pendingImageData;
+  const userContent=[];
+  imgs.forEach(img=>{
+    if(img.isPdf) userContent.push({type:'document',source:{type:'base64',media_type:'application/pdf',data:img.data}});
+    else userContent.push({type:'image',source:{type:'base64',media_type:img.type,data:img.data}});
+  });
+  const msgText=activeMode?`[Modo activo: ${activeMode}]\n${text}`:text;
+  if(text) userContent.push({type:'text',text:msgText});
+  else if(activeMode) userContent.push({type:'text',text:`[Modo activo: ${activeMode}]`});
 
-  const userContent = [];
-  if (imgData) {
-    if (imgData.isPdf) {
-      userContent.push({ type:'document', source:{ type:'base64', media_type:'application/pdf', data: imgData.data } });
-    } else {
-      userContent.push({ type:'image', source:{ type:'base64', media_type: imgData.type, data: imgData.data } });
-    }
-  }
-  const msgText = activeMode ? `[Modo activo: ${activeMode}]\n${text}` : text;
-  if (text) userContent.push({ type:'text', text: msgText });
-  else if (activeMode) userContent.push({ type:'text', text:`[Modo activo: ${activeMode}]` });
-
-  const userMsg = { role:'user', display: text, image: imgData?.dataUrl, content: userContent };
+  const userMsg={role:'user',display:text,images:imgs,content:userContent};
   messages.push(userMsg);
+  inputEl.value='';inputEl.style.height='auto';
+  pendingImages=[];renderPreview();
+  isLoading=true;updateSendBtn();render();
 
-  inputEl.value = '';
-  inputEl.style.height = 'auto';
-  pendingImageData = null;
-  imgPreview.style.display = 'none';
-  isLoading = true;
-  updateSendBtn();
-  render();
+  const apiMessages=messages.map(m=>({role:m.role,content:m.role==='user'?m.content:m.display}));
 
-  const apiMessages = messages.map(m => ({
-    role: m.role,
-    content: m.role === 'user' ? m.content : m.display
-  }));
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
-        system: SYSTEM_PROMPT,
-        messages: apiMessages
-      })
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:modelId,max_tokens:1024,system:SYSTEM_PROMPT,messages:apiMessages})
     });
-
-    if (res.status === 401) {
-      messages.push({ role:'assistant', display:'⚠️ API key inválida o expirada. Toca ⚙️ para actualizarla.', content:'Error.' });
-    } else if (!res.ok) {
-      let detail = '';
-      try { const err = await res.json(); detail = err.error?.message || ''; } catch(e) {}
-      messages.push({ role:'assistant', display:`⚠️ Error ${res.status}${detail ? ': ' + detail : ''}. Intenta nuevamente.`, content:'Error.' });
+    if(res.status===401){
+      messages.push({role:'assistant',display:'⚠️ API key inválida. Toca ⚙️ para actualizarla.',content:'Error.'});
+    } else if(!res.ok){
+      let detail='';
+      try{const err=await res.json();detail=err.error?.message||'';}catch(e){}
+      messages.push({role:'assistant',display:`⚠️ Error ${res.status}${detail?': '+detail:''}. Toca ⚙️ para verificar modelo y API key.`,content:'Error.'});
     } else {
-      const data = await res.json();
-      const reply = data.content?.find(b => b.type==='text')?.text || 'Sin respuesta del servidor.';
-      messages.push({ role:'assistant', display: reply, content: reply });
+      const data=await res.json();
+      const reply=data.content?.find(b=>b.type==='text')?.text||'Sin respuesta del servidor.';
+      messages.push({role:'assistant',display:reply,content:reply});
     }
-  } catch(e) {
-    messages.push({ role:'assistant', display:'⚠️ Error de conexión. Verifica tu internet e intenta nuevamente.', content:'Error.' });
+  } catch(e){
+    messages.push({role:'assistant',display:'⚠️ Error de conexión. Verifica tu internet e intenta nuevamente.',content:'Error.'});
   }
-
-  isLoading = false;
-  updateSendBtn();
-  render();
+  isLoading=false;updateSendBtn();render();
 }
 </script>
 </body>
