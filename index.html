@@ -381,6 +381,7 @@ inputEl.addEventListener('input',()=>{
   updateSendBtn();
 });
 inputEl.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} });
+sendBtn.addEventListener('click', send);
 
 // ── FILE HANDLING ──
 document.getElementById('cam-btn').addEventListener('click',()=>fileInput.click());
