@@ -113,6 +113,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
       <div class="field-note">Se guarda localmente, nunca se comparte. Obtén una en <a href="https://platform.claude.com" target="_blank">platform.claude.com</a></div>
     </div>
     <div class="field-group">
+      <div class="field-label">Documentos <span style="font-size:10px;color:rgba(232,232,240,0.3);font-weight:400;">OPCIONAL</span></div>
+      <textarea class="setup-input" id="docs-input" rows="4" placeholder='Pega aquí el JSON con los file IDs de los manuales...' style="font-size:11px;line-height:1.5;font-family:DM Mono,monospace;resize:vertical;"></textarea>
+      <div class="field-note" id="docs-note">Sin documentos, IFAS usa solo conocimiento base. Con documentos, Claude consulta los manuales oficiales en cada respuesta.</div>
+    </div>
+    <div class="field-group">
       <div class="field-label">Modelo</div>
       <input class="setup-input" type="text" id="model-input" placeholder="claude-sonnet-4-6" spellcheck="false"/>
       <div class="model-chips">
@@ -248,6 +253,7 @@ const MODE_CONFIG = {
 // ── STATE ──
 let apiKey = localStorage.getItem('ifas_api_key') || '';
 let modelId = localStorage.getItem('ifas_model') || 'claude-sonnet-4-6';
+let fileIds = JSON.parse(localStorage.getItem('ifas_file_ids') || '{}');
 let activeMode = null;
 let messages = [];
 let pendingImages = [];
@@ -268,6 +274,8 @@ const settingsBtn = document.getElementById('settings-btn');
 const imgPreview = document.getElementById('img-preview');
 const fileInput = document.getElementById('file-input');
 const modeLabelText = document.getElementById('mode-label-text');
+const docsInput = document.getElementById('docs-input');
+const docsNote = document.getElementById('docs-note');
 
 // ── SETUP SCREEN ──
 function showApp(){
@@ -282,6 +290,18 @@ function showSetup(prefill){
   apiKeyInput.value = prefill ? '••••••••••••' : '';
   modelInput.value = modelId;
   updateChips(modelId);
+  // Pre-fill docs if exist
+  const stored = localStorage.getItem('ifas_file_ids');
+  if(stored && stored !== '{}'){
+    docsInput.value = stored;
+    const count = Object.keys(JSON.parse(stored)).length;
+    docsNote.textContent = `✓ ${count} documentos cargados actualmente.`;
+    docsNote.style.color = 'rgba(48,209,88,0.8)';
+  } else {
+    docsInput.value = '';
+    docsNote.textContent = 'Sin documentos, IFAS usa solo conocimiento base. Con documentos, Claude consulta los manuales oficiales en cada respuesta.';
+    docsNote.style.color = '';
+  }
   validateSetup();
   setupError.style.display='none';
 }
@@ -311,6 +331,8 @@ function updateChips(val){
 startBtn.addEventListener('click',()=>{
   const keyVal = apiKeyInput.value.trim();
   const modelVal = modelInput.value.trim() || 'claude-sonnet-4-6';
+  const docsVal = docsInput.value.trim();
+
   if(keyVal !== '••••••••••••'){
     if(!keyVal.startsWith('sk-')){setupError.style.display='block';return;}
     apiKey = keyVal;
@@ -318,6 +340,16 @@ startBtn.addEventListener('click',()=>{
   }
   modelId = modelVal;
   localStorage.setItem('ifas_model', modelId);
+
+  if(docsVal){
+    try {
+      fileIds = JSON.parse(docsVal);
+      localStorage.setItem('ifas_file_ids', docsVal);
+    } catch(e) {
+      // JSON inválido, ignorar sin borrar los existentes
+    }
+  }
+
   showApp();
 });
 
@@ -440,7 +472,7 @@ function selectMode(id){
     if(b.dataset.id===id){b.classList.add('active');b.style.background=bc.bg;b.style.borderColor=bc.color;b.style.color=bc.color;}
     else{b.classList.remove('active');b.style.background='';b.style.borderColor='';b.style.color='';}
   });
-  modeLabelText.textContent='Modo activo: '+cfg.label;
+  modeLabelText.textContent = 'Modo activo: ' + cfg.label + (Object.keys(fileIds).length > 0 ? ' · 📚 ' + Object.keys(fileIds).length + ' manuales' : '');
   inputEl.placeholder='Escribe tu consulta...';
   clearBtn.style.display='block';
   render();inputEl.focus();updateSendBtn();
@@ -480,6 +512,32 @@ function render(){
   messagesEl.scrollTop=messagesEl.scrollHeight;
 }
 
+// ── BUILD API MESSAGES (with optional document context) ──
+function buildApiMessages(msgs) {
+  const result = [];
+  const keys = Object.keys(fileIds);
+
+  if(keys.length > 0){
+    const docBlocks = keys.map(k => ({
+      type: 'document',
+      source: { type: 'file', file_id: fileIds[k].file_id },
+      title: fileIds[k].titulo,
+      citations: { enabled: false }
+    }));
+    docBlocks.push({
+      type: 'text',
+      text: 'Usa estos manuales técnicos oficiales de Notifier ONYX como referencia para responder consultas técnicas. Cita el manual y sección cuando corresponda.'
+    });
+    result.push({ role: 'user', content: docBlocks });
+    result.push({ role: 'assistant', content: 'Entendido. Tengo acceso a los manuales técnicos oficiales de Notifier ONYX y los usaré como referencia en mis respuestas.' });
+  }
+
+  msgs.forEach(m => {
+    result.push({ role: m.role, content: m.role === 'user' ? m.content : m.display });
+  });
+  return result;
+}
+
 // ── SEND ──
 async function send(){
   if(isLoading||(!inputEl.value.trim()&&pendingImages.length===0)) return;
@@ -501,12 +559,18 @@ async function send(){
   pendingImages=[];renderPreview();
   isLoading=true;updateSendBtn();render();
 
-  const apiMessages=messages.map(m=>({role:m.role,content:m.role==='user'?m.content:m.display}));
+  const apiMessages = buildApiMessages(messages);
 
   try{
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-beta':'files-api-2025-04-14',
+        'anthropic-dangerous-direct-browser-access':'true'
+      },
       body:JSON.stringify({model:modelId,max_tokens:1024,system:SYSTEM_PROMPT,messages:apiMessages})
     });
     if(res.status===401){
