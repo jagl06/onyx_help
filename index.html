@@ -92,6 +92,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 .inp-btn:hover{background:rgba(255,255,255,0.12);}
 #mic-btn.listening{background:rgba(255,69,58,0.25);color:#FF453A;animation:pulse 1s ease infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+#manual-bar{padding:7px 16px 8px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;display:flex;align-items:center;gap:8px;}
+#manual-bar label{font-size:10px;color:rgba(232,232,240,0.3);letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;}
+#manual-select{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(232,232,240,0.7);font-size:11px;font-family:'DM Sans',sans-serif;padding:5px 8px;outline:none;cursor:pointer;min-width:0;}
+#manual-select:focus{border-color:rgba(255,255,255,0.2);}
+#manual-select option{background:#1a1a24;color:#E8E8F0;}
 #msg-input{flex:1;background:transparent;border:none;outline:none;color:#E8E8F0;font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:90px;overflow-y:auto;}
 #msg-input::placeholder{color:rgba(232,232,240,0.3);}
 #send-btn{width:34px;height:34px;border-radius:8px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;color:#fff;transition:all 0.15s;}
@@ -158,6 +163,13 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
       <button class="mode-btn" data-id="DICCIONARIO" data-color="#30D158" data-bg="rgba(48,209,88,0.14)">📖 Diccionario</button>
       <button class="mode-btn" data-id="GUIA_RAPIDA" data-color="#BF5AF2" data-bg="rgba(191,90,242,0.14)">⚡ Guía Rápida</button>
     </div>
+  </div>
+
+  <div id="manual-bar">
+    <label>📚 Manual</label>
+    <select id="manual-select">
+      <option value="">Sin manual (conocimiento base)</option>
+    </select>
   </div>
 
   <div id="messages"></div>
@@ -473,7 +485,10 @@ function selectMode(id){
     if(b.dataset.id===id){b.classList.add('active');b.style.background=bc.bg;b.style.borderColor=bc.color;b.style.color=bc.color;}
     else{b.classList.remove('active');b.style.background='';b.style.borderColor='';b.style.color='';}
   });
-  modeLabelText.textContent = 'Modo activo: ' + cfg.label + (Object.keys(fileIds).length > 0 ? ' · 📚 ' + Object.keys(fileIds).length + ' manuales' : '');
+  const manualLabel = manualSelect.value && fileIds[manualSelect.value]
+    ? ' · 📚 ' + fileIds[manualSelect.value].titulo.split('(')[0].trim()
+    : (Object.keys(fileIds).length > 0 ? ' · 📚 Sin manual activo' : '');
+  modeLabelText.textContent = 'Modo activo: ' + cfg.label + manualLabel;
   inputEl.placeholder='Escribe tu consulta...';
   clearBtn.style.display='block';
   render();inputEl.focus();updateSendBtn();
@@ -513,24 +528,42 @@ function render(){
   messagesEl.scrollTop=messagesEl.scrollHeight;
 }
 
-// ── BUILD API MESSAGES (with optional document context) ──
+// ── MANUAL SELECTOR ──
+const manualSelect = document.getElementById('manual-select');
+
+function populateManualSelector() {
+  while(manualSelect.options.length > 1) manualSelect.remove(1);
+  const keys = Object.keys(fileIds);
+  if(keys.length > 0){
+    keys.forEach(k => {
+      const opt = document.createElement('option');
+      opt.value = k;
+      opt.textContent = fileIds[k].titulo;
+      manualSelect.appendChild(opt);
+    });
+    document.getElementById('manual-bar').style.display = 'flex';
+  } else {
+    document.getElementById('manual-bar').style.display = 'none';
+  }
+}
+populateManualSelector();
+
+// ── BUILD API MESSAGES (one selected manual max) ──
 function buildApiMessages(msgs) {
   const result = [];
-  const keys = Object.keys(fileIds);
+  const selectedKey = manualSelect.value;
 
-  if(keys.length > 0){
-    const docBlocks = keys.map(k => ({
-      type: 'document',
-      source: { type: 'file', file_id: fileIds[k].file_id },
-      title: fileIds[k].titulo,
-      citations: { enabled: false }
-    }));
-    docBlocks.push({
-      type: 'text',
-      text: 'Usa estos manuales técnicos oficiales de Notifier ONYX como referencia para responder consultas técnicas. Cita el manual y sección cuando corresponda.'
+  if(selectedKey && fileIds[selectedKey]){
+    const doc = fileIds[selectedKey];
+    result.push({
+      role: 'user',
+      content: [
+        { type: 'document', source: { type: 'file', file_id: doc.file_id },
+          title: doc.titulo, citations: { enabled: false } },
+        { type: 'text', text: `Usa este manual oficial (${doc.titulo}) como referencia. Cita sección cuando corresponda.` }
+      ]
     });
-    result.push({ role: 'user', content: docBlocks });
-    result.push({ role: 'assistant', content: 'Entendido. Tengo acceso a los manuales técnicos oficiales de Notifier ONYX y los usaré como referencia en mis respuestas.' });
+    result.push({ role: 'assistant', content: `Entendido. Tengo acceso al ${doc.titulo} y lo usaré como referencia.` });
   }
 
   msgs.forEach(m => {
