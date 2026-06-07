@@ -280,7 +280,7 @@ let isLoading = false;
 let docIndex = [];      // [{id,cat,doc,page,text,tokens,len}]
 let bm25 = null;        // {df, avgdl, N}
 let indexReady = false;
-const TOP_K = 6;        // fragmentos a inyectar por consulta
+const TOP_K = 8;        // fragmentos a inyectar por consulta
 
 // ── ELEMENTS ──
 const setupScreen = document.getElementById('setup-screen');
@@ -533,7 +533,7 @@ async function loadIndex(){
     const data = await res.json();
     const df = {}; let totalLen = 0;
     docIndex = (data.items||[]).map(it=>{
-      const toks = tokenize(it.text);
+      const toks = tokenize(it.doc + ' ' + it.text);   // incluye el nombre del documento (modelos/códigos)
       const tf = {};
       toks.forEach(t=>{ tf[t]=(tf[t]||0)+1; });
       for(const t in tf) df[t]=(df[t]||0)+1;
