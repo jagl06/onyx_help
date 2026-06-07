@@ -533,12 +533,13 @@ async function loadIndex(){
     const data = await res.json();
     const df = {}; let totalLen = 0;
     docIndex = (data.items||[]).map(it=>{
-      const toks = tokenize(it.doc + ' ' + it.text);   // incluye el nombre del documento (modelos/códigos)
+      const toks = tokenize(it.text);
       const tf = {};
       toks.forEach(t=>{ tf[t]=(tf[t]||0)+1; });
       for(const t in tf) df[t]=(df[t]||0)+1;
       totalLen += toks.length;
-      return {id:it.id, cat:it.cat, doc:it.doc, page:it.page, text:it.text, tf, len:toks.length};
+      return {id:it.id, cat:it.cat, doc:it.doc, page:it.page, text:it.text, tf, len:toks.length,
+              nameTokens: tokenize(it.doc)};
     });
     bm25 = { df, N: docIndex.length, avgdl: totalLen/(docIndex.length||1) };
     indexReady = docIndex.length > 0;
@@ -571,6 +572,10 @@ function retrieve(query, k){
       if(!f) continue;
       s += idf[t] * (f*(k1+1))/(f + k1*(1 - b + b*d.len/bm25.avgdl));
     }
+    // refuerzo si el NOMBRE del documento coincide con la consulta (modelos/códigos: FSP-851, NFS2-3030…)
+    let nameBonus = 0;
+    for(const t of d.nameTokens){ if(idf[t]!==undefined) nameBonus += idf[t]; }
+    s += nameBonus * 2.5;
     if(s>0) scored.push([s,d]);
   }
   scored.sort((a,b)=>b[0]-a[0]);
