@@ -1,659 +1,172 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-<meta name="apple-mobile-web-app-capable" content="yes"/>
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-<title>IFAS — ISELEC Fire Alarm Support</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;}
-body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0;}
-::-webkit-scrollbar{width:3px;}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px;}
-
-/* ── SETUP SCREEN ── */
-#setup-screen{position:fixed;inset:0;background:#08080F;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;z-index:100;overflow-y:auto;}
-.setup-logo{width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#FF453A,#FF9F0A);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px;}
-#setup-screen h2{font-size:22px;font-weight:700;margin-bottom:6px;}
-#setup-screen .sub{font-size:13px;color:rgba(232,232,240,0.45);text-align:center;line-height:1.6;margin-bottom:28px;max-width:320px;}
-.setup-wrap{width:100%;max-width:340px;display:flex;flex-direction:column;gap:16px;}
-.field-group{display:flex;flex-direction:column;gap:6px;}
-.field-label{font-size:11px;color:rgba(232,232,240,0.45);letter-spacing:0.06em;text-transform:uppercase;}
-.setup-input{background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.12);border-radius:10px;padding:12px 14px;color:#E8E8F0;font-family:'DM Mono',monospace;font-size:13px;outline:none;width:100%;transition:border-color 0.2s;letter-spacing:0.03em;}
-.setup-input:focus{border-color:rgba(255,69,58,0.6);}
-.setup-input::placeholder{color:rgba(232,232,240,0.2);letter-spacing:0;}
-.field-note{font-size:11px;color:rgba(232,232,240,0.28);line-height:1.5;}
-.field-note a{color:rgba(255,159,10,0.75);text-decoration:none;}
-.model-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;}
-.chip{padding:4px 10px;border-radius:12px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(232,232,240,0.5);font-size:11px;cursor:pointer;font-family:'DM Mono',monospace;transition:all 0.15s;}
-.chip:hover,.chip.active{background:rgba(255,69,58,0.12);border-color:rgba(255,69,58,0.4);color:#FF453A;}
-#start-btn{margin-top:6px;width:100%;padding:13px;border-radius:11px;background:linear-gradient(135deg,#FF453A,#FF9F0A);border:none;color:#fff;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:opacity 0.15s;}
-#start-btn:hover{opacity:0.9;}
-#start-btn:disabled{opacity:0.35;cursor:not-allowed;}
-.setup-error{font-size:12px;color:#FF453A;display:none;}
-
-/* ── MAIN APP ── */
-#app{display:none;flex-direction:column;height:100vh;max-width:520px;margin:0 auto;}
-#header{padding:14px 18px 12px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
-.logo{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#FF453A,#FF9F0A);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
-.title-block{margin-left:10px;}
-.title-block h1{font-size:15px;font-weight:700;letter-spacing:0.02em;}
-.title-block p{font-size:11px;color:rgba(232,232,240,0.4);margin-top:1px;}
-.hdr-actions{display:flex;gap:7px;align-items:center;}
-.hdr-btn{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:7px;padding:5px 10px;color:rgba(232,232,240,0.5);font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:none;}
-.hdr-btn:hover{background:rgba(255,255,255,0.09);color:rgba(232,232,240,0.8);}
-#settings-btn{padding:5px 8px;display:flex;}
-#mode-bar{padding:11px 16px 9px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;}
-.mode-label{font-size:10px;color:rgba(232,232,240,0.3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
-#modes{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;}
-#modes::-webkit-scrollbar{display:none;}
-.mode-btn{padding:7px 13px;border-radius:20px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);color:rgba(232,232,240,0.55);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all 0.15s;flex-shrink:0;}
-.mode-btn:hover{transform:translateY(-1px);}
-.mode-btn.active{font-weight:600;}
-#messages{flex:1;overflow-y:auto;padding:14px 16px;}
-.empty-state{text-align:center;padding:52px 20px;color:rgba(232,232,240,0.28);}
-.empty-state .e-icon{font-size:42px;margin-bottom:14px;}
-.empty-state p{font-size:13px;line-height:1.7;}
-.bubble-row{display:flex;margin-bottom:11px;animation:fadeUp 0.2s ease;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:translateY(0);}}
-.bubble-row.user{justify-content:flex-end;}
-.bubble-row.assistant{justify-content:flex-start;}
-.bot-avatar{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#FF453A,#FF9F0A);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-right:8px;align-self:flex-end;margin-bottom:2px;}
-.bubble{max-width:83%;padding:10px 14px;font-size:13.5px;line-height:1.65;}
-.bubble.user-b{border-radius:16px 16px 4px 16px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.1);}
-.bubble.bot-b{border-radius:16px 16px 16px 4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);}
-.bubble-imgs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:7px;}
-.bubble-imgs img{width:80px;height:80px;object-fit:cover;border-radius:6px;}
-.bubble strong{font-weight:600;}
-.bubble code{background:rgba(255,255,255,0.1);padding:1px 5px;border-radius:3px;font-family:'DM Mono',monospace;font-size:0.88em;}
-.src-note{font-size:10px;color:rgba(232,232,240,0.38);margin:5px 0 0 2px;line-height:1.45;}
-.typing-row{display:flex;align-items:center;margin-bottom:11px;}
-.typing-bubble{padding:12px 15px;border-radius:16px 16px 16px 4px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);display:flex;gap:5px;align-items:center;}
-.dot{width:6px;height:6px;border-radius:50%;background:rgba(232,232,240,0.4);animation:blink 1.2s ease infinite;}
-.dot:nth-child(2){animation-delay:0.2s;}
-.dot:nth-child(3){animation-delay:0.4s;}
-@keyframes blink{0%,80%,100%{opacity:0.2;}40%{opacity:1;}}
-
-/* ── PENDING IMAGES PREVIEW ── */
-#img-preview{margin:0 16px 8px;padding:8px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;display:none;gap:8px;align-items:center;flex-wrap:wrap;}
-.thumb-item{position:relative;flex-shrink:0;}
-.thumb-item img{width:48px;height:48px;object-fit:cover;border-radius:6px;display:block;}
-.thumb-item .pdf-thumb{width:48px;height:48px;background:rgba(255,255,255,0.08);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:18px;}
-.thumb-item .pdf-name{font-size:9px;color:rgba(232,232,240,0.5);max-width:48px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px;}
-.thumb-rm{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:#FF453A;border:none;color:#fff;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
-
-/* ── INPUT ── */
-#input-area{padding:10px 16px 20px;border-top:1px solid rgba(255,255,255,0.06);flex-shrink:0;}
-#input-wrap{display:flex;gap:8px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:9px 11px;align-items:flex-end;transition:border-color 0.2s;}
-#input-wrap:focus-within{border-color:rgba(255,255,255,0.2);}
-.inp-btn{background:rgba(255,255,255,0.07);border:none;border-radius:8px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;color:rgba(232,232,240,0.55);transition:all 0.15s;}
-.inp-btn:hover{background:rgba(255,255,255,0.12);}
-#mic-btn.listening{background:rgba(255,69,58,0.25);color:#FF453A;animation:pulse 1s ease infinite;}
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
-#manual-bar{padding:7px 16px 8px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;display:flex;align-items:center;gap:8px;}
-#manual-bar label{font-size:10px;color:rgba(232,232,240,0.3);letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;}
-#manual-select{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:8px;color:rgba(232,232,240,0.7);font-size:11px;font-family:'DM Sans',sans-serif;padding:5px 8px;outline:none;cursor:pointer;min-width:0;}
-#manual-select:focus{border-color:rgba(255,255,255,0.2);}
-#manual-select option{background:#1a1a24;color:#E8E8F0;}
-#msg-input{flex:1;background:transparent;border:none;outline:none;color:#E8E8F0;font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;resize:none;max-height:90px;overflow-y:auto;}
-#msg-input::placeholder{color:rgba(232,232,240,0.3);}
-#send-btn{width:34px;height:34px;border-radius:8px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;color:#fff;transition:all 0.15s;}
-#send-btn:hover:not(:disabled){transform:scale(1.06);}
-#send-btn:disabled{opacity:0.35;cursor:not-allowed;}
-</style>
-</head>
-<body>
-
-<!-- ── SETUP / SETTINGS SCREEN ── -->
-<div id="setup-screen">
-  <div class="setup-logo">🔥</div>
-  <h2>IFAS</h2>
-  <p class="sub">ISELEC Fire Alarm Support — Asistente técnico para paneles Notifier ONYX en campo.</p>
-  <div class="setup-wrap">
-    <div class="field-group">
-      <div class="field-label">API Key de Anthropic</div>
-      <input class="setup-input" type="password" id="api-key-input" placeholder="sk-ant-api03-..." autocomplete="off" spellcheck="false"/>
-      <div class="field-note">Se guarda localmente, nunca se comparte. Obtén una en <a href="https://platform.claude.com" target="_blank">platform.claude.com</a></div>
-    </div>
-    <div class="field-group">
-      <div class="field-label">Modelo</div>
-      <input class="setup-input" type="text" id="model-input" placeholder="claude-sonnet-4-6" spellcheck="false"/>
-      <div class="model-chips">
-        <span class="chip active" data-model="claude-sonnet-4-6">Sonnet 4.6 ★</span>
-        <span class="chip" data-model="claude-haiku-4-5-20251001">Haiku 4.5</span>
-        <span class="chip" data-model="claude-3-5-sonnet-20241022">Sonnet 3.5</span>
-        <span class="chip" data-model="claude-3-haiku-20240307">Haiku 3</span>
-      </div>
-      <div class="field-note">Sonnet 4.6 recomendado. Si hay error 404 prueba Haiku 3.</div>
-    </div>
-    <div class="setup-error" id="setup-error">API key inválida. Debe empezar con sk-ant-</div>
-    <button id="start-btn" disabled>Comenzar →</button>
-  </div>
-</div>
-
-<!-- ── MAIN APP ── -->
-<div id="app">
-  <div id="header">
-    <div style="display:flex;align-items:center;">
-      <div class="logo">🔥</div>
-      <div class="title-block">
-        <h1>IFAS</h1>
-        <p>ISELEC Fire Alarm Support</p>
-      </div>
-    </div>
-    <div class="hdr-actions">
-      <button class="hdr-btn" id="clear-btn">Nueva sesión</button>
-      <button class="hdr-btn" id="settings-btn" style="display:flex;" title="Configuración">⚙️</button>
-    </div>
-  </div>
-
-  <div id="mode-bar">
-    <div class="mode-label" id="mode-label-text">Selecciona un modo</div>
-    <div id="modes">
-      <button class="mode-btn" data-id="TROUBLESHOOTING" data-color="#FF453A" data-bg="rgba(255,69,58,0.14)">🔧 Troubleshooting</button>
-      <button class="mode-btn" data-id="REEMPLAZO_HARDWARE" data-color="#FF9F0A" data-bg="rgba(255,159,10,0.14)">🔄 Reemplazo HW</button>
-      <button class="mode-btn" data-id="EXAMEN" data-color="#0A84FF" data-bg="rgba(10,132,255,0.14)">📋 Examen</button>
-      <button class="mode-btn" data-id="DICCIONARIO" data-color="#30D158" data-bg="rgba(48,209,88,0.14)">📖 Diccionario</button>
-      <button class="mode-btn" data-id="GUIA_RAPIDA" data-color="#BF5AF2" data-bg="rgba(191,90,242,0.14)">⚡ Guía Rápida</button>
-      <button class="mode-btn" data-id="DISENO" data-color="#5AC8FA" data-bg="rgba(90,200,250,0.14)">📐 Diseño</button>
-    </div>
-  </div>
-
-  <div id="manual-bar">
-    <label>📚 Documentación</label>
-    <span id="doc-status" style="font-size:11px;color:rgba(232,232,240,0.45);">cargando…</span>
-  </div>
-
-  <div id="messages"></div>
-
-  <div id="img-preview"></div>
-
-  <div id="input-area">
-    <div id="input-wrap">
-      <input type="file" id="file-input" accept="image/*,application/pdf" multiple style="display:none"/>
-      <button class="inp-btn" id="cam-btn" title="Adjuntar fotos o PDFs (múltiples)">📎</button>
-      <button class="inp-btn" id="mic-btn" title="Dictar mensaje">🎤</button>
-      <textarea id="msg-input" placeholder="Selecciona un modo para comenzar..." rows="1"></textarea>
-      <button id="send-btn" disabled>↑</button>
-    </div>
-  </div>
-</div>
-
-<script>
-const SYSTEM_PROMPT = `# IFAS — ISELEC Fire Alarm Support
-
-## Identidad
-Eres un asistente técnico especializado en sistemas de detección y alarma de incendio: paneles Notifier serie ONYX (NFS-320, NFS2-640, NFS2-3030), VeriFire Tools, dispositivos de campo (detectores, módulos, dispositivos de notificación) y diseño/ingeniería según NFPA 72. Respondes en español técnico claro y conciso.
-
-## REGLA 1 — TRIAGE OBLIGATORIO (SOLO modos TROUBLESHOOTING y REEMPLAZO_HARDWARE)
-En esos dos modos, antes de diagnosticar necesitas: (1) modelo del panel, (2) qué cambió recientemente, (3) texto literal del error. Si falta alguno, haz máximo 3 preguntas en UN solo mensaje. Si el usuario ya dio toda la info, diagnostica directamente sin pedir más.
-
-Si el usuario dice que no hubo cambio de hardware, antes de diagnosticar pregunta: ¿Hubo corte de energía, pico de voltaje, alguien trabajó en el panel aunque no cambiara tarjetas, cambio en cableado SLC/NAC, o el problema fue gradual o repentino?
-
-Esta regla NO aplica a los modos DISENO, DICCIONARIO, GUIA_RAPIDA ni EXAMEN. En esos modos no exijas el triage de troubleshooting: responde la consulta directamente y pide solo los datos propios de ese modo si faltan.
-
-## REGLA 2 — REEMPLAZO DE HARDWARE (OBLIGATORIO cuando se mencione cambio de componente)
-Si se reemplazó CPU o tarjeta principal:
-1. Verificar compatibilidad firmware CPU con LCM/LEM instaladas
-2. VeriFire Tools → Programming → Loop Configuration → habilitar lazos con tipo correcto (LCM-320)
-3. Download completo de base de datos al panel
-4. Reiniciar panel (AC + baterías)
-5. Verificar: MAIN MENU → READ STATUS → INSTALLED MODULES → debe mostrar "INSTALLED"
-
-Si se reemplazó LCM o LEM:
-1. DIP switches: Primera LCM = Address 1 | Segunda LCM = Address 2
-2. Ribbon cable: CPU → LCM (no CPU → LEM directo). Verificar orientación pin 1
-3. Reiniciar panel (AC + baterías)
-4. Verificar: READ STATUS → VERSION → debe mostrar "LCM: X INSTALADO"
-
-Para cualquier cambio: siempre reiniciar completo (AC + baterías). Nunca manipular ribbons con panel energizado.
-
-## REGLA 3 — DIAGNÓSTICO CONTEXTUAL
-Da máximo 2 causas probables en orden de probabilidad y máximo 4 pasos con resultado esperado. No listes causas genéricas.
-
-Tabla de referencia:
-- LCM NO INSTALADO + CPU nueva → Lazos no configurados en VeriFire / falta Download
-- LCM NO INSTALADO + sin cambio → Ribbon desconectado o DIP incorrecto
-- PBL SIN EQUIPOS LAZO X + CPU nueva → Loop no habilitado + falta Download
-- PBL SIN EQUIPOS LAZO X + sin cambio → LCM no detectada físicamente
-- VERSION PANEL NO SOPORTADA (VeriFire) → Incompatibilidad versión VeriFire/firmware panel
-- GROUND FAULT → Cable SLC con contacto a tierra o chasis
-- SLC OPEN → Cable cortado o sin resistencia de fin de línea
-- PBL PROBLEMA BATERIA NRAM → Batería NVRAM descargada en CPU
-
-## REGLA 4 — ANTI-ALUCINACIÓN
-NUNCA inventes versiones de firmware o VeriFire. Si no tienes el dato: "Verifica en panel: MAIN MENU → READ STATUS → VERSION". No diagnostiques basándote solo en observaciones visuales sin evidencia del síntoma.
-
-## REGLA 5 — ANÁLISIS DE IMÁGENES
-Cuando recibas fotos: primero lista lo que observas (tarjetas visibles, texto en pantalla, LEDs, conexiones), luego diagnostica en base a esas observaciones.
-
-## REGLA 6 — FORMATO DE RESPUESTA
-Para troubleshooting:
-**Síntoma:** [texto exacto]
-**Contexto:** [cambio hw / evento / falla espontánea]
-**Causa probable:** [máx 2, ordenadas]
-**Pasos:**
-1. [Acción concreta] → Si [resultado X]: confirma causa. Si [resultado Y]: descarta, pasa al 2.
-**Referencia:** [Manual + sección si disponible]
-
-## REGLA 7 — DISEÑO Y CONSULTAS DE COBERTURA/ESPACIAMIENTO
-Para preguntas de diseño (cobertura, espaciamiento, cantidad de dispositivos, selección, ubicación):
-- El espaciamiento y la cobertura SIEMPRE provienen del listado UL / ficha técnica del dispositivo y de NFPA 72. NUNCA inventes un área de cobertura, un espaciamiento listado ni una cantidad para un modelo cuyo dato no tengas.
-- Si no tienes la ficha técnica del modelo exacto, dilo claramente y pide la ficha o el espaciamiento listado del dispositivo. No asumas un valor "típico" como si fuera el del modelo.
-- Antes de calcular cantidad o ubicación, si faltan, pregunta SOLO lo necesario para diseño: altura del techo, tipo de techo (liso / con vigas / con viguetas), dimensiones del área y si hay alto movimiento de aire (HVAC).
-- Muestra el razonamiento y los supuestos. El espaciamiento listado nominal de detectores de humo puntuales en techo liso suele ser 9.1 m (30 ft); aplica las reducciones de NFPA 72 por altura de techo, construcción del techo y movimiento de aire. Aclara que el espaciamiento es una guía y que el diseño final lo valida el ingeniero responsable bajo el código vigente.
-- Cita la fuente cuando esté disponible: ficha técnica del modelo y/o cláusula de NFPA 72.
-
-## REFERENCIA DE HARDWARE VERIFICADA (Manual NOCM-1116)
-NFS2-3030 por cantidad de lazos: 2L=1LCM+1LEM | 4L=2LCM+2LEM | 6L=3LCM+3LEM | 8L=4LCM+4LEM | 10L=5LCM+5LEM
-LCM-320 = Loop Control Module (conecta al CHS-M3) | LEM-320 = Loop Expander Module
-CPU: CPU2-3030D (con display) | Fuente: AMPS-24
-
-## MODOS DE OPERACIÓN
-TROUBLESHOOTING: Aplica Reglas 1-6. Diagnóstico contextual y conciso.
-REEMPLAZO_HARDWARE: Aplica Regla 2 obligatoriamente. Incluye verificación física + programación VeriFire + validación post-intervención.
-EXAMEN: Formula preguntas del banco de conocimiento ONYX una a la vez. No des la respuesta antes de que el usuario responda. Evalúa, da retroalimentación con referencia al manual y muestra puntaje acumulado.
-DICCIONARIO: Definición técnica + aplicación práctica + referencia manual. Máximo 5 líneas por término.
-GUIA_RAPIDA: Solo tablas con valores, límites y parámetros. Sin explicaciones largas.
-DISENO: Consultas abiertas de ingeniería y diseño (cobertura, espaciamiento, cantidad/ubicación de dispositivos, selección y compatibilidad de equipos). Aplica Regla 7. No exijas el triage de troubleshooting. Fundamenta en ficha técnica del dispositivo + NFPA 72 y nunca inventes valores de cobertura o espaciamiento.`;
-
-const MODE_CONFIG = {
-  TROUBLESHOOTING:{color:"#FF453A",bg:"rgba(255,69,58,0.14)",label:"Troubleshooting",starter:"Modo Troubleshooting activo.\n\nDescribe el problema: modelo del panel, qué cambió recientemente y el texto exacto del error o trouble que muestra."},
-  REEMPLAZO_HARDWARE:{color:"#FF9F0A",bg:"rgba(255,159,10,0.14)",label:"Reemplazo HW",starter:"Modo Reemplazo de Hardware activo.\n\nIndica qué componente fue reemplazado (CPU, LCM, LEM, fuente, etc.) y el modelo del panel. Te guío paso a paso incluyendo la reprogramación en VeriFire."},
-  EXAMEN:{color:"#0A84FF",bg:"rgba(10,132,255,0.14)",label:"Examen",starter:"Modo Examen activo.\n\n¿Sobre qué modelo o tema quieres ser evaluado?\n\n• NFS-320\n• NFS2-640\n• NFS2-3030\n• VeriFire Tools\n• Operación y mantenimiento"},
-  DICCIONARIO:{color:"#30D158",bg:"rgba(48,209,88,0.14)",label:"Diccionario",starter:"Modo Diccionario activo.\n\n¿Qué término o función quieres consultar? (ej: Alarm Verification, Drift Compensation, Walk Test, SLC, NAC, LCM, etc.)"},
-  GUIA_RAPIDA:{color:"#BF5AF2",bg:"rgba(191,90,242,0.14)",label:"Guía Rápida",starter:"Modo Guía Rápida activo.\n\n¿Qué parámetros necesitas?\n\n• Corrientes por dispositivo\n• Resistencias de fin de línea\n• Capacidades por lazo/panel\n• Límites de cableado SLC\n• Otro — especifica"},
-  DISENO:{color:"#5AC8FA",bg:"rgba(90,200,250,0.14)",label:"Diseño",starter:"Modo Diseño activo.\n\nConsulta abierta de ingeniería: cobertura/espaciamiento de detectores, cantidad de dispositivos para un área, selección o compatibilidad de equipos.\n\nPara cálculos de cobertura ten a mano: modelo exacto del dispositivo, altura y tipo de techo (liso / con vigas / con viguetas) y dimensiones del área. IFAS consulta la documentación automáticamente; si quieres, también puedes adjuntar la ficha técnica como foto o PDF."}
-};
-
-// ── STATE ──
-let apiKey = localStorage.getItem('ifas_api_key') || '';
-let modelId = localStorage.getItem('ifas_model') || 'claude-sonnet-4-6';
-let activeMode = null;
-let messages = [];
-let pendingImages = [];
-let isLoading = false;
-// Indice de busqueda BM25 (se carga desde ifas_index.json)
-let docIndex = [];      // [{id,cat,doc,page,text,tokens,len}]
-let bm25 = null;        // {df, avgdl, N}
-let indexReady = false;
-const TOP_K = 8;        // fragmentos a inyectar por consulta
-
-// ── ELEMENTS ──
-const setupScreen = document.getElementById('setup-screen');
-const appEl = document.getElementById('app');
-const apiKeyInput = document.getElementById('api-key-input');
-const modelInput = document.getElementById('model-input');
-const startBtn = document.getElementById('start-btn');
-const setupError = document.getElementById('setup-error');
-const messagesEl = document.getElementById('messages');
-const inputEl = document.getElementById('msg-input');
-const sendBtn = document.getElementById('send-btn');
-const clearBtn = document.getElementById('clear-btn');
-const settingsBtn = document.getElementById('settings-btn');
-const imgPreview = document.getElementById('img-preview');
-const fileInput = document.getElementById('file-input');
-const modeLabelText = document.getElementById('mode-label-text');
-const docStatus = document.getElementById('doc-status');
-
-// ── SETUP SCREEN ──
-function showApp(){
-  setupScreen.style.display='none';
-  appEl.style.display='flex';
-  render();
-}
-
-function showSetup(prefill){
-  setupScreen.style.display='flex';
-  appEl.style.display='none';
-  apiKeyInput.value = prefill ? '••••••••••••' : '';
-  modelInput.value = modelId;
-  updateChips(modelId);
-  validateSetup();
-  setupError.style.display='none';
-}
-
-function validateSetup(){
-  const key = apiKeyInput.value.trim();
-  const hasKey = key.length > 20 || key === '••••••••••••';
-  startBtn.disabled = !hasKey;
-}
-
-apiKeyInput.addEventListener('input',()=>{ setupError.style.display='none'; validateSetup(); });
-modelInput.addEventListener('input',()=>{ updateChips(modelInput.value.trim()); });
-
-document.querySelectorAll('.chip').forEach(c=>{
-  c.addEventListener('click',()=>{
-    modelInput.value = c.dataset.model;
-    updateChips(c.dataset.model);
-  });
-});
-
-function updateChips(val){
-  document.querySelectorAll('.chip').forEach(c=>{
-    c.classList.toggle('active', c.dataset.model === val);
-  });
-}
-
-startBtn.addEventListener('click',()=>{
-  const keyVal = apiKeyInput.value.trim();
-  const modelVal = modelInput.value.trim() || 'claude-sonnet-4-6';
-
-  if(keyVal !== '••••••••••••'){
-    if(!keyVal.startsWith('sk-')){setupError.style.display='block';return;}
-    apiKey = keyVal;
-    localStorage.setItem('ifas_api_key', apiKey);
-  }
-  modelId = modelVal;
-  localStorage.setItem('ifas_model', modelId);
-
-  showApp();
-});
-
-settingsBtn.addEventListener('click',()=>{ showSetup(true); });
-
-clearBtn.addEventListener('click',()=>{
-  messages=[];activeMode=null;pendingImages=[];
-  renderPreview();
-  inputEl.value='';inputEl.style.height='auto';
-  clearBtn.style.display='none';
-  modeLabelText.textContent='Selecciona un modo';
-  document.querySelectorAll('.mode-btn').forEach(b=>{b.classList.remove('active');b.style.background='';b.style.borderColor='';b.style.color='';});
-  inputEl.placeholder='Selecciona un modo para comenzar...';
-  render();updateSendBtn();
-});
-
-if(apiKey){ showApp(); } else { showSetup(false); }
-
-// ── INPUT ──
-function updateSendBtn(){
-  const cfg = activeMode ? MODE_CONFIG[activeMode] : null;
-  sendBtn.style.background = cfg ? cfg.color : '#FF453A';
-  sendBtn.disabled = isLoading || (!inputEl.value.trim() && pendingImages.length===0);
-}
-
-inputEl.addEventListener('input',()=>{
-  inputEl.style.height='auto';
-  inputEl.style.height=Math.min(inputEl.scrollHeight,90)+'px';
-  updateSendBtn();
-});
-inputEl.addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();} });
-sendBtn.addEventListener('click', send);
-
-// ── FILE HANDLING ──
-document.getElementById('cam-btn').addEventListener('click',()=>fileInput.click());
-
-fileInput.addEventListener('change',e=>{
-  const files = Array.from(e.target.files);
-  if(!files.length) return;
-  files.forEach(file=>{
-    const reader = new FileReader();
-    reader.onload = ()=>{
-      pendingImages.push({
-        dataUrl: reader.result,
-        type: file.type,
-        data: reader.result.split(',')[1],
-        isPdf: file.type==='application/pdf',
-        name: file.name
-      });
-      renderPreview();
-      updateSendBtn();
-    };
-    reader.readAsDataURL(file);
-  });
-  e.target.value='';
-});
-
-document.addEventListener('paste',e=>{
-  const items = e.clipboardData?.items;
-  if(!items) return;
-  for(const item of items){
-    if(item.type.startsWith('image/')){
-      const file = item.getAsFile();
-      const reader = new FileReader();
-      reader.onload=()=>{
-        pendingImages.push({dataUrl:reader.result,type:item.type,data:reader.result.split(',')[1],isPdf:false,name:'imagen'});
-        renderPreview();updateSendBtn();
-      };
-      reader.readAsDataURL(file);
-      break;
-    }
-  }
-});
-
-function renderPreview(){
-  if(pendingImages.length===0){imgPreview.style.display='none';imgPreview.innerHTML='';return;}
-  imgPreview.style.display='flex';
-  imgPreview.innerHTML = pendingImages.map((img,i)=>`
-    <div class="thumb-item">
-      ${img.isPdf
-        ? `<div class="pdf-thumb">📄</div><div class="pdf-name">${img.name}</div>`
-        : `<img src="${img.dataUrl}" alt="img"/>`}
-      <button class="thumb-rm" onclick="removeImg(${i})">×</button>
-    </div>`).join('') +
-    `<span style="font-size:11px;color:rgba(232,232,240,0.35);align-self:center;">${pendingImages.length} archivo${pendingImages.length>1?'s':''}</span>`;
-}
-
-window.removeImg = function(i){
-  pendingImages.splice(i,1);
-  renderPreview();updateSendBtn();
-};
-
-// ── VOICE ──
-const micBtn = document.getElementById('mic-btn');
-const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
-if(!SR){ micBtn.style.display='none'; }
-else {
-  const rec = new SR();
-  rec.lang='es-419';rec.continuous=false;rec.interimResults=false;
-  let listening=false;
-  rec.onresult=e=>{ inputEl.value=(inputEl.value+' '+e.results[0][0].transcript).trim();inputEl.style.height='auto';inputEl.style.height=Math.min(inputEl.scrollHeight,90)+'px';updateSendBtn(); };
-  rec.onend=()=>{ listening=false;micBtn.classList.remove('listening');micBtn.textContent='🎤'; };
-  rec.onerror=()=>{ listening=false;micBtn.classList.remove('listening');micBtn.textContent='🎤'; };
-  micBtn.addEventListener('click',()=>{
-    if(listening){rec.stop();}
-    else{rec.start();listening=true;micBtn.classList.add('listening');micBtn.textContent='⏹';}
-  });
-}
-
-// ── MODE SELECTION ──
-document.querySelectorAll('.mode-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>selectMode(btn.dataset.id));
-});
-
-function selectMode(id){
-  activeMode=id;
-  const cfg=MODE_CONFIG[id];
-  messages=[{role:'assistant',display:cfg.starter,content:cfg.starter}];
-  document.querySelectorAll('.mode-btn').forEach(b=>{
-    const bc=MODE_CONFIG[b.dataset.id];
-    if(b.dataset.id===id){b.classList.add('active');b.style.background=bc.bg;b.style.borderColor=bc.color;b.style.color=bc.color;}
-    else{b.classList.remove('active');b.style.background='';b.style.borderColor='';b.style.color='';}
-  });
-  modeLabelText.textContent = 'Modo activo: ' + cfg.label;
-  inputEl.placeholder='Escribe tu consulta...';
-  clearBtn.style.display='block';
-  render();inputEl.focus();updateSendBtn();
-}
-
-// ── RENDER ──
-function md(text){
-  return text
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
-    .replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')
-    .replace(/`([^`\n]+)`/g,'<code>$1</code>')
-    .replace(/\n/g,'<br/>');
-}
-
-function render(){
-  if(messages.length===0){
-    messagesEl.innerHTML='<div class="empty-state"><div class="e-icon">🔥</div><p>Selecciona un modo para comenzar.<br/>Puedes adjuntar múltiples fotos y PDFs.</p></div>';
-    return;
-  }
-  let html='';
-  messages.forEach(m=>{
-    const cfg=activeMode?MODE_CONFIG[activeMode]:null;
-    if(m.role==='user'){
-      const accent=cfg?cfg.color:'rgba(232,232,240,0.85)';
-      const border=cfg?cfg.color+'35':'rgba(255,255,255,0.1)';
-      const imgs = m.images||[];
-      const imgHtml = imgs.length ? `<div class="bubble-imgs">${imgs.filter(i=>!i.isPdf).map(i=>`<img src="${i.dataUrl}" alt=""/>`).join('')}${imgs.filter(i=>i.isPdf).map(i=>`<div style="font-size:12px;color:rgba(232,232,240,0.5);">📄 ${i.name}</div>`).join('')}</div>` : '';
-      html+=`<div class="bubble-row user"><div class="bubble user-b" style="border-color:${border};color:${accent};">${imgHtml}${m.display?md(m.display):''}</div></div>`;
-    } else {
-      const srcHtml = (m.sources && m.sources.length)
-        ? `<div class="src-note">📚 ${[...new Set(m.sources.map(s=>s.doc+' · pág. '+s.page))].slice(0,5).join('   ·   ')}</div>`
-        : '';
-      html+=`<div class="bubble-row assistant"><div class="bot-avatar">🔥</div><div style="max-width:83%;"><div class="bubble bot-b" style="max-width:100%;">${md(m.display)}</div>${srcHtml}</div></div>`;
-    }
-  });
-  if(isLoading){
-    html+=`<div class="typing-row"><div class="bot-avatar">🔥</div><div class="typing-bubble"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>`;
-  }
-  messagesEl.innerHTML=html;
-  messagesEl.scrollTop=messagesEl.scrollHeight;
-}
-
-// ── ÍNDICE DE BÚSQUEDA (BM25) ──
-const STOP = new Set("de la el en y a los las un una con para por del al es se su lo como mas o un".split(" "));
-
-function tokenize(s){
-  return (s.toLowerCase()
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')   // quita acentos
-    .match(/[a-z0-9]+/g) || [])
-    .filter(t => t.length > 1 && !STOP.has(t));
-}
-
-async function loadIndex(){
-  try{
-    const res = await fetch('ifas_index.json', {cache:'force-cache'});
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const data = await res.json();
-    const df = {}; let totalLen = 0;
-    docIndex = (data.items||[]).map(it=>{
-      const toks = tokenize(it.text);
-      const tf = {};
-      toks.forEach(t=>{ tf[t]=(tf[t]||0)+1; });
-      for(const t in tf) df[t]=(df[t]||0)+1;
-      totalLen += toks.length;
-      return {id:it.id, cat:it.cat, doc:it.doc, page:it.page, text:it.text, tf, len:toks.length,
-              nameTokens: tokenize(it.doc)};
-    });
-    bm25 = { df, N: docIndex.length, avgdl: totalLen/(docIndex.length||1) };
-    indexReady = docIndex.length > 0;
-    docStatus.textContent = indexReady
-      ? `${docIndex.length.toLocaleString('es')} fragmentos listos`
-      : 'sin documentación';
-    docStatus.style.color = indexReady ? 'rgba(48,209,88,0.8)' : 'rgba(255,159,10,0.8)';
-  }catch(e){
-    indexReady = false;
-    docStatus.textContent = 'no disponible (revisa ifas_index.json)';
-    docStatus.style.color = 'rgba(255,159,10,0.8)';
-  }
-}
-
-function retrieve(query, k){
-  if(!indexReady) return [];
-  const q = tokenize(query);
-  if(!q.length) return [];
-  const k1 = 1.5, b = 0.75;
-  const idf = {};
-  q.forEach(t=>{
-    const n = bm25.df[t]||0;
-    idf[t] = Math.log(1 + (bm25.N - n + 0.5)/(n + 0.5));
-  });
-  const scored = [];
-  for(const d of docIndex){
-    let s = 0;
-    for(const t in idf){
-      const f = d.tf[t];
-      if(!f) continue;
-      s += idf[t] * (f*(k1+1))/(f + k1*(1 - b + b*d.len/bm25.avgdl));
-    }
-    // refuerzo si el NOMBRE del documento coincide con la consulta (modelos/códigos: FSP-851, NFS2-3030…)
-    let nameBonus = 0;
-    for(const t of d.nameTokens){ if(idf[t]!==undefined) nameBonus += idf[t]; }
-    s += nameBonus * 2.5;
-    if(s>0) scored.push([s,d]);
-  }
-  scored.sort((a,b)=>b[0]-a[0]);
-  return scored.slice(0,k).map(x=>x[1]);
-}
-
-// ── BUILD API MESSAGES ──
-function buildApiMessages(msgs){
-  return msgs.map(m => ({ role: m.role, content: m.role === 'user' ? m.content : m.display }));
-}
-
-loadIndex();
-
-// ── SEND ──
-async function send(){
-  if(isLoading||(!inputEl.value.trim()&&pendingImages.length===0)) return;
-  const text=inputEl.value.trim();
-  const imgs=[...pendingImages];
-
-  const userContent=[];
-  imgs.forEach(img=>{
-    if(img.isPdf) userContent.push({type:'document',source:{type:'base64',media_type:'application/pdf',data:img.data}});
-    else userContent.push({type:'image',source:{type:'base64',media_type:img.type,data:img.data}});
-  });
-  const msgText=activeMode?`[Modo activo: ${activeMode}]\n${text}`:text;
-  if(text) userContent.push({type:'text',text:msgText});
-  else if(activeMode) userContent.push({type:'text',text:`[Modo activo: ${activeMode}]`});
-
-  const userMsg={role:'user',display:text,images:imgs,content:userContent};
-  messages.push(userMsg);
-  inputEl.value='';inputEl.style.height='auto';
-  pendingImages=[];renderPreview();
-  isLoading=true;updateSendBtn();render();
-
-  // ── RECUPERACIÓN BM25: busca fragmentos relevantes e inyéctalos como contexto ──
-  const hits = text ? retrieve(text, TOP_K) : [];
-  const apiMessages = buildApiMessages(messages);
-  if(hits.length){
-    const ctx = 'FRAGMENTOS DE LA DOCUMENTACIÓN OFICIAL (úsalos como referencia y cita documento y página cuando los uses):\n\n'
-      + hits.map(h=>`[${h.cat} · ${h.doc} · pág. ${h.page}]\n${h.text}`).join('\n\n---\n\n');
-    const last = apiMessages[apiMessages.length-1];
-    const body = Array.isArray(last.content) ? last.content : [{type:'text',text:last.content}];
-    last.content = [{type:'text', text: ctx}, ...body];   // solo para esta llamada, no se guarda
-  }
-
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:modelId,
-        max_tokens:1024,
-        system:[{type:'text',text:SYSTEM_PROMPT,cache_control:{type:'ephemeral'}}],
-        messages:apiMessages
-      })
-    });
-    if(res.status===401){
-      messages.push({role:'assistant',display:'⚠️ API key inválida. Toca ⚙️ para actualizarla.',content:'Error.'});
-    } else if(!res.ok){
-      let detail='';
-      try{const err=await res.json();detail=err.error?.message||'';}catch(e){}
-      messages.push({role:'assistant',display:`⚠️ Error ${res.status}${detail?': '+detail:''}. Toca ⚙️ para verificar modelo y API key.`,content:'Error.'});
-    } else {
-      const data=await res.json();
-      const reply=data.content?.find(b=>b.type==='text')?.text||'Sin respuesta del servidor.';
-      const sources = hits.map(h=>({doc:h.doc, page:h.page}));
-      messages.push({role:'assistant',display:reply,content:reply,sources});
-    }
-  } catch(e){
-    messages.push({role:'assistant',display:'⚠️ Error de conexión. Verifica tu internet e intenta nuevamente.',content:'Error.'});
-  }
-  isLoading=false;updateSendBtn();render();
-}
-</script>
-</body>
-</html>
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+build_index.py  —  Construye el indice de busqueda (BM25) para IFAS.
+
+Lee los PDFs de las carpetas configuradas (OneDrive sincronizado), extrae el
+texto pagina por pagina, lo parte en fragmentos con metadata (categoria,
+documento, pagina) y escribe un unico archivo 'ifas_index.json' que subes al
+repo 'ifas_help' (junto a index.html).
+
+La busqueda es lexica (BM25) y ocurre en el navegador: NO usa embeddings, NO
+necesita API key, NO tiene limites de tasa y corre en segundos.
+
+Requisitos:
+    pip install -U pypdf cryptography
+
+Uso:
+    python build_index.py          (genera el indice)
+    python build_index.py --dry    (solo diagnostico: cuenta y categorias)
+"""
+
+import os
+import re
+import json
+import sys
+from pypdf import PdfReader
+
+# ─────────────────────────── CONFIG ───────────────────────────
+CHUNK_CHARS    = 1800           # ~tamano de cada fragmento
+CHUNK_OVERLAP  = 320            # solapamiento entre fragmentos
+OUT_FILE       = "ifas_index.json"
+
+# Tope de paginas por documento (0 = sin tope). Recorta los manuales gigantes
+# para que el indice no se vuelva enorme. Los datasheets (cortos) no se afectan.
+MAX_PAGES_PER_DOC = 80
+
+# Ajusta esta base a tu ruta local de OneDrive
+BASE = r"C:\Users\Jesus\OneDrive - ISELEC"
+
+# (carpeta_raiz, categoria_fija)  -> si categoria_fija es None, se usa la
+# primera subcarpeta debajo de la raiz como categoria.
+SOURCES = [
+    (os.path.join(BASE, r"PRODUCTOS\NOTIFIER\DOCUMENTACION NOTIFIER ONYX UNIVERSITY"), None),
+    (os.path.join(BASE, r"PRODUCTOS\NOTIFIER\PRESENTACIONES"), "PRESENTACIONES"),
+    # NFPA 72 excluido del indice publico por derechos de autor (las reglas
+    # generales de diseno viven directamente en la REGLA 7 del system prompt).
+    # (os.path.join(BASE, r"NFPA\NFPA 72 curso"), "NFPA72"),
+]
+
+# Documentos a excluir (consolidados gigantes, duplicados o con derechos de autor).
+# Substring del nombre de archivo, en mayusculas.
+# ALL_DETECTORS duplica las fichas individuales de los detectores (que si se indexan).
+# MP72/NFPA 72 se excluyen por derechos de autor (ver REGLA 7 del system prompt).
+EXCLUDE = ["ALL_DOCS_NOTIFIER", "PRESENTACION CONSOLIDADA", "ALL_DETECTORS",
+           "MP72", "NFPA 72", "NFPA72", "NFPA-72"]
+
+
+# ─────────────────────── EXTRACCION / CHUNKING ───────────────────────
+def category_for(root, path, fixed):
+    if fixed:
+        return fixed
+    root_name = os.path.basename(root.rstrip("\\/")).lower()
+    parts = os.path.relpath(path, root).split(os.sep)[:-1]  # carpetas, sin el archivo
+    # saltar carpetas anidadas que repiten el nombre de la raiz (estructura duplicada)
+    while parts and parts[0].lower() == root_name:
+        parts.pop(0)
+    return parts[0] if parts else "GENERAL"
+
+
+def clean(text):
+    text = text.replace("\x00", " ")
+    text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
+def chunk_page(text):
+    """Parte el texto de una pagina en fragmentos con solapamiento."""
+    text = clean(text)
+    if len(text) <= CHUNK_CHARS:
+        return [text] if text else []
+    chunks, start = [], 0
+    while start < len(text):
+        end = start + CHUNK_CHARS
+        if end < len(text):
+            sp = text.rfind(" ", start + CHUNK_CHARS - 200, end)
+            if sp > start:
+                end = sp
+        piece = text[start:end].strip()
+        if piece:
+            chunks.append(piece)
+        start = end - CHUNK_OVERLAP
+        if start < 0:
+            start = 0
+    return chunks
+
+
+def iter_chunks():
+    """Genera (categoria, documento, pagina, texto) para todo el corpus."""
+    for root, fixed in SOURCES:
+        if not os.path.isdir(root):
+            print(f"  [AVISO] No existe la carpeta: {root}", file=sys.stderr)
+            continue
+        for dirpath, _, files in os.walk(root):
+            for fn in sorted(files):
+                if not fn.lower().endswith(".pdf"):
+                    continue
+                if any(x in fn.upper() for x in EXCLUDE):
+                    continue
+                full = os.path.join(dirpath, fn)
+                cat = category_for(root, full, fixed)
+                doc = os.path.splitext(fn)[0]
+                try:
+                    reader = PdfReader(full)
+                    if reader.is_encrypted:
+                        try:
+                            reader.decrypt("")
+                        except Exception:
+                            pass
+                    n_pages = len(reader.pages)
+                except Exception as e:
+                    print(f"  [SALTADO] {fn}: {e}", file=sys.stderr)
+                    continue
+                if MAX_PAGES_PER_DOC:
+                    n_pages = min(n_pages, MAX_PAGES_PER_DOC)
+                for pno in range(1, n_pages + 1):
+                    try:
+                        txt = reader.pages[pno - 1].extract_text() or ""
+                    except Exception:
+                        continue
+                    for piece in chunk_page(txt):
+                        yield cat, doc, pno, piece
+
+
+def main():
+    dry = "--dry" in sys.argv
+
+    print("Extrayendo y fragmentando PDFs...")
+    records = list(iter_chunks())
+    print(f"  {len(records)} fragmentos en total.")
+    if not records:
+        print("No se encontraron fragmentos. Revisa las rutas en SOURCES.", file=sys.stderr)
+        sys.exit(1)
+
+    # ── Desglose ──
+    cats_d, docs_d, total_chars = {}, {}, 0
+    for cat, doc, _pno, txt in records:
+        cats_d[cat] = cats_d.get(cat, 0) + 1
+        docs_d[(cat, doc)] = docs_d.get((cat, doc), 0) + 1
+        total_chars += len(txt)
+    print("\nFragmentos por categoria:")
+    for c in sorted(cats_d, key=lambda k: -cats_d[k]):
+        print(f"  {c:34s} {cats_d[c]}")
+    print(f"\nTamano estimado del index.json: ~{(total_chars + len(records) * 60) / 1e6:.1f} MB")
+
+    if dry:
+        print("\n(Modo --dry: solo diagnostico, no se escribio el indice.)")
+        return
+
+    items = [{"id": i, "cat": c, "doc": d, "page": p, "text": t}
+             for i, (c, d, p, t) in enumerate(records)]
+    index = {"count": len(items), "items": items}
+    with open(OUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(index, f, ensure_ascii=False)
+
+    size_mb = os.path.getsize(OUT_FILE) / 1e6
+    print(f"\nListo: {OUT_FILE}  ({len(items)} fragmentos, {size_mb:.1f} MB)")
+    print("Subelo al repo 'ifas_help' junto a index.html.")
+
+
+if __name__ == "__main__":
+    main()
