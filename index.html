@@ -169,6 +169,34 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 #battery-panel .bp-ai{font-size:14px;line-height:1.6;white-space:pre-wrap;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:13px;margin-top:12px;}
 #battery-panel .bp-spin{width:14px;height:14px;border:2px solid rgba(0,0,0,0.3);border-top-color:#08080F;border-radius:50%;display:inline-block;animation:bpsp .6s linear infinite;}
 @keyframes bpsp{to{transform:rotate(360deg)}}
+
+/* ════ HOJA DE IMPRESIÓN — MEMORIA DE CÁLCULO ════ */
+#bp-print{display:none;}
+@media print{
+  @page{margin:14mm;}
+  html,body{height:auto!important;overflow:visible!important;background:#fff!important;}
+  #app,#keyModal,.toast{display:none!important;}
+  #bp-print{display:block!important;color:#000;font-family:'DM Sans',Arial,sans-serif;font-size:12px;line-height:1.5;}
+  #bp-print *{color:#000!important;}
+  #bp-print .ph{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:14px;}
+  #bp-print .ph .co{font-size:20px;font-weight:700;letter-spacing:.02em;}
+  #bp-print .ph .ti{font-size:12px;text-align:right;}
+  #bp-print h2{font-size:14px;margin:16px 0 7px;border-bottom:1px solid #999;padding-bottom:3px;}
+  #bp-print table{width:100%;border-collapse:collapse;margin:4px 0;}
+  #bp-print td,#bp-print th{border:1px solid #bbb;padding:5px 7px;text-align:left;vertical-align:top;}
+  #bp-print th{background:#eee;font-weight:600;}
+  #bp-print td.r,#bp-print th.r{text-align:right;font-variant-numeric:tabular-nums;}
+  #bp-print .meta{display:grid;grid-template-columns:1fr 1fr;gap:2px 18px;}
+  #bp-print .meta div{padding:2px 0;border-bottom:1px dotted #ccc;}
+  #bp-print .meta b{display:inline-block;min-width:104px;}
+  #bp-print .req{font-size:15px;font-weight:700;}
+  #bp-print .bat{font-size:14px;font-weight:700;margin:6px 0;}
+  #bp-print .chk{margin:2px 0;}
+  #bp-print .sign{display:flex;gap:40px;margin-top:34px;}
+  #bp-print .sign div{flex:1;border-top:1px solid #000;padding-top:4px;font-size:11px;}
+  #bp-print .ft{margin-top:18px;border-top:1px solid #999;padding-top:6px;font-size:9.5px;color:#444!important;}
+  #bp-print .ft *{color:#444!important;}
+}
 </style>
 </head>
 <body>
@@ -277,6 +305,18 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
       <div class="bp-note">Por defecto 24 h + 5 min, derating 1.2 (20 %). Ajusta solo si el AHJ lo exige.</div>
     </div>
 
+    <div class="bp-card">
+      <div class="bp-h"><span class="bp-n">5</span><h3>Datos del proyecto</h3><span class="bp-hint">para la impresión</span></div>
+      <div class="field"><label class="bp-lbl">Proyecto / Premisa protegida</label>
+        <input type="text" id="bp-pjProy" class="bp-input" placeholder="Ej. Torre Empresarial, Piso 5"></div>
+      <div class="field" style="margin-top:10px"><label class="bp-lbl">Dirección</label>
+        <input type="text" id="bp-pjDir" class="bp-input" placeholder="Ciudad / sector"></div>
+      <div class="bp-row" style="margin-top:10px">
+        <div><label class="bp-lbl">Preparado por</label><input type="text" id="bp-pjBy" class="bp-input" placeholder="Técnico ISELEC"></div>
+        <div><label class="bp-lbl">Fecha</label><input type="date" id="bp-pjDate" class="bp-input"></div>
+      </div>
+    </div>
+
     <div class="bp-card" id="bp-resultCard" style="display:none">
       <div class="bp-h"><span class="bp-n ok">✓</span><h3>Resultado</h3><span class="bp-hint">cálculo determinístico</span></div>
       <div class="bp-readout">
@@ -293,7 +333,10 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
         <span><i style="background:#F5A623"></i>Standby</span><span><i style="background:#FF453A"></i>Alarma</span><span><i style="background:#2F81F7"></i>Reserva</span>
       </div>
       <div id="bp-checks" style="margin-top:14px"></div>
-      <button class="bp-btn ghost" style="margin-top:14px" onclick="BAT.explain()" id="bp-aiBtn">🤖 Explicar este resultado</button>
+      <div class="bp-row" style="margin-top:14px">
+        <button class="bp-btn ghost" onclick="BAT.print()" id="bp-printBtn">🖨️ Imprimir / PDF</button>
+        <button class="bp-btn ghost" onclick="BAT.explain()" id="bp-aiBtn">🤖 Explicar</button>
+      </div>
       <div id="bp-aiBox" class="bp-ai" style="display:none"></div>
     </div>
 
@@ -813,25 +856,21 @@ async function send(){
 // de HPFF8.xls (Battery Calc 3.0); el resto, "por confirmar".
 // ════════════════════════════════════════════════════════════
 const BAT = (function(){
-  const FUENTES = {
-    HPFF8:{nombre:"HPFF8 — Fuente booster 8 A",verificado:true,placaStandby:0.075,placaAlarma:0.206,
-      nacs:4,nacMax:3.0,tb4Max:2.0,salidaMax:8.0,cargadorMin:7,cargadorMax:26,fuente_datos:"HPFF8.xls"},
-    HPFF12:{nombre:"HPFF12 — Fuente booster 12 A",verificado:false,placaStandby:null,placaAlarma:null,
-      nacs:4,nacMax:3.0,tb4Max:2.0,salidaMax:12.0,cargadorMin:7,cargadorMax:26,fuente_datos:"subir HPFF12.xls"},
-    NFS320:{nombre:"NFS-320 — fuente onboard",verificado:false,placaStandby:null,placaAlarma:null,
-      nacs:4,nacMax:3.0,tb4Max:null,salidaMax:null,cargadorMin:7,cargadorMax:26,fuente_datos:"datasheet NFS-320"},
-    NFS2640:{nombre:"NFS2-640 — fuente onboard",verificado:false,placaStandby:null,placaAlarma:null,
-      nacs:4,nacMax:3.0,tb4Max:null,salidaMax:null,cargadorMin:7,cargadorMax:26,fuente_datos:"datasheet NFS2-640"},
-    NFS23030:{nombre:"NFS2-3030 — fuente onboard",verificado:false,placaStandby:null,placaAlarma:null,
-      nacs:4,nacMax:3.0,tb4Max:null,salidaMax:null,cargadorMin:7,cargadorMax:26,fuente_datos:"datasheet NFS2-3030"}
-  };
-  const BATERIAS = [
-    {pn:"BAT-1270",ah:7},{pn:"BAT-12120",ah:12},{pn:"BAT-12180",ah:18},
-    {pn:"BAT-12260",ah:26},{pn:"BAT-12550",ah:55},{pn:"BAT-121000",ah:100}
-  ];
+  // Datos de fuentes y baterias externalizados en fuentes.json (verificados de fabricante).
+  // Agregar/editar una fuente = editar fuentes.json, sin tocar este index.html.
+  let FUENTES={}, BATERIAS=[], fuentesLoaded=false;
   let DEVICES=[], cargasNAC=[], cargasAux=[], ultimo=null, started=false, libLoaded=false;
   const $=id=>document.getElementById(id);
   const fmt=(n,d=3)=>Number(n).toFixed(d);
+
+  async function loadFuentes(){
+    if(fuentesLoaded) return;
+    try{
+      const r=await fetch('fuentes.json',{cache:'force-cache'});
+      if(!r.ok) throw 0;
+      const j=await r.json(); FUENTES=j.fuentes||{}; BATERIAS=j.baterias||[]; fuentesLoaded=true;
+    }catch(e){ toast('No se cargó fuentes.json (revisa que esté en la misma carpeta).'); }
+  }
 
   async function loadLibrary(){
     if(libLoaded) return;
@@ -842,24 +881,30 @@ const BAT = (function(){
     }catch(e){ toast('No se cargó la librería (revisa ifas_device_library.json).'); }
   }
 
-  function init(){
-    if(!started){
+  async function init(){
+    await loadFuentes();
+    if(!started && Object.keys(FUENTES).length){
       const sel=$('bp-source');
       sel.innerHTML=Object.entries(FUENTES).map(([k,v])=>`<option value="${k}">${v.nombre}${v.verificado?'':' ⚠'}</option>`).join('');
       onSource(); renderNAC(); started=true;
+      const dt=$('bp-pjDate'); if(dt&&!dt.value) dt.value=new Date().toISOString().slice(0,10);
       document.addEventListener('click',e=>{ if(!e.target.closest('.bp-search')) $('bp-devResults').style.display='none'; });
     }
     loadLibrary();
   }
 
   function onSource(){
-    const f=FUENTES[$('bp-source').value], badge=$('bp-srcBadge'), specs=$('bp-srcSpecs');
+    const f=FUENTES[$('bp-source').value]; if(!f) return;
+    const badge=$('bp-srcBadge'), specs=$('bp-srcSpecs');
     badge.className='bp-badge '+(f.verificado?'ok':'warn');
     badge.textContent=f.verificado?'✓ verificado':'⚠ por confirmar';
-    specs.innerHTML=f.verificado
-      ? `<span>Placa: ${f.placaStandby} sb / ${f.placaAlarma} al</span><span>NAC: ${f.nacs}× ${f.nacMax} A</span>`+
-        (f.tb4Max?`<span>TB4: ${f.tb4Max} A</span>`:'')+`<span>Cargador: ${f.cargadorMin}–${f.cargadorMax} AH</span>`
-      : `<span style="color:rgba(232,232,240,0.45)">Faltan datos — ${f.fuente_datos}. Cálculo bloqueado hasta confirmar.</span>`;
+    specs.innerHTML=
+      `<span>Placa: ${f.placaStandby} sb / ${f.placaAlarma} al</span>`+
+      `<span>NAC: ${f.nacs}× ${f.nacMax!=null?f.nacMax+' A':'—'}</span>`+
+      (f.perNacAdder?`<span>+${f.perNacAdder} A/NAC</span>`:'')+
+      (f.tb4Max?`<span>TB4: ${f.tb4Max} A</span>`:'')+
+      `<span>Cargador: ${f.cargadorMin}–${f.cargadorMax} AH</span>`+
+      (f.nota?`<div class="bp-note" style="width:100%;margin:6px 0 0">${f.nota}</div>`:'');
     renderNAC();
   }
 
@@ -910,21 +955,32 @@ const BAT = (function(){
   // ── CÁLCULO DETERMINÍSTICO (fuente de verdad) ──
   function calc(){
     const f=FUENTES[$('bp-source').value];
-    if(!f.verificado){toast('Fuente por confirmar. Usa HPFF8 o valida el datasheet.');return;}
+    if(!f){toast('Cargando datos de fuentes… intenta de nuevo en un momento.');return;}
+    if(!f.verificado){toast('Esta fuente está por confirmar.');return;}
     const tStandby=parseFloat($('bp-tStandby').value)||0;
     const tAlarmMin=parseFloat($('bp-tAlarm').value)||0, tAlarm=tAlarmMin/60;
     const derate=parseFloat($('bp-derate').value)||1.2;
     const devAl=cargasNAC.reduce((s,c)=>s+c.al*c.qty,0), devSb=cargasNAC.reduce((s,c)=>s+c.sb*c.qty,0);
     const auxSb=cargasAux.reduce((s,c)=>s+c.sb,0), auxAl=cargasAux.reduce((s,c)=>s+c.al,0);
-    const Istandby=f.placaStandby+devSb+auxSb, Ialarma=f.placaAlarma+devAl+auxAl;
+    // corriente interna de placa por NAC en uso (0.035 A/NAC en NFS-320/640; 0 en HPFF/3030)
+    const nacsEnUso=new Set(cargasNAC.map(c=>c.nac)).size;
+    const adder=(f.perNacAdder||0)*nacsEnUso;
+    const Istandby=f.placaStandby+adder+devSb+auxSb, Ialarma=f.placaAlarma+adder+devAl+auxAl;
     const ahSb=Istandby*tStandby, ahAl=Ialarma*tAlarm, ahSub=ahSb+ahAl, ahReq=ahSub*derate;
-    const bateria=BATERIAS.find(b=>b.ah>=ahReq)||null;
-    const enRango=bateria?(bateria.ah>=f.cargadorMin&&bateria.ah<=f.cargadorMax):false;
+    // batería: la menor del catálogo que cubra el AH requerido Y respete el rango del cargador
+    const minAh=Math.max(ahReq, f.cargadorMin||0);
+    const cand=BATERIAS.filter(b=>b.ah>=minAh && b.ah<=(f.cargadorMax||Infinity));
+    const bateria=cand.length?cand[0]:null;
     const spare=bateria?(bateria.ah-ahReq):0;
+    const sobredim=bateria?(ahReq<(f.cargadorMin||0)):false;            // forzado por mínimo del cargador
+    const necesitaGab=bateria&&f.gabineteMax&&bateria.ah>f.gabineteMax; // requiere gabinete externo
     const nacLoads={}; for(let n=1;n<=f.nacs;n++) nacLoads[n]=cargasNAC.filter(c=>c.nac===n).reduce((s,c)=>s+c.al*c.qty,0);
-    const nacExc=Object.entries(nacLoads).filter(([n,a])=>a>f.nacMax);
-    const salTotal=devAl, salExc=f.salidaMax&&salTotal>f.salidaMax;
-    ultimo={f:f.nombre,Istandby,Ialarma,ahSb,ahAl,ahSub,ahReq,derate,tStandby,tAlarmMin,bateria,enRango,spare,nacExc,salTotal,salExc,cmin:f.cargadorMin,cmax:f.cargadorMax};
+    const nacExc=(f.nacMax!=null)?Object.entries(nacLoads).filter(([n,a])=>a>f.nacMax):[];
+    const salExc=f.salidaMax&&devAl>f.salidaMax;
+    const sbExc=f.standbyMax&&Istandby>f.standbyMax;
+    ultimo={f:f.nombre,Istandby,Ialarma,ahSb,ahAl,ahSub,ahReq,derate,tStandby,tAlarmMin,bateria,spare,sobredim,necesitaGab,
+      nacExc,salTotal:devAl,salExc,sbExc,nacMax:f.nacMax,salidaMax:f.salidaMax,standbyMax:f.standbyMax,
+      cmin:f.cargadorMin,cmax:f.cargadorMax,gab:f.gabineteMax};
     paint(ultimo);
   }
   function paint(r){
@@ -934,8 +990,8 @@ const BAT = (function(){
     $('bp-rSubtotal').textContent='× '+r.derate+' → '+fmt(r.ahSub)+' AH'; $('bp-rReq').textContent=fmt(r.ahReq,2)+' AH';
     const bb=$('bp-batBox');
     bb.innerHTML = r.bateria
-      ? `<div class="bp-bat ${r.enRango?'':'fail'}"><div class="ic">${r.enRango?'🔋':'⚠️'}</div><div><div class="b1">${r.bateria.pn} · ${r.bateria.ah} AH</div><div class="b2">2× 12 V en serie (24 V) · reserva ${fmt(r.spare,2)} AH</div></div></div>`
-      : `<div class="bp-bat fail"><div class="ic">⚠️</div><div><div class="b1">Sin batería en catálogo</div><div class="b2">${fmt(r.ahReq,2)} AH excede 100 AH. Requiere fuente mayor o banco externo.</div></div></div>`;
+      ? `<div class="bp-bat"><div class="ic">🔋</div><div><div class="b1">${r.bateria.pn} · ${r.bateria.ah} AH</div><div class="b2">2× 12 V en serie (24 V) · reserva ${fmt(r.spare,2)} AH</div></div></div>`
+      : `<div class="bp-bat fail"><div class="ic">⚠️</div><div><div class="b1">Sin batería en catálogo</div><div class="b2">${fmt(r.ahReq,2)} AH excede el rango del cargador (${r.cmin}–${r.cmax} AH). Requiere fuente mayor o banco externo.</div></div></div>`;
     const g=$('bp-gauge'), gl=$('bp-gaugeLegend');
     if(r.bateria){
       const cap=r.bateria.ah, pSb=Math.min(100,r.ahSb*r.derate/cap*100), pAl=Math.min(100-pSb,r.ahAl*r.derate/cap*100), pSp=Math.max(0,100-pSb-pAl);
@@ -944,18 +1000,24 @@ const BAT = (function(){
     }else{g.style.display='none';gl.style.display='none';}
     const ch=[];
     if(r.bateria){
-      ch.push(chk(r.bateria.ah>=r.ahReq,`Capacidad ${r.bateria.ah} AH cubre lo requerido (${fmt(r.ahReq,2)} AH)`));
-      ch.push(chk(r.enRango,r.enRango?`Dentro del rango del cargador (${r.cmin}–${r.cmax} AH)`:`${r.bateria.ah} AH fuera del rango del cargador (${r.cmin}–${r.cmax} AH) — requiere cargador externo`));
+      ch.push(chk(true,`Capacidad ${r.bateria.ah} AH cubre lo requerido (${fmt(r.ahReq,2)} AH)`));
+      ch.push(chk(true,`Dentro del rango del cargador (${r.cmin}–${r.cmax} AH)`));
+      if(r.sobredim) ch.push(chkInfo(`El cargador exige mínimo ${r.cmin} AH; se selecciona ${r.bateria.ah} AH aunque la carga pida menos`));
+      if(r.necesitaGab) ch.push(chkInfo(`Batería > ${r.gab} AH: requiere gabinete externo (NFS-LBB / BB-100)`));
     }
-    r.nacExc.forEach(([n,a])=>ch.push(chk(false,`NAC ${n} en ${fmt(a,3)} A excede el máximo de 3 A`)));
-    if(!r.nacExc.length&&cargasNAC.length) ch.push(chk(true,'Ningún NAC excede su límite'));
-    if(r.salExc) ch.push(chk(false,`Salida total ${fmt(r.salTotal,3)} A excede la capacidad de la fuente`));
-    ch.push(`<div class="bp-check info"><span class="i">›</span><span>Confirmar que la batería quepa en el gabinete del FACP</span></div>`);
+    if(r.sbExc) ch.push(chk(false,`Carga standby ${fmt(r.Istandby,3)} A excede el máximo de ${r.standbyMax} A de la fuente`));
+    if(r.salExc) ch.push(chk(false,`Salida en alarma ${fmt(r.salTotal,3)} A excede el máximo de ${r.salidaMax} A de la fuente`));
+    r.nacExc.forEach(([n,a])=>ch.push(chk(false,`NAC ${n} en ${fmt(a,3)} A excede el máximo de ${r.nacMax} A`)));
+    if(r.nacMax!=null && !r.nacExc.length && cargasNAC.length) ch.push(chk(true,`Ningún NAC excede su límite de ${r.nacMax} A`));
+    if(r.nacMax==null && cargasNAC.length) ch.push(chkInfo('Límites NAC vía AMPS-24 — verifícalos en el manual 51907'));
+    ch.push(chkInfo('Confirmar que la batería quepa en el gabinete del FACP'));
+    r.checksHtml=ch.slice();
     $('bp-checks').innerHTML=ch.join('');
     const ai=$('bp-aiBox');ai.style.display='none';ai.textContent='';
     $('bp-resultCard').scrollIntoView({behavior:'smooth',block:'start'});
   }
   function chk(p,t){return `<div class="bp-check ${p?'pass':'fail'}"><span class="i">${p?'✓':'✕'}</span><span>${t}</span></div>`;}
+  function chkInfo(t){return `<div class="bp-check info"><span class="i">›</span><span>${t}</span></div>`;}
 
   // ── IA: SOLO EXPLICA, prohibido recalcular ──
   async function explain(){
@@ -977,6 +1039,59 @@ const BAT = (function(){
     finally{btn.disabled=false;btn.innerHTML='🤖 Explicar este resultado';}
   }
 
+  // ── IMPRESIÓN / PDF: memoria de cálculo (window.print) ──
+  function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function print(){
+    if(!ultimo){toast('Primero calcula.');return;}
+    const r=ultimo;
+    const proy=$('bp-pjProy').value.trim()||'—', dir=$('bp-pjDir').value.trim()||'—';
+    const by=$('bp-pjBy').value.trim()||'—';
+    const fecha=$('bp-pjDate').value||new Date().toISOString().slice(0,10);
+
+    // aparatos por NAC
+    const devRows=cargasNAC.map(c=>`<tr><td>${esc(c.pn)}</td><td>${esc(c.d)}</td><td class="r">NAC ${c.nac}</td><td class="r">${c.qty}</td><td class="r">${fmt(c.al)}</td><td class="r">${fmt(c.al*c.qty)}</td></tr>`).join('');
+    const auxRows=cargasAux.map(c=>`<tr><td colspan="2">${esc(c.desc)}</td><td class="r">TB4</td><td class="r">1</td><td class="r">${fmt(c.sb)} / ${fmt(c.al)}</td><td class="r">—</td></tr>`).join('');
+    const devTable=(cargasNAC.length||cargasAux.length)
+      ? `<h2>Aparatos y cargas</h2><table><tr><th>Modelo</th><th>Descripción</th><th class="r">Circuito</th><th class="r">Cant.</th><th class="r">Alarma c/u (A)</th><th class="r">Alarma total (A)</th></tr>${devRows}${auxRows}</table>`
+      : '';
+
+    // validaciones -> texto
+    const checks=(r.checksHtml||[]).map(h=>{
+      const sym=/bp-check pass/.test(h)?'✓':/bp-check fail/.test(h)?'✗':'•';
+      const txt=(h.match(/<span>([^<]*)<\/span>\s*<\/div>$/)||[])[1]||'';
+      return `<div class="chk">${sym} ${esc(txt)}</div>`;
+    }).join('');
+
+    const bat=r.bateria?`${esc(r.bateria.pn)} · ${r.bateria.ah} AH (2× 12 V en serie) · reserva ${fmt(r.spare,2)} AH`
+                       :`Sin batería en catálogo — ${fmt(r.ahReq,2)} AH excede el rango del cargador.`;
+
+    $('bp-print').innerHTML=`
+      <div class="ph"><div class="co">ISELEC PANAMÁ</div>
+        <div class="ti"><b>Memoria de Cálculo de Batería</b><br>NFPA 72 · IFAS</div></div>
+      <div class="meta">
+        <div><b>Proyecto:</b> ${esc(proy)}</div><div><b>Fuente:</b> ${esc(r.f)}</div>
+        <div><b>Dirección:</b> ${esc(dir)}</div><div><b>Preparado por:</b> ${esc(by)}</div>
+        <div><b>Fecha:</b> ${esc(fecha)}</div><div><b>Derating:</b> ${r.derate} (envejecimiento)</div>
+      </div>
+      ${devTable}
+      <h2>Cálculo de capacidad (NFPA 72)</h2>
+      <table>
+        <tr><th>Concepto</th><th class="r">Corriente</th><th class="r">Tiempo</th><th class="r">Amp-hora</th></tr>
+        <tr><td>Carga en standby (supervisión)</td><td class="r">${fmt(r.Istandby)} A</td><td class="r">${r.tStandby} h</td><td class="r">${fmt(r.ahSb)} AH</td></tr>
+        <tr><td>Carga en alarma</td><td class="r">${fmt(r.Ialarma)} A</td><td class="r">${r.tAlarmMin} min</td><td class="r">${fmt(r.ahAl,4)} AH</td></tr>
+        <tr><td colspan="3">Subtotal</td><td class="r">${fmt(r.ahSub)} AH</td></tr>
+        <tr><td colspan="3">× Factor de envejecimiento (${r.derate})</td><td class="r req">${fmt(r.ahReq,2)} AH</td></tr>
+      </table>
+      <h2>Batería seleccionada</h2>
+      <div class="bat">${bat}</div>
+      <h2>Validaciones</h2>${checks}
+      <div class="sign"><div>Preparado por — ${esc(by)}</div><div>Revisado / AHJ</div></div>
+      <div class="ft">Cálculo determinístico generado por IFAS (ISELEC Fire Alarm Support) el ${new Date().toLocaleString('es-PA')}.
+        Fórmula: AH = [(I_standby × t_standby) + (I_alarma × t_alarma)] × ${r.derate}. Valores de placa y cargador según datasheet del fabricante.
+        Verificar siempre contra la documentación oficial del panel y la aprobación del AHJ.</div>`;
+    setTimeout(()=>window.print(),60);
+  }
+
   let toastT;
   function toast(m){
     let t=$('bp-toast');
@@ -986,8 +1101,9 @@ const BAT = (function(){
     t.textContent=m;t.style.opacity='1';clearTimeout(toastT);toastT=setTimeout(()=>t.style.opacity='0',3000);
   }
 
-  return {init,onSource,search,add,qty,setQty,setNac,rmDev,addAux,rmAux,calc,explain};
+  return {init,onSource,search,add,qty,setQty,setNac,rmDev,addAux,rmAux,calc,explain,print};
 })();
 </script>
+<div id="bp-print"></div>
 </body>
 </html>
