@@ -48,9 +48,8 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 #settings-btn{padding:5px 8px;display:flex;}
 #mode-bar{padding:11px 16px 9px;border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;}
 .mode-label{font-size:10px;color:rgba(232,232,240,0.3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
-#modes{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;}
-#modes::-webkit-scrollbar{display:none;}
-.mode-btn{padding:7px 13px;border-radius:20px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);color:rgba(232,232,240,0.55);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all 0.15s;flex-shrink:0;}
+#modes{display:flex;flex-wrap:wrap;gap:7px;}
+.mode-btn{padding:7px 13px;border-radius:20px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(255,255,255,0.08);color:rgba(232,232,240,0.55);font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:all 0.15s;}
 .mode-btn:hover{transform:translateY(-1px);}
 .mode-btn.active{font-weight:600;}
 #messages{flex:1;overflow-y:auto;padding:14px 16px;}
