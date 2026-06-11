@@ -103,6 +103,72 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
 #send-btn{width:34px;height:34px;border-radius:8px;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;color:#fff;transition:all 0.15s;}
 #send-btn:hover:not(:disabled){transform:scale(1.06);}
 #send-btn:disabled{opacity:0.35;cursor:not-allowed;}
+/* ════ MODO BATERÍA ════ */
+#battery-panel{flex:1;overflow-y:auto;padding:14px 16px 24px;}
+#battery-panel .bp-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:15px;margin-bottom:12px;}
+#battery-panel .bp-h{display:flex;align-items:center;gap:9px;margin-bottom:13px;}
+#battery-panel .bp-h h3{font-size:14px;font-weight:600;}
+#battery-panel .bp-n{font-family:'DM Mono',monospace;font-size:12px;color:#FFD60A;border:1px solid #FFD60A;border-radius:6px;width:23px;height:23px;display:grid;place-items:center;flex:0 0 auto;}
+#battery-panel .bp-n.ok{color:#30D158;border-color:#30D158;}
+#battery-panel .bp-hint{font-size:11px;color:rgba(232,232,240,0.3);margin-left:auto;}
+#battery-panel .bp-badge{margin-left:auto;font-size:11px;padding:3px 9px;border-radius:20px;}
+#battery-panel .bp-badge.ok{background:rgba(48,209,88,0.14);color:#30D158;}
+#battery-panel .bp-badge.warn{background:rgba(255,159,10,0.14);color:#FF9F0A;}
+#battery-panel .bp-lbl{display:block;font-size:12px;color:rgba(232,232,240,0.5);margin:0 0 5px;}
+#battery-panel .bp-input{width:100%;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);color:#E8E8F0;border-radius:9px;padding:11px 12px;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;appearance:none;}
+#battery-panel .bp-input:focus{border-color:rgba(255,214,10,0.6);}
+#battery-panel select.bp-input{cursor:pointer;}
+#battery-panel .bp-row{display:flex;gap:10px;}#battery-panel .bp-row>*{flex:1;}
+#battery-panel .bp-specs{display:flex;flex-wrap:wrap;gap:12px;font-family:'DM Mono',monospace;font-size:12px;color:rgba(232,232,240,0.6);margin-top:11px;}
+#battery-panel .bp-btn{display:flex;align-items:center;justify-content:center;gap:7px;border:none;border-radius:10px;padding:13px 16px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;}
+#battery-panel .bp-btn.primary{background:#FFD60A;color:#08080F;}
+#battery-panel .bp-btn.ghost{background:rgba(255,255,255,0.05);color:#E8E8F0;border:1px solid rgba(255,255,255,0.1);}
+#battery-panel .bp-btn.sm{padding:9px 13px;font-size:13px;width:auto;}
+#battery-panel .bp-btn:active{transform:translateY(1px);}
+#battery-panel .bp-btn:disabled{opacity:.4;}
+#battery-panel .bp-search{position:relative;}
+#battery-panel .bp-results{position:absolute;left:0;right:0;top:calc(100% + 4px);background:#14141f;border:1px solid rgba(255,255,255,0.12);border-radius:11px;max-height:270px;overflow-y:auto;z-index:20;box-shadow:0 12px 32px rgba(0,0,0,0.5);}
+#battery-panel .bp-res{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,0.06);cursor:pointer;}
+#battery-panel .bp-res:last-child{border-bottom:none;}
+#battery-panel .bp-res:active{background:rgba(255,255,255,0.04);}
+#battery-panel .bp-res .pn{font-family:'DM Mono',monospace;font-size:13px;}
+#battery-panel .bp-res .m{font-size:11px;color:rgba(232,232,240,0.5);display:flex;gap:8px;margin-top:2px;}
+#battery-panel .bp-res .tag{color:#FF9F0A;}
+#battery-panel .bp-loadrow{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:9px 10px;margin-bottom:8px;}
+#battery-panel .bp-loadrow .inf{flex:1;min-width:0;}
+#battery-panel .bp-loadrow .t1{font-family:'DM Mono',monospace;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#battery-panel .bp-loadrow .t2{font-size:11px;color:rgba(232,232,240,0.5);margin-top:2px;}
+#battery-panel .bp-loadrow select{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#E8E8F0;border-radius:7px;padding:6px 7px;font-size:12px;font-family:'DM Sans';}
+#battery-panel .bp-qty{display:flex;align-items:center;gap:5px;flex:0 0 auto;}
+#battery-panel .bp-qty button{width:29px;height:29px;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.05);color:#E8E8F0;font-size:17px;cursor:pointer;line-height:1;}
+#battery-panel .bp-qty input{width:42px;text-align:center;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#E8E8F0;border-radius:7px;padding:6px 2px;font-size:14px;}
+#battery-panel .bp-del{flex:0 0 auto;color:rgba(232,232,240,0.35);background:none;border:none;font-size:20px;cursor:pointer;padding:2px 4px;}
+#battery-panel .bp-empty{text-align:center;color:rgba(232,232,240,0.35);font-size:13px;padding:16px 8px;border:1px dashed rgba(255,255,255,0.1);border-radius:10px;}
+#battery-panel .bp-note{font-size:12px;color:rgba(232,232,240,0.5);background:rgba(255,255,255,0.03);border-left:3px solid #FF9F0A;border-radius:0 8px 8px 0;padding:9px 11px;margin:0 0 12px;}
+#battery-panel .bp-readout{background:#0a0a12;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;margin-bottom:10px;}
+#battery-panel .bp-line{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;}
+#battery-panel .bp-line span:first-child{font-size:12px;color:rgba(232,232,240,0.5);}
+#battery-panel .bp-v{font-family:'DM Mono',monospace;font-size:15px;}
+#battery-panel .bp-line.total{border-top:1px solid rgba(255,255,255,0.08);margin-top:6px;padding-top:11px;}
+#battery-panel .bp-line.total span:first-child{color:#E8E8F0;font-weight:600;font-size:14px;}
+#battery-panel .bp-line.total .bp-v{font-size:22px;color:#FFD60A;font-weight:700;}
+#battery-panel .bp-v.red{color:#FF453A;}#battery-panel .bp-v.amb{color:#F5A623;}
+#battery-panel .bp-bat{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,0.04);border:1px solid #30D158;border-radius:12px;padding:13px;margin:12px 0;}
+#battery-panel .bp-bat.fail{border-color:#FF453A;}
+#battery-panel .bp-bat .ic{font-size:25px;flex:0 0 auto;}
+#battery-panel .bp-bat .b1{font-family:'DM Mono',monospace;font-size:16px;font-weight:600;}
+#battery-panel .bp-bat .b2{font-size:12px;color:rgba(232,232,240,0.5);margin-top:2px;}
+#battery-panel .bp-gauge{height:24px;border-radius:7px;overflow:hidden;display:flex;background:rgba(255,255,255,0.05);margin:14px 0 8px;border:1px solid rgba(255,255,255,0.08);}
+#battery-panel .bp-gauge span{height:100%;transition:width .5s cubic-bezier(.2,.8,.2,1);}
+#battery-panel .bp-gauge .g-sb{background:#F5A623;}#battery-panel .bp-gauge .g-al{background:#FF453A;}#battery-panel .bp-gauge .g-sp{background:#2F81F7;}
+#battery-panel .bp-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:rgba(232,232,240,0.5);}
+#battery-panel .bp-legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:5px;vertical-align:middle;}
+#battery-panel .bp-check{display:flex;gap:9px;font-size:13px;padding:6px 0;align-items:flex-start;}
+#battery-panel .bp-check .i{flex:0 0 auto;}
+#battery-panel .bp-check.pass .i{color:#30D158;}#battery-panel .bp-check.fail .i{color:#FF453A;}#battery-panel .bp-check.info .i{color:#FF9F0A;}
+#battery-panel .bp-ai{font-size:14px;line-height:1.6;white-space:pre-wrap;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:13px;margin-top:12px;}
+#battery-panel .bp-spin{width:14px;height:14px;border:2px solid rgba(0,0,0,0.3);border-top-color:#08080F;border-radius:50%;display:inline-block;animation:bpsp .6s linear infinite;}
+@keyframes bpsp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -159,6 +225,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
       <button class="mode-btn" data-id="DICCIONARIO" data-color="#30D158" data-bg="rgba(48,209,88,0.14)">📖 Diccionario</button>
       <button class="mode-btn" data-id="GUIA_RAPIDA" data-color="#BF5AF2" data-bg="rgba(191,90,242,0.14)">⚡ Guía Rápida</button>
       <button class="mode-btn" data-id="DISENO" data-color="#5AC8FA" data-bg="rgba(90,200,250,0.14)">📐 Diseño</button>
+      <button class="mode-btn" data-id="BATERIA" data-color="#FFD60A" data-bg="rgba(255,214,10,0.14)">🔋 Batería</button>
     </div>
   </div>
 
@@ -168,6 +235,71 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:#08080F;color:#E8E8F0
   </div>
 
   <div id="messages"></div>
+
+  <!-- ════ MODO BATERÍA (vista determinística, reemplaza el chat) ════ -->
+  <div id="battery-panel" style="display:none">
+    <div class="bp-card">
+      <div class="bp-h"><span class="bp-n">1</span><h3>Fuente de poder</h3><span class="bp-badge" id="bp-srcBadge"></span></div>
+      <select id="bp-source" class="bp-input" onchange="BAT.onSource()"></select>
+      <div id="bp-srcSpecs" class="bp-specs"></div>
+    </div>
+
+    <div class="bp-card">
+      <div class="bp-h"><span class="bp-n">2</span><h3>Aparatos de notificación</h3><span class="bp-hint">corriente en alarma</span></div>
+      <div class="bp-search">
+        <input type="text" id="bp-devSearch" class="bp-input" placeholder="Buscar modelo o tipo (P2RL, strobe, horn)…" autocomplete="off" oninput="BAT.search()" onfocus="BAT.search()">
+        <div id="bp-devResults" class="bp-results" style="display:none"></div>
+      </div>
+      <div id="bp-devList"></div>
+    </div>
+
+    <div class="bp-card">
+      <div class="bp-h"><span class="bp-n">3</span><h3>Cargas auxiliares (TB4)</h3><span class="bp-hint">standby + alarma</span></div>
+      <div class="bp-note">Dispositivos 24 V que consumen en supervisión (relés, módulos, anunciadores). Corriente del datasheet.</div>
+      <div class="bp-row">
+        <div><label class="bp-lbl">Standby (A)</label><input type="number" id="bp-auxSb" class="bp-input" step="0.001" min="0" placeholder="0.000"></div>
+        <div><label class="bp-lbl">Alarma (A)</label><input type="number" id="bp-auxAl" class="bp-input" step="0.001" min="0" placeholder="0.000"></div>
+      </div>
+      <label class="bp-lbl" style="margin-top:8px">Descripción</label>
+      <input type="text" id="bp-auxDesc" class="bp-input" placeholder="Ej. Módulo relé / anunciador">
+      <button class="bp-btn ghost sm" onclick="BAT.addAux()" style="margin-top:8px">+ Agregar carga auxiliar</button>
+      <div id="bp-auxList" style="margin-top:10px"></div>
+    </div>
+
+    <div class="bp-card">
+      <div class="bp-h"><span class="bp-n">4</span><h3>Parámetros NFPA 72</h3></div>
+      <div class="bp-row">
+        <div><label class="bp-lbl">Standby (horas)</label><input type="number" id="bp-tStandby" class="bp-input" value="24" step="1" min="0"></div>
+        <div><label class="bp-lbl">Alarma (minutos)</label><input type="number" id="bp-tAlarm" class="bp-input" value="5" step="1" min="0"></div>
+      </div>
+      <label class="bp-lbl" style="margin-top:10px">Factor de envejecimiento</label>
+      <input type="number" id="bp-derate" class="bp-input" value="1.2" step="0.05" min="1">
+      <div class="bp-note">Por defecto 24 h + 5 min, derating 1.2 (20 %). Ajusta solo si el AHJ lo exige.</div>
+    </div>
+
+    <div class="bp-card" id="bp-resultCard" style="display:none">
+      <div class="bp-h"><span class="bp-n ok">✓</span><h3>Resultado</h3><span class="bp-hint">cálculo determinístico</span></div>
+      <div class="bp-readout">
+        <div class="bp-line"><span>Carga standby total</span><span class="bp-v amb" id="bp-rSb">—</span></div>
+        <div class="bp-line"><span>Carga alarma total</span><span class="bp-v red" id="bp-rAl">—</span></div>
+        <div class="bp-line"><span>AH standby</span><span class="bp-v" id="bp-rAhSb">—</span></div>
+        <div class="bp-line"><span>AH alarma</span><span class="bp-v" id="bp-rAhAl">—</span></div>
+        <div class="bp-line"><span>Subtotal × derating</span><span class="bp-v" id="bp-rSubtotal">—</span></div>
+        <div class="bp-line total"><span>AH requerido</span><span class="bp-v" id="bp-rReq">—</span></div>
+      </div>
+      <div id="bp-batBox"></div>
+      <div class="bp-gauge" id="bp-gauge" style="display:none"><span class="g-sb" id="bp-gSb"></span><span class="g-al" id="bp-gAl"></span><span class="g-sp" id="bp-gSp"></span></div>
+      <div class="bp-legend" id="bp-gaugeLegend" style="display:none">
+        <span><i style="background:#F5A623"></i>Standby</span><span><i style="background:#FF453A"></i>Alarma</span><span><i style="background:#2F81F7"></i>Reserva</span>
+      </div>
+      <div id="bp-checks" style="margin-top:14px"></div>
+      <button class="bp-btn ghost" style="margin-top:14px" onclick="BAT.explain()" id="bp-aiBtn">🤖 Explicar este resultado</button>
+      <div id="bp-aiBox" class="bp-ai" style="display:none"></div>
+    </div>
+
+    <button class="bp-btn primary" onclick="BAT.calc()" style="margin:4px 0 8px">Calcular batería</button>
+  </div>
+  <!-- ════ FIN MODO BATERÍA ════ -->
 
   <div id="img-preview"></div>
 
@@ -267,7 +399,8 @@ const MODE_CONFIG = {
   EXAMEN:{color:"#0A84FF",bg:"rgba(10,132,255,0.14)",label:"Examen",starter:"Modo Examen activo.\n\n¿Sobre qué modelo o tema quieres ser evaluado?\n\n• NFS-320\n• NFS2-640\n• NFS2-3030\n• VeriFire Tools\n• Operación y mantenimiento"},
   DICCIONARIO:{color:"#30D158",bg:"rgba(48,209,88,0.14)",label:"Diccionario",starter:"Modo Diccionario activo.\n\n¿Qué término o función quieres consultar? (ej: Alarm Verification, Drift Compensation, Walk Test, SLC, NAC, LCM, etc.)"},
   GUIA_RAPIDA:{color:"#BF5AF2",bg:"rgba(191,90,242,0.14)",label:"Guía Rápida",starter:"Modo Guía Rápida activo.\n\n¿Qué parámetros necesitas?\n\n• Corrientes por dispositivo\n• Resistencias de fin de línea\n• Capacidades por lazo/panel\n• Límites de cableado SLC\n• Otro — especifica"},
-  DISENO:{color:"#5AC8FA",bg:"rgba(90,200,250,0.14)",label:"Diseño",starter:"Modo Diseño activo.\n\nConsulta abierta de ingeniería: cobertura/espaciamiento de detectores, cantidad de dispositivos para un área, selección o compatibilidad de equipos.\n\nPara cálculos de cobertura ten a mano: modelo exacto del dispositivo, altura y tipo de techo (liso / con vigas / con viguetas) y dimensiones del área. IFAS consulta la documentación automáticamente; si quieres, también puedes adjuntar la ficha técnica como foto o PDF."}
+  DISENO:{color:"#5AC8FA",bg:"rgba(90,200,250,0.14)",label:"Diseño",starter:"Modo Diseño activo.\n\nConsulta abierta de ingeniería: cobertura/espaciamiento de detectores, cantidad de dispositivos para un área, selección o compatibilidad de equipos.\n\nPara cálculos de cobertura ten a mano: modelo exacto del dispositivo, altura y tipo de techo (liso / con vigas / con viguetas) y dimensiones del área. IFAS consulta la documentación automáticamente; si quieres, también puedes adjuntar la ficha técnica como foto o PDF."},
+  BATERIA:{color:"#FFD60A",bg:"rgba(255,214,10,0.14)",label:"Cálculo de Batería",starter:""}
 };
 
 // ── STATE ──
@@ -358,6 +491,8 @@ settingsBtn.addEventListener('click',()=>{ showSetup(true); });
 
 clearBtn.addEventListener('click',()=>{
   messages=[];activeMode=null;pendingImages=[];
+  const bp=document.getElementById('battery-panel');if(bp)bp.style.display='none';
+  ['messages','manual-bar','input-area','img-preview'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='';});
   renderPreview();
   inputEl.value='';inputEl.style.height='auto';
   clearBtn.style.display='none';
@@ -468,15 +603,32 @@ document.querySelectorAll('.mode-btn').forEach(btn=>{
 function selectMode(id){
   activeMode=id;
   const cfg=MODE_CONFIG[id];
-  messages=[{role:'assistant',display:cfg.starter,content:cfg.starter}];
   document.querySelectorAll('.mode-btn').forEach(b=>{
     const bc=MODE_CONFIG[b.dataset.id];
     if(b.dataset.id===id){b.classList.add('active');b.style.background=bc.bg;b.style.borderColor=bc.color;b.style.color=bc.color;}
     else{b.classList.remove('active');b.style.background='';b.style.borderColor='';b.style.color='';}
   });
   modeLabelText.textContent = 'Modo activo: ' + cfg.label;
-  inputEl.placeholder='Escribe tu consulta...';
   clearBtn.style.display='block';
+
+  // ── Modo Batería: vista determinística (no chat) ──
+  const bp=document.getElementById('battery-panel');
+  const chatEls=['messages','manual-bar','input-area','img-preview'];
+  if(id==='BATERIA'){
+    messages=[];
+    chatEls.forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='none';});
+    bp.style.display='flex';bp.style.flexDirection='column';
+    BAT.init();
+    return;
+  }
+  bp.style.display='none';
+  document.getElementById('messages').style.display='';
+  document.getElementById('manual-bar').style.display='';
+  document.getElementById('input-area').style.display='';
+  document.getElementById('img-preview').style.display='';
+
+  messages=[{role:'assistant',display:cfg.starter,content:cfg.starter}];
+  inputEl.placeholder='Escribe tu consulta...';
   render();inputEl.focus();updateSendBtn();
 }
 
@@ -655,6 +807,187 @@ async function send(){
   }
   isLoading=false;updateSendBtn();render();
 }
+// ════════════════════════════════════════════════════════════
+// MODO BATERÍA — motor determinístico (NFPA 72). La IA solo explica.
+// Reutiliza apiKey/modelId globales de IFAS. Datos HPFF8 verificados
+// de HPFF8.xls (Battery Calc 3.0); el resto, "por confirmar".
+// ════════════════════════════════════════════════════════════
+const BAT = (function(){
+  const FUENTES = {
+    HPFF8:{nombre:"HPFF8 — Fuente booster 8 A",verificado:true,placaStandby:0.075,placaAlarma:0.206,
+      nacs:4,nacMax:3.0,tb4Max:2.0,salidaMax:8.0,cargadorMin:7,cargadorMax:26,fuente_datos:"HPFF8.xls"},
+    HPFF12:{nombre:"HPFF12 — Fuente booster 12 A",verificado:false,placaStandby:null,placaAlarma:null,
+      nacs:4,nacMax:3.0,tb4Max:2.0,salidaMax:12.0,cargadorMin:7,cargadorMax:26,fuente_datos:"subir HPFF12.xls"},
+    NFS320:{nombre:"NFS-320 — fuente onboard",verificado:false,placaStandby:null,placaAlarma:null,
+      nacs:4,nacMax:3.0,tb4Max:null,salidaMax:null,cargadorMin:7,cargadorMax:26,fuente_datos:"datasheet NFS-320"},
+    NFS2640:{nombre:"NFS2-640 — fuente onboard",verificado:false,placaStandby:null,placaAlarma:null,
+      nacs:4,nacMax:3.0,tb4Max:null,salidaMax:null,cargadorMin:7,cargadorMax:26,fuente_datos:"datasheet NFS2-640"},
+    NFS23030:{nombre:"NFS2-3030 — fuente onboard",verificado:false,placaStandby:null,placaAlarma:null,
+      nacs:4,nacMax:3.0,tb4Max:null,salidaMax:null,cargadorMin:7,cargadorMax:26,fuente_datos:"datasheet NFS2-3030"}
+  };
+  const BATERIAS = [
+    {pn:"BAT-1270",ah:7},{pn:"BAT-12120",ah:12},{pn:"BAT-12180",ah:18},
+    {pn:"BAT-12260",ah:26},{pn:"BAT-12550",ah:55},{pn:"BAT-121000",ah:100}
+  ];
+  let DEVICES=[], cargasNAC=[], cargasAux=[], ultimo=null, started=false, libLoaded=false;
+  const $=id=>document.getElementById(id);
+  const fmt=(n,d=3)=>Number(n).toFixed(d);
+
+  async function loadLibrary(){
+    if(libLoaded) return;
+    try{
+      const r=await fetch('ifas_device_library.json',{cache:'force-cache'});
+      if(!r.ok) throw 0;
+      const j=await r.json(); DEVICES=j.dispositivos||[]; libLoaded=true;
+    }catch(e){ toast('No se cargó la librería (revisa ifas_device_library.json).'); }
+  }
+
+  function init(){
+    if(!started){
+      const sel=$('bp-source');
+      sel.innerHTML=Object.entries(FUENTES).map(([k,v])=>`<option value="${k}">${v.nombre}${v.verificado?'':' ⚠'}</option>`).join('');
+      onSource(); renderNAC(); started=true;
+      document.addEventListener('click',e=>{ if(!e.target.closest('.bp-search')) $('bp-devResults').style.display='none'; });
+    }
+    loadLibrary();
+  }
+
+  function onSource(){
+    const f=FUENTES[$('bp-source').value], badge=$('bp-srcBadge'), specs=$('bp-srcSpecs');
+    badge.className='bp-badge '+(f.verificado?'ok':'warn');
+    badge.textContent=f.verificado?'✓ verificado':'⚠ por confirmar';
+    specs.innerHTML=f.verificado
+      ? `<span>Placa: ${f.placaStandby} sb / ${f.placaAlarma} al</span><span>NAC: ${f.nacs}× ${f.nacMax} A</span>`+
+        (f.tb4Max?`<span>TB4: ${f.tb4Max} A</span>`:'')+`<span>Cargador: ${f.cargadorMin}–${f.cargadorMax} AH</span>`
+      : `<span style="color:rgba(232,232,240,0.45)">Faltan datos — ${f.fuente_datos}. Cálculo bloqueado hasta confirmar.</span>`;
+    renderNAC();
+  }
+
+  function search(){
+    const q=$('bp-devSearch').value.trim().toLowerCase(), box=$('bp-devResults');
+    if(!DEVICES.length){box.style.display='none';return;}
+    let res = !q ? DEVICES.slice(0,8)
+      : DEVICES.filter(d=>d.pn.toLowerCase().includes(q)||d.d.toLowerCase().includes(q)||(d.t||'').toLowerCase().includes(q)).slice(0,12);
+    box.innerHTML = res.length
+      ? res.map(d=>{const i=DEVICES.indexOf(d);return `<div class="bp-res" onclick="BAT.add(${i})"><div class="pn">${d.pn}</div><div class="m"><span class="tag">${d.t||'—'}</span><span>${d.d}</span></div><div class="m" style="font-family:'DM Mono'">sb ${d.sb} · al ${d.al} A</div></div>`;}).join('')
+      : '<div class="bp-res" style="color:rgba(232,232,240,0.4)">Sin coincidencias</div>';
+    box.style.display='block';
+  }
+  function add(i){
+    const d=DEVICES[i], ex=cargasNAC.find(x=>x.pn===d.pn);
+    if(ex) ex.qty++; else cargasNAC.push({pn:d.pn,d:d.d,t:d.t,al:d.al,sb:d.sb,qty:1,nac:1});
+    $('bp-devSearch').value=''; $('bp-devResults').style.display='none'; renderNAC();
+  }
+  function renderNAC(){
+    const el=$('bp-devList');
+    if(!cargasNAC.length){el.innerHTML='<div class="bp-empty">Aún sin aparatos. Búscalos arriba.</div>';return;}
+    const f=FUENTES[$('bp-source').value];
+    const opts=n=>Array.from({length:f.nacs},(_,k)=>k+1).map(x=>`<option value="${x}" ${x===n?'selected':''}>NAC ${x}</option>`).join('');
+    el.innerHTML=cargasNAC.map((c,i)=>`<div class="bp-loadrow">
+      <div class="inf"><div class="t1">${c.pn}</div><div class="t2">${c.al} A · ${c.t||'—'}</div></div>
+      <select onchange="BAT.setNac(${i},this.value)">${opts(c.nac)}</select>
+      <div class="bp-qty"><button onclick="BAT.qty(${i},-1)">−</button><input type="number" min="1" value="${c.qty}" onchange="BAT.setQty(${i},this.value)"><button onclick="BAT.qty(${i},1)">+</button></div>
+      <button class="bp-del" onclick="BAT.rmDev(${i})">×</button></div>`).join('');
+  }
+  function qty(i,d){cargasNAC[i].qty=Math.max(1,cargasNAC[i].qty+d);renderNAC();}
+  function setQty(i,v){cargasNAC[i].qty=Math.max(1,parseInt(v)||1);renderNAC();}
+  function setNac(i,v){cargasNAC[i].nac=parseInt(v);}
+  function rmDev(i){cargasNAC.splice(i,1);renderNAC();}
+
+  function addAux(){
+    const sb=parseFloat($('bp-auxSb').value)||0, al=parseFloat($('bp-auxAl').value)||0;
+    const desc=$('bp-auxDesc').value.trim()||'Carga auxiliar';
+    if(sb<=0&&al<=0){toast('Ingresa al menos una corriente.');return;}
+    cargasAux.push({desc,sb,al});
+    $('bp-auxSb').value='';$('bp-auxAl').value='';$('bp-auxDesc').value='';renderAux();
+  }
+  function renderAux(){
+    const el=$('bp-auxList');
+    el.innerHTML=cargasAux.map((c,i)=>`<div class="bp-loadrow"><div class="inf"><div class="t1">${c.desc}</div><div class="t2" style="font-family:'DM Mono'">sb ${c.sb} · al ${c.al} A</div></div><button class="bp-del" onclick="BAT.rmAux(${i})">×</button></div>`).join('');
+  }
+  function rmAux(i){cargasAux.splice(i,1);renderAux();}
+
+  // ── CÁLCULO DETERMINÍSTICO (fuente de verdad) ──
+  function calc(){
+    const f=FUENTES[$('bp-source').value];
+    if(!f.verificado){toast('Fuente por confirmar. Usa HPFF8 o valida el datasheet.');return;}
+    const tStandby=parseFloat($('bp-tStandby').value)||0;
+    const tAlarmMin=parseFloat($('bp-tAlarm').value)||0, tAlarm=tAlarmMin/60;
+    const derate=parseFloat($('bp-derate').value)||1.2;
+    const devAl=cargasNAC.reduce((s,c)=>s+c.al*c.qty,0), devSb=cargasNAC.reduce((s,c)=>s+c.sb*c.qty,0);
+    const auxSb=cargasAux.reduce((s,c)=>s+c.sb,0), auxAl=cargasAux.reduce((s,c)=>s+c.al,0);
+    const Istandby=f.placaStandby+devSb+auxSb, Ialarma=f.placaAlarma+devAl+auxAl;
+    const ahSb=Istandby*tStandby, ahAl=Ialarma*tAlarm, ahSub=ahSb+ahAl, ahReq=ahSub*derate;
+    const bateria=BATERIAS.find(b=>b.ah>=ahReq)||null;
+    const enRango=bateria?(bateria.ah>=f.cargadorMin&&bateria.ah<=f.cargadorMax):false;
+    const spare=bateria?(bateria.ah-ahReq):0;
+    const nacLoads={}; for(let n=1;n<=f.nacs;n++) nacLoads[n]=cargasNAC.filter(c=>c.nac===n).reduce((s,c)=>s+c.al*c.qty,0);
+    const nacExc=Object.entries(nacLoads).filter(([n,a])=>a>f.nacMax);
+    const salTotal=devAl, salExc=f.salidaMax&&salTotal>f.salidaMax;
+    ultimo={f:f.nombre,Istandby,Ialarma,ahSb,ahAl,ahSub,ahReq,derate,tStandby,tAlarmMin,bateria,enRango,spare,nacExc,salTotal,salExc,cmin:f.cargadorMin,cmax:f.cargadorMax};
+    paint(ultimo);
+  }
+  function paint(r){
+    $('bp-resultCard').style.display='block';
+    $('bp-rSb').textContent=fmt(r.Istandby)+' A'; $('bp-rAl').textContent=fmt(r.Ialarma)+' A';
+    $('bp-rAhSb').textContent=fmt(r.ahSb)+' AH'; $('bp-rAhAl').textContent=fmt(r.ahAl,4)+' AH';
+    $('bp-rSubtotal').textContent='× '+r.derate+' → '+fmt(r.ahSub)+' AH'; $('bp-rReq').textContent=fmt(r.ahReq,2)+' AH';
+    const bb=$('bp-batBox');
+    bb.innerHTML = r.bateria
+      ? `<div class="bp-bat ${r.enRango?'':'fail'}"><div class="ic">${r.enRango?'🔋':'⚠️'}</div><div><div class="b1">${r.bateria.pn} · ${r.bateria.ah} AH</div><div class="b2">2× 12 V en serie (24 V) · reserva ${fmt(r.spare,2)} AH</div></div></div>`
+      : `<div class="bp-bat fail"><div class="ic">⚠️</div><div><div class="b1">Sin batería en catálogo</div><div class="b2">${fmt(r.ahReq,2)} AH excede 100 AH. Requiere fuente mayor o banco externo.</div></div></div>`;
+    const g=$('bp-gauge'), gl=$('bp-gaugeLegend');
+    if(r.bateria){
+      const cap=r.bateria.ah, pSb=Math.min(100,r.ahSb*r.derate/cap*100), pAl=Math.min(100-pSb,r.ahAl*r.derate/cap*100), pSp=Math.max(0,100-pSb-pAl);
+      g.style.display='flex';gl.style.display='flex';
+      $('bp-gSb').style.width=pSb+'%';$('bp-gAl').style.width=pAl+'%';$('bp-gSp').style.width=pSp+'%';
+    }else{g.style.display='none';gl.style.display='none';}
+    const ch=[];
+    if(r.bateria){
+      ch.push(chk(r.bateria.ah>=r.ahReq,`Capacidad ${r.bateria.ah} AH cubre lo requerido (${fmt(r.ahReq,2)} AH)`));
+      ch.push(chk(r.enRango,r.enRango?`Dentro del rango del cargador (${r.cmin}–${r.cmax} AH)`:`${r.bateria.ah} AH fuera del rango del cargador (${r.cmin}–${r.cmax} AH) — requiere cargador externo`));
+    }
+    r.nacExc.forEach(([n,a])=>ch.push(chk(false,`NAC ${n} en ${fmt(a,3)} A excede el máximo de 3 A`)));
+    if(!r.nacExc.length&&cargasNAC.length) ch.push(chk(true,'Ningún NAC excede su límite'));
+    if(r.salExc) ch.push(chk(false,`Salida total ${fmt(r.salTotal,3)} A excede la capacidad de la fuente`));
+    ch.push(`<div class="bp-check info"><span class="i">›</span><span>Confirmar que la batería quepa en el gabinete del FACP</span></div>`);
+    $('bp-checks').innerHTML=ch.join('');
+    const ai=$('bp-aiBox');ai.style.display='none';ai.textContent='';
+    $('bp-resultCard').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function chk(p,t){return `<div class="bp-check ${p?'pass':'fail'}"><span class="i">${p?'✓':'✕'}</span><span>${t}</span></div>`;}
+
+  // ── IA: SOLO EXPLICA, prohibido recalcular ──
+  async function explain(){
+    if(!ultimo){toast('Primero calcula.');return;}
+    if(!apiKey){toast('Configura tu API key en ⚙️.');return;}
+    const btn=$('bp-aiBtn'), box=$('bp-aiBox');
+    btn.disabled=true;btn.innerHTML='<span class="bp-spin"></span> Explicando…';box.style.display='block';box.textContent='';
+    const r=ultimo;
+    const datos=`Fuente: ${r.f}\nStandby total: ${fmt(r.Istandby)} A\nAlarma total: ${fmt(r.Ialarma)} A\nAH standby (${r.tStandby} h): ${fmt(r.ahSb)} AH\nAH alarma (${r.tAlarmMin} min): ${fmt(r.ahAl,4)} AH\nDerating: ${r.derate}\nAH requerido: ${fmt(r.ahReq,2)} AH\nBatería: ${r.bateria?r.bateria.pn+' '+r.bateria.ah+' AH':'ninguna'}\nReserva: ${fmt(r.spare,2)} AH`;
+    const system=`Eres asistente técnico de IFAS para alarma contra incendio (Panamá). Te entrego un cálculo de batería YA RESUELTO de forma determinística. Tu única tarea es EXPLICAR en español claro por qué dan esos números según NFPA 72. PROHIBIDO recalcular, corregir, inventar o cambiar cualquier número: los valores entregados son la verdad. Sé breve (máx 6 líneas), sin markdown.`;
+    try{
+      const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({model:modelId,max_tokens:400,system:[{type:'text',text:system}],messages:[{role:'user',content:`Explícame este cálculo:\n\n${datos}`}]})});
+      if(res.status===401){box.textContent='⚠️ API key inválida. Toca ⚙️.';}
+      else if(!res.ok){box.textContent='⚠️ Error '+res.status+'.';}
+      else{const data=await res.json();box.textContent=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim()||'Sin respuesta.';}
+    }catch(e){box.textContent='⚠️ Error de conexión.';}
+    finally{btn.disabled=false;btn.innerHTML='🤖 Explicar este resultado';}
+  }
+
+  let toastT;
+  function toast(m){
+    let t=$('bp-toast');
+    if(!t){t=document.createElement('div');t.id='bp-toast';
+      t.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a26;border:1px solid rgba(255,255,255,0.12);color:#E8E8F0;padding:11px 18px;border-radius:24px;font-size:13px;z-index:200;font-family:DM Sans;box-shadow:0 8px 24px rgba(0,0,0,0.5);opacity:0;transition:opacity .25s;';
+      document.body.appendChild(t);}
+    t.textContent=m;t.style.opacity='1';clearTimeout(toastT);toastT=setTimeout(()=>t.style.opacity='0',3000);
+  }
+
+  return {init,onSource,search,add,qty,setQty,setNac,rmDev,addAux,rmAux,calc,explain};
+})();
 </script>
 </body>
 </html>
