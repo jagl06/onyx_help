@@ -918,8 +918,10 @@ const BAT = (function(){
     box.style.display='block';
   }
   function add(i){
-    const d=DEVICES[i], ex=cargasNAC.find(x=>x.pn===d.pn);
-    if(ex) ex.qty++; else cargasNAC.push({pn:d.pn,d:d.d,t:d.t,al:d.al,sb:d.sb,qty:1,nac:1});
+    const d=DEVICES[i];
+    // Cada selección crea su propia fila para poder repartir el mismo modelo
+    // entre distintos NAC. La cantidad se ajusta luego con los botones +/-.
+    cargasNAC.push({pn:d.pn,d:d.d,t:d.t,al:d.al,sb:d.sb,qty:1,nac:1});
     $('bp-devSearch').value=''; $('bp-devResults').style.display='none'; renderNAC();
   }
   function renderNAC(){
