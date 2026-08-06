@@ -35,6 +35,11 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 
 # Historial
 
+##  2026-08-06 - Actualización y limpieza de indice
+**Archivo;** `ifas_index` (actualizo)
+**Cambios;**
+"Limpieza de duplicados + 5 docs nuevos (3 con OCR): 8,463 → 8,085 fragmentos, 198 → 193 docs".
+
 ## 2026-07-30 — Tema claro/oscuro + responsive + procedimiento de documentación
 **Archivos:** `index.html`, `PROCEDIMIENTO.md` (nuevo), `build_index.py` (nuevo), `check_index.py` (nuevo)
 **Cambios:**
