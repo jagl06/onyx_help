@@ -806,7 +806,7 @@ function tokenize(s){
 
 async function loadIndex(){
   try{
-    const res = await fetch('ifas_index.json', {cache:'force-cache'});
+    const res = await fetch('ifas_index.json', {cache:'no-cache'});
     if(!res.ok) throw new Error('HTTP '+res.status);
     const data = await res.json();
     const df = {}; let totalLen = 0;
@@ -948,7 +948,7 @@ const BAT = (function(){
   async function loadFuentes(){
     if(fuentesLoaded) return;
     try{
-      const r=await fetch('fuentes.json',{cache:'force-cache'});
+      const r=await fetch('fuentes.json',{cache:'no-cache'});
       if(!r.ok) throw 0;
       const j=await r.json(); FUENTES=j.fuentes||{}; BATERIAS=j.baterias||[]; fuentesLoaded=true;
     }catch(e){ toast('No se cargó fuentes.json (revisa que esté en la misma carpeta).'); }
@@ -957,7 +957,7 @@ const BAT = (function(){
   async function loadLibrary(){
     if(libLoaded) return;
     try{
-      const r=await fetch('ifas_device_library.json',{cache:'force-cache'});
+      const r=await fetch('ifas_device_library.json',{cache:'no-cache'});
       if(!r.ok) throw 0;
       const j=await r.json(); DEVICES=j.dispositivos||[]; libLoaded=true;
     }catch(e){ toast('No se cargó la librería (revisa ifas_device_library.json).'); }
