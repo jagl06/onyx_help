@@ -40,7 +40,7 @@ C:\Users\Jesus\OneDrive - ISELEC\PRODUCTOS\NOTIFIER\DOCUMENTACION NOTIFIER ONYX 
 **2. Regenerar el índice completo**
 
 ```
-python build_index.py "C:\Users\Jesus\OneDrive - ISELEC\Desktop\PDFS Onyx"
+python build_index.py "C:\Users\Jesus\OneDrive - ISELEC\PRODUCTOS\NOTIFIER\DOCUMENTACION NOTIFIER ONYX UNIVERSITY"
 ```
 
 Genera `ifas_index.json` en la carpeta actual y reporta por documento cuántas páginas indexó.
