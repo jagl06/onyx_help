@@ -30,7 +30,7 @@ python check_index.py FSP-851 --web
 **1. Guardar el PDF en la carpeta de su categoría**
 
 ```
-C:\Users\Jesus\OneDrive - ISELEC\PRODUCTOS\NOTIFIER\PDFS Onyx
+C:\Users\Jesus\OneDrive - ISELEC\PRODUCTOS\NOTIFIER\DOCUMENTACION NOTIFIER ONYX UNIVERSITY
 ```
 
 - La categoría es la **primera subcarpeta** bajo la raíz (ej. `ANNUNCIATORS`, `DETECTORES`). Para una categoría nueva, basta con crear la carpeta.
