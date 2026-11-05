@@ -291,7 +291,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
       <div class="logo">🔥</div>
       <div class="title-block">
         <h1>IFAS</h1>
-        <p>ISELEC Fire Alarm Support · v2026.1</p>
+        <p>ISELEC Fire Alarm Support · v2026.1.1</p>
       </div>
     </div>
     <div class="hdr-actions">
@@ -543,7 +543,7 @@ let indexReady = false;
 let manifest = null;    // contenido de idx/manifest.json
 const loadedCats = new Set();
 let familia = localStorage.getItem('ifas_familia') || 'ONYX';   // ONYX | N16 | TODOS
-const TOP_K = 8;        // fragmentos a inyectar por consulta
+const TOP_K = 10;       // fragmentos a inyectar por consulta
 
 // ── ELEMENTS ──
 const setupScreen = document.getElementById('setup-screen');
@@ -829,6 +829,7 @@ const STOP = new Set("de la el en y a los las un una con para por del al es se s
 function tokenize(s){
   return (s.toLowerCase()
     .normalize('NFD').replace(/[\u0300-\u036f]/g,'')   // quita acentos
+    .replace(/\b([a-z])\.(\d)/g,'$1$2')                   // "tabla h.2" → h2, "fig. 3.24" se mantiene
     .match(/[a-z0-9]+/g) || [])
     .filter(t => t.length > 1 && !STOP.has(t));
 }
@@ -858,9 +859,15 @@ function ingest(cat, frs){
   });
   loadedCats.add(cat);
 }
+let docPages = {};      // doc -> última página vista (nº de páginas aproximado)
+let docIds = new Set();  // identificadores de documento en minúsculas (52545sp, dn-7111…)
 function rebuildStats(){
-  const df = {}; let totalLen = 0;
-  for(const d of docIndex){ for(const t in d.tf) df[t]=(df[t]||0)+1; totalLen += d.len; }
+  const df = {}; let totalLen = 0; docPages = {}; docIds = new Set();
+  for(const d of docIndex){
+    for(const t in d.tf) df[t]=(df[t]||0)+1; totalLen += d.len;
+    if(d.page>(docPages[d.doc]||0)) docPages[d.doc]=d.page;
+    docIds.add(String(d.doc).toLowerCase());
+  }
   bm25 = { df, N: docIndex.length, avgdl: totalLen/(docIndex.length||1) };
   indexReady = docIndex.length > 0;
 }
@@ -934,24 +941,33 @@ function retrieve(query, k){
   const q = tokenize(query);
   if(!q.length) return [];
   const k1 = 1.5, b = 0.75;
-  const idf = {};
+  const idf = {}, rare = new Set();
   q.forEach(t=>{
     const n = bm25.df[t]||0;
     idf[t] = Math.log(1 + (bm25.N - n + 0.5)/(n + 0.5));
+    // términos raros con forma de código (j5, tb4, sw2, h.2 → h2, acm-32f): aparecen en <1 % de los fragmentos
+    if(n>0 && n < bm25.N*0.01 && /\d/.test(t)) rare.add(t);
   });
+  // documento pedido por nombre ("52545SP", "DN-7111"): sus fragmentos reciben prioridad
+  const qraw = query.toLowerCase();
+  const askedDocs = [...docIds].filter(id => id.length>=4 && qraw.includes(id));
   const scored = [];
   for(const d of docIndex){
-    let s = 0;
+    let s = 0, rareHits = 0;
     for(const t in idf){
       const f = d.tf[t];
       if(!f) continue;
       s += idf[t] * (f*(k1+1))/(f + k1*(1 - b + b*d.len/bm25.avgdl));
+      if(rare.has(t)) rareHits++;
     }
     if(s<=0) continue;
-    // refuerzo si el NOMBRE/título/modelos del documento coinciden con la consulta (FSP-851, NFS2-3030…)
+    // un código raro presente en el fragmento pesa más que el contexto genérico (tarjeta, madre, panel…)
+    if(rareHits) s *= 1 + rareHits;
+    // refuerzo acotado si el nombre/título/modelos del documento coinciden con la consulta (FSP-851, NFS2-3030…)
     let nameBonus = 0;
     for(const t of new Set(d.nameTokens)){ if(idf[t]!==undefined) nameBonus += idf[t]; }
-    s += nameBonus * 1.5;
+    s += Math.min(nameBonus, 4) * 1.5;
+    if(askedDocs.length) s *= askedDocs.includes(String(d.doc).toLowerCase()) ? 3 : 1;
     // familia seleccionada: penaliza fragmentos de la otra familia (COMUN no se toca)
     if(familia!=='TODOS' && d.familia!=='COMUN' && d.familia!==familia) s *= 0.5;
     // leve preferencia por documentos en español
@@ -1004,7 +1020,7 @@ async function send(){
   const apiMessages = buildApiMessages(messages);
   if(hits.length){
     const ctx = 'FRAGMENTOS DE LA DOCUMENTACIÓN OFICIAL (úsalos como referencia y cita documento y página cuando los uses):\n\n'
-      + hits.map(h=>`[${h.cat} · ${h.doc}${h.titulo?' · '+h.titulo:''} · ${h.tipo==='video'?'video':'pág. '+h.page}]\n${h.text}`).join('\n\n---\n\n');
+      + hits.map(h=>`[${h.cat} · ${h.doc}${h.titulo?' · '+h.titulo:''} · pág. ${h.page} de ~${docPages[h.doc]||'?'}]\n${h.text}`).join('\n\n---\n\n');
     const last = apiMessages[apiMessages.length-1];
     const body = Array.isArray(last.content) ? last.content : [{type:'text',text:last.content}];
     last.content = [{type:'text', text: ctx}, ...body];   // solo para esta llamada, no se guarda
