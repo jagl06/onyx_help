@@ -291,7 +291,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
       <div class="logo">🔥</div>
       <div class="title-block">
         <h1>IFAS</h1>
-        <p>ISELEC Fire Alarm Support · v2026.1.1</p>
+        <p>ISELEC Fire Alarm Support · v2026.2</p>
       </div>
     </div>
     <div class="hdr-actions">
@@ -544,6 +544,16 @@ let manifest = null;    // contenido de idx/manifest.json
 const loadedCats = new Set();
 let familia = localStorage.getItem('ifas_familia') || 'ONYX';   // ONYX | N16 | TODOS
 const TOP_K = 10;       // fragmentos a inyectar por consulta
+const MAX_BUSQUEDAS = 3; // búsquedas adicionales que el modelo puede pedir por pregunta
+const BUSCAR_TOOL = {
+  name:'buscar_documentacion',
+  description:'Busca fragmentos en los manuales, hojas de datos y presentaciones Notifier cargados en IFAS (búsqueda léxica BM25, español e inglés). Úsala cuando los fragmentos recibidos no contengan el dato que necesitas. Funciona mejor con términos concretos: códigos de conector o jumper (J5, TB4, SW2), modelos (FSP-951, CPU2-3030), número de documento (52545SP, DN-7111), nombres de parámetro o trouble en inglés (AUXILIARY TROUBLE, GROUND FAULT) y títulos de tabla (Table H.2).',
+  input_schema:{type:'object',properties:{consulta:{type:'string',description:'Términos de búsqueda, 2 a 8 palabras, sin frases largas.'}},required:['consulta']}
+};
+const TOOL_PROMPT = `
+
+## HERRAMIENTA DE BÚSQUEDA
+Dispones de buscar_documentacion. Si los fragmentos recibidos no responden la pregunta, antes de decir "no tengo el dato" haz hasta ${MAX_BUSQUEDAS} búsquedas con términos distintos: primero el código o modelo exacto (J5, TB4, FSP-951), luego el nombre en inglés del parámetro o trouble, luego el número de documento más el tema. Cuando el usuario pida revisar un documento concreto, incluye su número en la consulta. Si tras las búsquedas sigue sin aparecer, dilo y nombra el documento y sección donde debería estar. No repitas una consulta ya hecha.`;
 
 // ── ELEMENTS ──
 const setupScreen = document.getElementById('setup-screen');
@@ -936,17 +946,61 @@ const famSelect = document.getElementById('fam-select');
 famSelect.value = familia;
 famSelect.addEventListener('change', ()=>setFamilia(famSelect.value));
 
+// ── SINÓNIMOS (español de campo ↔ inglés de los manuales). Clave: término o frase en minúsculas sin acentos.
+// Los términos expandidos pesan 0.4 respecto a los escritos por el técnico. Ampliar con las preguntas que fallen.
+const SINONIMOS = {
+  'jumper':['j','puente','conector'], 'puente':['jumper','j'],
+  'puerto':['conector','tb','terminal','port','connector'], 'conector':['connector','tb','terminal','j'],
+  'terminal':['tb','terminal block'], 'tarjeta madre':['cpu','main board','board','placa','cpu2','tarjeta'],
+  'tarjeta':['board','card','modulo','module'], 'placa':['board','tarjeta','cpu'],
+  'falla a tierra':['ground fault','earth fault','tierra'], 'falla tierra':['ground fault','tierra'], 'tierra':['ground','earth'],
+  'problema':['trouble','fault','falla'], 'falla':['trouble','fault','failure','problema'], 'trouble':['problema','falla'],
+  'alarma':['alarm'], 'supervision':['supervisory','supervision','supervisar'], 'supervisar':['supervise','supervision'],
+  'bateria':['battery','baterias','bat'], 'baterias':['battery','batteries'], 'cargador':['charger'], 'fuente':['power supply','supply','amps'],
+  'lazo':['loop','slc','lazos'], 'lazos':['loops','slc'], 'circuito':['circuit'], 'cableado':['wiring','cable','wire'], 'cable':['wire','wiring','cableado'],
+  'corto':['short','short circuit','cortocircuito'], 'cortocircuito':['short circuit','short'], 'abierto':['open','open circuit'],
+  'detector':['sensor','detectores'], 'sensor':['detector'], 'modulo':['module','modulos'], 'estacion manual':['pull station','nbg'],
+  'sirena':['horn','sounder','strobe'], 'estrobo':['strobe','candela'], 'notificacion':['notification','nac'],
+  'anunciador':['annunciator','acs','acm'], 'pantalla':['display','lcd','screen'], 'teclado':['keypad','keyboard'],
+  'programacion':['programming','program','programar'], 'programar':['program','programming'], 'configurar':['configure','setup','configuracion'],
+  'descargar':['download'], 'cargar':['upload','download'], 'actualizar':['upgrade','update','firmware'], 'version':['version','firmware','rev'],
+  'contrasena':['password','clave'], 'clave':['password','contrasena'], 'reiniciar':['reset','reboot','power cycle'],
+  'resistencia de fin de linea':['eol','elr','end of line'], 'fin de linea':['eol','elr','end-of-line'], 'resistencia':['resistor','eol'],
+  'corriente':['current','amp','ma'], 'consumo':['current','draw','standby','alarm'], 'voltaje':['voltage','volt','vdc'], 'tension':['voltage','vdc'],
+  'direccion':['address','addr'], 'direccionable':['addressable','intelligent'], 'convencional':['conventional'],
+  'rele':['relay','form-c'], 'reles':['relays','relay'], 'salida':['output','nac'], 'entrada':['input','monitor'],
+  'verificacion de alarma':['alarm verification'], 'sensibilidad':['sensitivity'], 'prueba':['test','walk test','testing'],
+  'recorrido':['walk test','walk'], 'silenciar':['silence'], 'reconocer':['acknowledge','ack'], 'restablecer':['reset','restore'],
+  'red':['network','noti-fire-net','ncm','hs-ncm'], 'nodo':['node'], 'fibra':['fiber','optic'],
+  'gabinete':['cabinet','backbox','cab','enclosure'], 'compatibilidad':['compatibility','compatible'], 'listado':['listing','ul'],
+  'incompatibilidad de software':['software mismatch'], 'no correspondencia':['mismatch'], 'extincion':['release','releasing','agent'],
+  'inalambrico':['wireless','swift'], 'conducto':['duct','dnr'], 'haz':['beam','fsb'], 'calor':['heat','thermal','fst'], 'humo':['smoke','photo','fsp'],
+  'co':['carbon monoxide','fco','fsco'], 'aislador':['isolator','iso-x','iso'], 'repetidor':['repeater','rpt'], 'impresora':['printer','prn']
+};
+function expandQuery(query){
+  const base = tokenize(query); const w = {};
+  base.forEach(t=>{ w[t]=1; });
+  const norm = query.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  for(const key in SINONIMOS){
+    const hit = key.includes(' ') ? norm.includes(key) : base.includes(key);
+    if(!hit) continue;
+    for(const syn of SINONIMOS[key]) tokenize(syn).forEach(t=>{ if(w[t]===undefined) w[t]=0.4; });
+  }
+  return w;   // token -> peso
+}
+
 function retrieve(query, k){
   if(!indexReady) return [];
-  const q = tokenize(query);
+  const weights = expandQuery(query);
+  const q = Object.keys(weights);
   if(!q.length) return [];
   const k1 = 1.5, b = 0.75;
   const idf = {}, rare = new Set();
   q.forEach(t=>{
     const n = bm25.df[t]||0;
-    idf[t] = Math.log(1 + (bm25.N - n + 0.5)/(n + 0.5));
+    idf[t] = weights[t] * Math.log(1 + (bm25.N - n + 0.5)/(n + 0.5));
     // términos raros con forma de código (j5, tb4, sw2, h.2 → h2, acm-32f): aparecen en <1 % de los fragmentos
-    if(n>0 && n < bm25.N*0.01 && /\d/.test(t)) rare.add(t);
+    if(weights[t]===1 && n>0 && n < bm25.N*0.01 && /\d/.test(t)) rare.add(t);
   });
   // documento pedido por nombre ("52545SP", "DN-7111"): sus fragmentos reciben prioridad
   const qraw = query.toLowerCase();
@@ -1026,37 +1080,57 @@ async function send(){
     last.content = [{type:'text', text: ctx}, ...body];   // solo para esta llamada, no se guarda
   }
 
+  // ── BÚSQUEDA AGÉNTICA: el modelo puede pedir hasta MAX_BUSQUEDAS búsquedas adicionales (todos los modos salvo DICCIONARIO)
+  const useTool = activeMode !== 'DICCIONARIO';
+  const allHits = [...hits]; let busquedas = 0;
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'x-api-key':apiKey,
-        'anthropic-version':'2023-06-01',
-        'anthropic-dangerous-direct-browser-access':'true'
-      },
-      body:JSON.stringify({
-        model:modelId,
-        max_tokens:1024,
-        system:[{type:'text',text:SYSTEM_PROMPT,cache_control:{type:'ephemeral'}}],
+    let data = null;
+    for(let turno=0; turno<=MAX_BUSQUEDAS; turno++){
+      const body = {
+        model:modelId, max_tokens:1024,
+        system:[{type:'text',text:SYSTEM_PROMPT + (useTool ? TOOL_PROMPT : ''),cache_control:{type:'ephemeral'}}],
         messages:apiMessages
-      })
-    });
-    if(res.status===401){
-      messages.push({role:'assistant',display:'⚠️ API key inválida. Toca ⚙️ para actualizarla.',content:'Error.'});
-    } else if(!res.ok){
-      let detail='';
-      try{const err=await res.json();detail=err.error?.message||'';}catch(e){}
-      messages.push({role:'assistant',display:`⚠️ Error ${res.status}${detail?': '+detail:''}. Toca ⚙️ para verificar modelo y API key.`,content:'Error.'});
-    } else {
-      const data=await res.json();
-      const reply=data.content?.find(b=>b.type==='text')?.text||'Sin respuesta del servidor.';
-      const sources = hits.map(h=>({doc:h.doc, page:h.page}));
+      };
+      if(useTool) body.tools = [BUSCAR_TOOL];   // siempre presente mientras haya bloques tool_use en el historial
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify(body)
+      });
+      if(res.status===401){ messages.push({role:'assistant',display:'⚠️ API key inválida. Toca ⚙️ para actualizarla.',content:'Error.'}); data=null; break; }
+      if(!res.ok){
+        let detail=''; try{const err=await res.json();detail=err.error?.message||'';}catch(e){}
+        messages.push({role:'assistant',display:`⚠️ Error ${res.status}${detail?': '+detail:''}. Toca ⚙️ para verificar modelo y API key.`,content:'Error.'});
+        data=null; break;
+      }
+      data=await res.json();
+      const toolUses = (data.content||[]).filter(b=>b.type==='tool_use');
+      if(data.stop_reason!=='tool_use' || !toolUses.length) break;
+      // atender cada búsqueda pedida por el modelo con el motor local
+      apiMessages.push({role:'assistant', content:data.content});
+      const results=[];
+      for(const tu of toolUses){
+        const consulta = String(tu.input?.consulta||'').trim(); busquedas++;
+        docStatus.textContent = `buscando: ${consulta.slice(0,40)}…`;
+        if(consulta) await ensureIndexesFor(consulta);
+        const found = consulta ? retrieve(consulta, TOP_K) : [];
+        found.forEach(h=>{ if(!allHits.some(x=>x.id===h.id)) allHits.push(h); });
+        results.push({type:'tool_result', tool_use_id:tu.id, content: found.length
+          ? found.map(h=>`[${h.cat} · ${h.doc}${h.titulo?' · '+h.titulo:''} · pág. ${h.page} de ~${docPages[h.doc]||'?'}]\n${h.text}`).join('\n\n---\n\n')
+          : 'Sin resultados para esa consulta. Prueba con un código (J5, TB4), un modelo (FSP-951) o el número de documento (52545SP).'});
+      }
+      if(busquedas >= MAX_BUSQUEDAS) results[results.length-1].content += '\n\n[LÍMITE DE BÚSQUEDAS ALCANZADO: responde ahora con la información disponible, sin pedir más búsquedas.]';
+      apiMessages.push({role:'user', content:results});
+    }
+    if(data){
+      const reply=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n').trim()||'No obtuve una respuesta en texto tras las búsquedas. Reformula la pregunta con el código o modelo exacto.';
+      const seen=new Set(); const sources = allHits.map(h=>({doc:h.doc, page:h.page})).filter(x=>{const k=x.doc+'|'+x.page; if(seen.has(k)) return false; seen.add(k); return true;}).slice(0,12);
       messages.push({role:'assistant',display:reply,content:reply,sources});
     }
   } catch(e){
     messages.push({role:'assistant',display:'⚠️ Error de conexión. Verifica tu internet e intenta nuevamente.',content:'Error.'});
   }
+  if(indexReady) setDocStatus(statusText(), true);
   isLoading=false;updateSendBtn();render();
 }
 // ════════════════════════════════════════════════════════════
