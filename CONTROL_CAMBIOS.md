@@ -14,13 +14,15 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 
 ---
 
-## Estado actual (2026-11-04)
+## Estado actual (2026-11-05)
 
 | Componente | Estado |
 |---|---|
 | Modos | Troubleshooting, Reemplazo HW, Examen, Diccionario, Guía Rápida, Diseño, Batería |
 | Modelo API | `claude-sonnet-4-6` (seleccionable: Haiku 4.5, Sonnet 3.5, Haiku 3) |
 | Documentación | Índices BM25 por categoría en `idx/` (manifest 2026.1, 12 índices, 18.197 fragmentos, 15 MB) |
+| Búsqueda | BM25 con sinónimos bilingües ES↔EN (88 claves, peso 0.4 frente a 1 de lo escrito), 10 fragmentos por consulta, refuerzo a códigos raros y ×3 al documento nombrado |
+| Búsqueda agéntica | El modelo puede pedir hasta 3 búsquedas por pregunta con `buscar_documentacion`, resueltas por el motor local; activa en todos los modos salvo Diccionario |
 | Datos externos | `fuentes.json` (fuentes/baterías), `ifas_device_library.json` (aparatos) |
 | Tema | Claro/oscuro con botón 🌙/☀️, persistente (localStorage `ifas_theme`) |
 | Responsive | Breakpoints 380 / 768 / 1100 px; Batería en 2 columnas en escritorio |
