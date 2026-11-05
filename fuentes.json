@@ -1,5 +1,5 @@
 {
- "version": "2026.1",
+ "version": "2026.2",
  "actualizado": "2026-11",
  "nota_derating": "Panama sigue UL/NFPA 72: factor 1.2 (envejecimiento 20%). Las deratings ULC (1.5/1.8/2.5 segun AH) no aplican en Panama.",
  "baterias": [
@@ -77,8 +77,8 @@
    "cargadorMin": 18,
    "cargadorMax": 200,
    "gabineteMax": 26,
-   "fuente_datos": "DN-7112 NFS-320 + 52745LD",
-   "nota": "Base = CPU 0.250 A + KDM-R2 0.100 A. Suma 0.035 A por cada NAC en uso. Opcionales (tarjetas, anunciadores remotos) van como carga auxiliar. Cargador 18-200 AH; sobre 26 AH requiere gabinete externo (NFS-LBB)."
+   "fuente_datos": "DN-7112 + 52745LD",
+   "nota": "Placa 0.35 A = tarjeta NFS-320 0.250 A + KDM-R2 (display, backlight on) 0.100 A; +0.035 A por cada NAC en uso (DN-7112, especificaciones). Cargador CPS-24: 18-200 AH; sobre 26 AH gabinete separado (52745LD nota 7 y 9)."
   },
   "NFS2640": {
    "nombre": "NFS2-640 — fuente onboard",
@@ -94,8 +94,8 @@
    "cargadorMin": 18,
    "cargadorMax": 200,
    "gabineteMax": 26,
-   "fuente_datos": "DN-7111 NFS2-640",
-   "nota": "Base = CPU2-640 0.250 A + KDM-R2 0.100 A. Suma 0.035 A por cada NAC en uso. Si tiene 2.o lazo (LEM-320) agrega 0.100 A como carga auxiliar. Cargador 18-200 AH; sobre 26 AH gabinete externo."
+   "fuente_datos": "DN-7111",
+   "nota": "Placa 0.35 A = CPU2-640 0.250 A + KDM-R2 0.100 A; +0.035 A por cada NAC en uso; LEM-320 0.100 A adicional si está instalada (DN-7111, especificaciones). Cargador 18-200 AH; sobre 26 AH gabinete separado."
   },
   "NFS23030": {
    "nombre": "NFS2-3030 — fuente onboard (AMPS-24)",
@@ -111,14 +111,14 @@
    "cargadorMin": 7,
    "cargadorMax": 200,
    "gabineteMax": 26,
-   "fuente_datos": "DN-7070 NFS2-3030 + AMPS-24",
-   "nota": "Base = CPU2-3030D 0.340 A + AMPS-24 0.130 A + LCM-320 0.130 A (1 lazo). Lazos adicionales (LCM 0.130 / LEM 0.100 c/u) y 2.o AMPS-24 van como carga auxiliar. Limites NAC via AMPS-24 (manual 51907), por eso no se valida NAC aqui. Cargador 7-200 AH; sobre 26 AH gabinete externo (BB-100/BB-200)."
+   "fuente_datos": "DN-7070 + 51907",
+   "nota": "Placa 0.6 A ≈ CPU2-3030D 0.340 A + AMPS-24 0.13 A + LCM-320 0.130 A (DN-7070, current draw). Sumar 0.100 A por cada LEM-320 y 0.130 A por cada LCM-320 adicional como carga auxiliar. Cargador AMPS-24: 7-200 AH (51907)."
   },
   "AMPS24": {
-   "nombre": "AMPS-24 — fuente remota/auxiliar (por confirmar)",
+   "nombre": "AMPS-24 — fuente direccionable 24 V (datos parciales)",
    "verificado": false,
-   "placaStandby": null,
-   "placaAlarma": null,
+   "placaStandby": 0.13,
+   "placaAlarma": 0.13,
    "perNacAdder": 0,
    "nacs": null,
    "nacMax": null,
@@ -128,14 +128,14 @@
    "cargadorMin": 7,
    "cargadorMax": 200,
    "gabineteMax": null,
-   "fuente_datos": "51907 pág. 7 (extracción automática 2026, sin validar)",
-   "nota": "Datos candidatos extraídos por script. Validar contra el PDF, completar los null y cambiar verificado a true para habilitar el cálculo. Salida auxiliar de 24 V en TB2. Salida de 5 V: 0.15 A."
+   "fuente_datos": "DN-7070 (0.13 A) · 51907 pág. 7 (cargador 7-200 AH, aux 24 V 0.5 A)",
+   "nota": "Pendiente: número de salidas NAC y corriente máxima por salida (manual 51907, sección de especificaciones). Sin esos dos datos el cálculo sigue bloqueado."
   },
   "AMPS24E": {
-   "nombre": "AMPS-24E — fuente remota/auxiliar (por confirmar)",
+   "nombre": "AMPS-24E — fuente direccionable 24 V, 220/240 VAC (datos parciales)",
    "verificado": false,
-   "placaStandby": null,
-   "placaAlarma": null,
+   "placaStandby": 0.13,
+   "placaAlarma": 0.13,
    "perNacAdder": 0,
    "nacs": null,
    "nacMax": null,
@@ -145,8 +145,8 @@
    "cargadorMin": 7,
    "cargadorMax": 200,
    "gabineteMax": null,
-   "fuente_datos": "51907 pág. 7 (extracción automática 2026, sin validar)",
-   "nota": "Datos candidatos extraídos por script. Validar contra el PDF, completar los null y cambiar verificado a true para habilitar el cálculo. Salida auxiliar de 24 V en TB2. Salida de 5 V: 0.15 A."
+   "fuente_datos": "DN-7070 (0.13 A) · 51907 pág. 7",
+   "nota": "Igual que AMPS-24. Pendiente: número de salidas NAC y corriente máxima por salida."
   },
   "ACPS610": {
    "nombre": "ACPS-610 — fuente remota/auxiliar (por confirmar)",
@@ -157,13 +157,13 @@
    "nacs": 4,
    "nacMax": 1.5,
    "tb4Max": 0.5,
-   "salidaMax": 6,
+   "salidaMax": 6.0,
    "standbyMax": null,
    "cargadorMin": 12,
    "cargadorMax": 200,
    "gabineteMax": null,
-   "fuente_datos": "53018 pág. 7 (extracción automática 2026, sin validar)",
-   "nota": "Datos candidatos extraídos por script. Validar contra el PDF, completar los null y cambiar verificado a true para habilitar el cálculo. Hasta 10.0 A totales con el cargador desactivado. Las cuatro salidas son configurables. Auxiliar de 5 V: 0.15 A."
+   "fuente_datos": "53018 pág. 7-8 (4 salidas TB3-TB6, 1.5 A como NAC, 6.0 A total o 10.0 A con cargador deshabilitado, aux 24 V 0.5 A, baterías 12-200 AH)",
+   "nota": "Verificado literalmente: salidas, límites y cargador. Pendiente: consumo propio de la placa en standby y alarma (tabla 5.1 del manual 53018, pág. 46-49). Con placa confirmada, cambiar verificado a true."
   },
   "ACPS610E": {
    "nombre": "ACPS-610E — fuente remota/auxiliar (por confirmar)",
@@ -174,99 +174,99 @@
    "nacs": 4,
    "nacMax": 1.5,
    "tb4Max": 0.5,
-   "salidaMax": 6,
+   "salidaMax": 6.0,
    "standbyMax": null,
    "cargadorMin": 12,
    "cargadorMax": 200,
    "gabineteMax": null,
-   "fuente_datos": "53018 pág. 7 (extracción automática 2026, sin validar)",
-   "nota": "Datos candidatos extraídos por script. Validar contra el PDF, completar los null y cambiar verificado a true para habilitar el cálculo. Hasta 10.0 A totales con el cargador desactivado. Las cuatro salidas son configurables. Auxiliar de 5 V: 0.15 A."
+   "fuente_datos": "53018 pág. 7-8 (4 salidas TB3-TB6, 1.5 A como NAC, 6.0 A total o 10.0 A con cargador deshabilitado, aux 24 V 0.5 A, baterías 12-200 AH)",
+   "nota": "Verificado literalmente: salidas, límites y cargador. Pendiente: consumo propio de la placa en standby y alarma (tabla 5.1 del manual 53018, pág. 46-49). Con placa confirmada, cambiar verificado a true."
   },
   "APS26R": {
-   "nombre": "APS2-6R — fuente remota/auxiliar (por confirmar)",
+   "nombre": "APS2-6R — fuente auxiliar 6 A (sin cargador)",
+   "verificado": false,
+   "placaStandby": 0.041,
+   "placaAlarma": 0.041,
+   "perNacAdder": 0,
+   "nacs": null,
+   "nacMax": null,
+   "tb4Max": null,
+   "salidaMax": 6.0,
+   "standbyMax": null,
+   "cargadorMin": null,
+   "cargadorMax": null,
+   "gabineteMax": null,
+   "fuente_datos": "53232 pág. 9 (41 mA standby desde baterías; no tiene cargador) · DN-60410",
+   "nota": "No aplica para cálculo de batería propio: la APS2-6R no tiene cargador, sus baterías las carga la fuente del sistema. Tratarla como carga auxiliar del panel o fuente que la alimenta."
+  },
+  "FCPS24S6": {
+   "nombre": "FCPS-24S6 — fuente remota 6 A",
+   "verificado": false,
+   "placaStandby": 0.065,
+   "placaAlarma": 0.065,
+   "perNacAdder": 0,
+   "nacs": 4,
+   "nacMax": 3.0,
+   "tb4Max": null,
+   "salidaMax": 6.0,
+   "standbyMax": null,
+   "cargadorMin": 7,
+   "cargadorMax": 18,
+   "gabineteMax": 7,
+   "fuente_datos": "51977 pág. 11 (65 mA standby desde baterías, cargador 7-18 AH, 1.5 A carga) · DN-6927 pág. 1 (4 NAC clase B/A, 3.0 A por NAC, gabinete 7 AH)",
+   "nota": "Placa en alarma asumida igual a standby (el manual solo publica 65 mA de standby); confirmar en la tabla 6.3 del 51977 (pág. 40) y luego cambiar verificado a true."
+  },
+  "FCPS24S8": {
+   "nombre": "FCPS-24S8 — fuente remota 8 A",
+   "verificado": false,
+   "placaStandby": 0.065,
+   "placaAlarma": 0.065,
+   "perNacAdder": 0,
+   "nacs": 4,
+   "nacMax": 3.0,
+   "tb4Max": null,
+   "salidaMax": 8.0,
+   "standbyMax": null,
+   "cargadorMin": 7,
+   "cargadorMax": 18,
+   "gabineteMax": 7,
+   "fuente_datos": "51977 pág. 11 (65 mA standby desde baterías, cargador 7-18 AH, 1.5 A carga) · DN-6927 pág. 1 (4 NAC clase B/A, 3.0 A por NAC, gabinete 7 AH)",
+   "nota": "Placa en alarma asumida igual a standby (el manual solo publica 65 mA de standby); confirmar en la tabla 6.3 del 51977 (pág. 40) y luego cambiar verificado a true."
+  },
+  "PSE6": {
+   "nombre": "PSE-6 — expansor de fuente 6 A",
    "verificado": false,
    "placaStandby": null,
    "placaAlarma": null,
    "perNacAdder": 0,
    "nacs": null,
-   "nacMax": null,
+   "nacMax": 3.0,
    "tb4Max": null,
-   "salidaMax": 6,
-   "standbyMax": null,
-   "cargadorMin": null,
-   "cargadorMax": null,
-   "gabineteMax": null,
-   "fuente_datos": "DN-60410 pág. 1 (extracción automática 2026, sin validar)",
-   "nota": "Datos candidatos extraídos por script. Validar contra el PDF, completar los null y cambiar verificado a true para habilitar el cálculo. 6.0 A en alarma y 4.0 A continuos."
-  },
-  "FCPS24S6": {
-   "nombre": "FCPS-24S6 — fuente remota/auxiliar (por confirmar)",
-   "verificado": false,
-   "placaStandby": null,
-   "placaAlarma": null,
-   "perNacAdder": 0,
-   "nacs": 4,
-   "nacMax": 3,
-   "tb4Max": null,
-   "salidaMax": 6,
-   "standbyMax": null,
-   "cargadorMin": null,
-   "cargadorMax": 18,
-   "gabineteMax": 7,
-   "fuente_datos": "DN-6927 pág. 1 (extracción automática 2026, sin validar)",
-   "nota": "Datos candidatos extraídos por script. Validar contra el PDF, completar los null y cambiar verificado a true para habilitar el cálculo. Salida nominal de 6 A. Consultar la ficha para el limite segun el modo de operacion."
-  },
-  "FCPS24S8": {
-   "nombre": "FCPS-24S8 — fuente remota/auxiliar (por confirmar)",
-   "verificado": false,
-   "placaStandby": null,
-   "placaAlarma": null,
-   "perNacAdder": 0,
-   "nacs": 4,
-   "nacMax": 3,
-   "tb4Max": null,
-   "salidaMax": 8,
-   "standbyMax": null,
-   "cargadorMin": null,
-   "cargadorMax": 18,
-   "gabineteMax": 7,
-   "fuente_datos": "DN-6927 pág. 1 (extracción automática 2026, sin validar)",
-   "nota": "Datos candidatos extraídos por script. Validar contra el PDF, completar los null y cambiar verificado a true para habilitar el cálculo. Salida nominal de 8 A. Consultar la ficha para el limite segun el modo de operacion."
-  },
-  "PSE6": {
-   "nombre": "PSE-6 — fuente remota/auxiliar (por confirmar)",
-   "verificado": false,
-   "placaStandby": null,
-   "placaAlarma": null,
-   "perNacAdder": 0,
-   "nacs": 5,
-   "nacMax": 3,
-   "tb4Max": null,
-   "salidaMax": 6,
+   "salidaMax": 6.0,
    "standbyMax": null,
    "cargadorMin": 7,
    "cargadorMax": 33,
    "gabineteMax": 18,
-   "fuente_datos": "LS10227-000NF-E pág. 9 (extracción automática 2026, sin validar)",
-   "nota": "Datos candidatos extraídos por script. Validar contra el PDF, completar los null y cambiar verificado a true para habilitar el cálculo. 3 A en aplicaciones especiales; en salidas reguladas, 1 A en TB8–TB9 y 0.3 A en TB10–TB12. El gabinete admite 7 o 18 AH."
+   "fuente_datos": "LS10227-000NF-E pág. 9 (baterías 7-33 AH, 7 o 18 AH en gabinete, carga 1.5 A) · pág. 36 (3.0 A por NAC aplicación especial)",
+   "nota": "El num_NAC extraído por script (5 y 7) era falso: coincidía con la corriente de entrada AC. Pendiente: número de salidas y consumo propio de la placa (tabla 6.3, pág. 36-37)."
   },
   "PSE10": {
-   "nombre": "PSE-10 — fuente remota/auxiliar (por confirmar)",
+   "nombre": "PSE-10 — expansor de fuente 10 A",
    "verificado": false,
    "placaStandby": null,
    "placaAlarma": null,
    "perNacAdder": 0,
-   "nacs": 7,
-   "nacMax": 3,
+   "nacs": null,
+   "nacMax": 3.0,
    "tb4Max": null,
-   "salidaMax": 10,
+   "salidaMax": 10.0,
    "standbyMax": null,
    "cargadorMin": 7,
    "cargadorMax": 33,
    "gabineteMax": 18,
-   "fuente_datos": "LS10227-000NF-E pág. 9 (extracción automática 2026, sin validar)",
-   "nota": "Datos candidatos extraídos por script. Validar contra el PDF, completar los null y cambiar verificado a true para habilitar el cálculo. 3 A en aplicaciones especiales; en salidas reguladas, 1.5 A en TB8–TB11 y 0.3 A en TB12–TB14. El gabinete admite 7 o 18 AH."
+   "fuente_datos": "LS10227-000NF-E pág. 9 (baterías 7-33 AH, 7 o 18 AH en gabinete, carga 1.5 A) · pág. 36 (3.0 A por NAC aplicación especial)",
+   "nota": "El num_NAC extraído por script (5 y 7) era falso: coincidía con la corriente de entrada AC. Pendiente: número de salidas y consumo propio de la placa (tabla 6.3, pág. 36-37)."
   }
  },
- "nota_candidatos": "NFS-320/NFS2-640: la extracción 2026 (DN-7112 pág. 7 / DN-7111 pág. 9) da placa 0.25 A sb/al y batería mín. 18 AH; el valor verificado actual es 0.35 A. Revisar cuál corresponde a la revisión vigente del datasheet."
+ "nota_candidatos": "Discrepancia 0.25 A vs 0.35 A resuelta: 0.25 A es la tarjeta sola y 0.35 A incluye el display KDM-R2 (DN-7112/DN-7111). Las fuentes nuevas quedan en verificado=false hasta completar los campos pendientes indicados en cada nota."
 }
