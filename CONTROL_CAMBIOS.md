@@ -14,13 +14,13 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 
 ---
 
-## Estado actual (2026-07-30)
+## Estado actual (2026-11-04)
 
 | Componente | Estado |
 |---|---|
 | Modos | Troubleshooting, Reemplazo HW, Examen, Diccionario, Guía Rápida, Diseño, Batería |
 | Modelo API | `claude-sonnet-4-6` (seleccionable: Haiku 4.5, Sonnet 3.5, Haiku 3) |
-| Documentación | Índice BM25 `ifas_index.json` — 8,463 fragmentos, 23 categorías (~12 MB) |
+| Documentación | Índices BM25 por categoría en `idx/` (manifest 2026.1, 12 índices, 18.197 fragmentos, 15 MB) |
 | Datos externos | `fuentes.json` (fuentes/baterías), `ifas_device_library.json` (aparatos) |
 | Tema | Claro/oscuro con botón 🌙/☀️, persistente (localStorage `ifas_theme`) |
 | Responsive | Breakpoints 380 / 768 / 1100 px; Batería en 2 columnas en escritorio |
@@ -34,6 +34,11 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 ---
 
 # Historial
+
+## 2026-11-04 — v2026.1: índices por categoría (Notifier University 2026) + INSPIRE N16
+**Archivos:** index.html, fuentes.json, idx/ (nuevo, 13 archivos), ifas_index.json (eliminado), CONTROL_CAMBIOS.md
+**Cambios:** loader por manifest con carga base según familia (selector ONYX / INSPIRE N16 / Todas) y carga bajo demanda del otro índice; 18.197 fragmentos de 212 documentos, 8 presentaciones y 8 videos transcritos; BM25 con bonus de nombre 1.5, penalización 0.5 a la familia no seleccionada, preferencia 1.1 por español y máximo 3 fragmentos por documento; system prompt con identidad ONYX + N16, tabla de diagnóstico ampliada y Reglas 8 (firmware antes que hardware), 9 (recuperación de contraseña solo por Password Agreement), 10 (prueba de reaceptación NFPA 72 / 15378) y 11 (N16: capacidades, exclusiones, conversión de base de datos); fuentes.json con nueve fuentes nuevas marcadas por confirmar.
+**Verificación:** sintaxis JS con node, JSON válidos, servidor local con todos los archivos en 200, motor BM25 probado contra los índices reales (ONYX 16.287 fragmentos en 1.1 s).
 
 ##  2026-08-06 - Actualización y limpieza de indice
 **Archivo;** `ifas_index` (actualizo)

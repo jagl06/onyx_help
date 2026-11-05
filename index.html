@@ -291,7 +291,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
       <div class="logo">🔥</div>
       <div class="title-block">
         <h1>IFAS</h1>
-        <p>ISELEC Fire Alarm Support</p>
+        <p>ISELEC Fire Alarm Support · v2026.1</p>
       </div>
     </div>
     <div class="hdr-actions">
@@ -316,6 +316,11 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 
   <div id="manual-bar">
     <label>📚 Documentación</label>
+    <select id="fam-select" title="Familia de panel: decide qué índices se cargan" style="flex:0 0 auto;background:var(--surface-1);border:1px solid var(--border-2);border-radius:8px;color:var(--text-dim);font-size:11px;font-family:'DM Sans',sans-serif;padding:4px 6px;outline:none;cursor:pointer;">
+      <option value="ONYX">ONYX</option>
+      <option value="N16">INSPIRE N16</option>
+      <option value="TODOS">Todas</option>
+    </select>
     <span id="doc-status" style="font-size:11px;color:var(--text-faint);">cargando…</span>
   </div>
 
@@ -418,7 +423,9 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
 const SYSTEM_PROMPT = `# IFAS — ISELEC Fire Alarm Support
 
 ## Identidad
-Eres un asistente técnico especializado en sistemas de detección y alarma de incendio: paneles Notifier serie ONYX (NFS-320, NFS2-640, NFS2-3030), VeriFire Tools, dispositivos de campo (detectores, módulos, dispositivos de notificación) y diseño/ingeniería según NFPA 72. Respondes en español técnico claro y conciso.
+Eres un asistente técnico especializado en sistemas de detección y alarma de incendio Notifier: familia ONYX (NFS-320, NFS2-640, NFS2-3030) y familia INSPIRE (N16, N16E, N16X), VeriFire Tools, red NotiFireNet (NCM, HS-NCM), fuentes (AMPS-24, ACPS-610, APS2-6R, FCPS-24S6/S8, PSE-6/10), dispositivos de campo (detectores series 851/951, módulos, SWIFT, notificación L-Series) y diseño/ingeniería según NFPA 72. Respondes en español técnico claro y conciso. La base documental es Notifier University 2026 (manuales, hojas de datos, presentaciones PPT01-PPT08 y transcripciones de video).
+
+Cada mensaje del usuario llega con el modo activo y la familia de panel seleccionada ([Familia: ONYX | N16 | TODOS]). Si la familia es TODOS y el síntoma depende del panel, pregunta cuál es antes de diagnosticar. Nunca mezcles menús, códigos de trouble ni procedimientos de ONYX con los de N16: el N16 no tiene LCM/LEM, usa SLM-318 (lazos), ACM-30 (anunciador), CAB-5 (gabinete) y RLD (display remoto), y se programa 100 % desde VeriFire Tools.
 
 ## REGLA 1 — TRIAGE OBLIGATORIO (SOLO modos TROUBLESHOOTING y REEMPLAZO_HARDWARE)
 En esos dos modos, antes de diagnosticar necesitas: (1) modelo del panel, (2) qué cambió recientemente, (3) texto literal del error. Si falta alguno, haz máximo 3 preguntas en UN solo mensaje. Si el usuario ya dio toda la info, diagnostica directamente sin pedir más.
@@ -455,9 +462,28 @@ Tabla de referencia:
 - GROUND FAULT → Cable SLC con contacto a tierra o chasis
 - SLC OPEN → Cable cortado o sin resistencia de fin de línea
 - PBL PROBLEMA BATERIA NRAM → Batería NVRAM descargada en CPU
+- SOFTWARE MISMATCH (NFS2-3030) → Versión de firmware de CPU incompatible con LCM/LEM o con AMPS-24 (ej. CPU V22 frente a LCM V8.0 o V12.0). Pedir las versiones exactas de cada tarjeta (tecla de versión 5 s o READ STATUS → VERSION) y comparar con la tabla de compatibilidad del manual; la solución es actualizar firmware, no reemplazar tarjetas.
+- GROUND FAULT intermitente → aislar por circuito: desconectar SLC, NAC y 24 V aux uno a uno hasta que desaparezca; revisar blindajes aterrizados en ambos extremos y cajas con humedad.
+- NODO PERDIDO / NO RESPONDE (NotiFireNet) → verificar dirección de nodo en la NCM, estilo de red (4 abierto / 7 cerrado), polaridad del par y, en HS-NCM, el firmware igual en todos los nodos.
+- TROUBLE AMPS-24 / PBL FUENTE → confirmar en el NFS2-3030 que la AMPS-24 está declarada y supervisada en VeriFire (System → AMPS-24) y que el cableado de supervisión (TB) coincide con el manual 51907.
 
 ## REGLA 4 — ANTI-ALUCINACIÓN
-NUNCA inventes versiones de firmware o VeriFire. Si no tienes el dato: "Verifica en panel: MAIN MENU → READ STATUS → VERSION". No diagnostiques basándote solo en observaciones visuales sin evidencia del síntoma.
+NUNCA inventes versiones de firmware o VeriFire. Si no tienes el dato: "Verifica en panel: MAIN MENU → READ STATUS → VERSION". No diagnostiques basándote solo en observaciones visuales sin evidencia del síntoma. Los fragmentos de documentación que recibes en cada mensaje son la fuente de verdad: si un dato (corriente, capacidad, compatibilidad, menú) no está en ellos ni en esta instrucción, dilo y nombra el documento donde buscarlo en vez de completarlo de memoria.
+
+## REGLA 8 — FIRMWARE ANTES QUE HARDWARE
+Ante un trouble de compatibilidad, software mismatch o "VERSION PANEL NO SOPORTADA", el orden es: (1) anotar versiones actuales de CPU, LCM/LEM, AMPS-24 y VeriFire; (2) consultar la tabla de compatibilidad; (3) actualizar firmware con VeriFire Tools (NFS-320/NFS2-640: flash de CPU; NFS2-3030: actualización a V31 o la que indique la tabla; HS-NCM: actualización de cada tarjeta de red); (4) solo si persiste, considerar reemplazo. Antes de actualizar: respaldar la base de datos (Upload desde el panel), tener la versión de VeriFire Tools que el panel requiere (no usar VFT 11.xx para conversiones) y alimentación estable. Después: Download, reinicio completo y prueba de reaceptación.
+
+## REGLA 9 — RECUPERACIÓN DE CONTRASEÑA
+La única vía es el procedimiento oficial de Notifier: un empleado vigente de la empresa propietaria del panel llena y firma el NOTIFIER Password Agreement (solo los campos en rojo, sin cambiar el idioma), con correo de dominio de la empresa y sello, y lo envía por el canal de soporte Notifier; Notifier devuelve la contraseña. Para N16 el procedimiento tiene sus propios pasos en el documento "N16 Password Recover Steps". NUNCA sugieras contraseñas por defecto, trucos de hardware, puentes ni "métodos alternativos" para entrar a un panel. Las contraseñas de fábrica (ej. 00000 / 11111) solo se mencionan para paneles nuevos sin programar.
+
+## REGLA 10 — PRUEBA DE REACEPTACIÓN (NFPA 72, documento 15378)
+Después de cualquier cambio de programación, firmware, cableado o componente, indica al técnico que debe probar el 100 % de los dispositivos, circuitos y funciones afectados, más al menos el 10 % de los dispositivos iniciadores no afectados (máximo 50), y verificar la operación del sistema. Inclúyelo como último paso en todo procedimiento de reemplazo o actualización.
+
+## REGLA 11 — INSPIRE N16 (migración y programación)
+- Capacidades: N16E sale de caja con un lazo; N16X se amplía con SLM-318 y licencia; hasta 10 routers y 15 periféricos por router (80 ACM-30 en la versión inicial); bus AIO para ACM-30, RLD y periféricos.
+- El N16 NO soporta detectores en modo retrofit CLIP ni zonas de release (extinción con agentes limpios); si el proyecto lo requiere, se queda en ONYX.
+- Conversión de base de datos ONYX a N16: (1) importar la base en VeriFire Tools 12.45 o superior; (2) "Upgrade Node" a V27.0 o superior; (3) "Convert Node" de V27.0 a N16 V5.0 o superior; (4) revisar manualmente dispositivos no soportados y lógica. No usar VFT 11.xx en ninguna parte del proceso.
+- Para diagnosticar un N16, pide siempre: versión de firmware del CPU-N16LD, versión de VeriFire Tools y el texto exacto del evento en el display o RLD.
 
 ## REGLA 5 — ANÁLISIS DE IMÁGENES
 Cuando recibas fotos: primero lista lo que observas (tarjetas visibles, texto en pantalla, LEDs, conexiones), luego diagnostica en base a esas observaciones.
@@ -488,17 +514,17 @@ CPU: CPU2-3030D (con display) | Fuente: AMPS-24
 ## MODOS DE OPERACIÓN
 TROUBLESHOOTING: Aplica Reglas 1-6. Diagnóstico contextual y conciso.
 REEMPLAZO_HARDWARE: Aplica Regla 2 obligatoriamente. Incluye verificación física + programación VeriFire + validación post-intervención.
-EXAMEN: Formula preguntas del banco de conocimiento ONYX una a la vez. No des la respuesta antes de que el usuario responda. Evalúa, da retroalimentación con referencia al manual y muestra puntaje acumulado.
+EXAMEN: Formula preguntas una a la vez a partir de los fragmentos de Notifier University 2026 (presentaciones PPT01-PPT08, LAB 1 y manuales) del tema elegido. No des la respuesta antes de que el usuario responda. Evalúa, da retroalimentación con referencia al manual y muestra puntaje acumulado.
 DICCIONARIO: Definición técnica + aplicación práctica + referencia manual. Máximo 5 líneas por término.
-GUIA_RAPIDA: Solo tablas con valores, límites y parámetros. Sin explicaciones largas.
+GUIA_RAPIDA: Solo tablas con valores, límites y parámetros, o pasos numerados cuando se pida un procedimiento (walk test, recuperación de contraseña, configuración de AMPS-24, actualización de firmware, instalación de VeriFire Tools). Sin explicaciones largas.
 DISENO: Consultas abiertas de ingeniería y diseño (cobertura, espaciamiento, cantidad/ubicación de dispositivos, selección y compatibilidad de equipos). Aplica Regla 7. No exijas el triage de troubleshooting. Fundamenta en ficha técnica del dispositivo + NFPA 72 y nunca inventes valores de cobertura o espaciamiento.`;
 
 const MODE_CONFIG = {
-  TROUBLESHOOTING:{color:"#FF453A",colorLight:"#C81E14",bg:"rgba(255,69,58,0.14)",label:"Troubleshooting",starter:"Modo Troubleshooting activo.\n\nDescribe el problema: modelo del panel, qué cambió recientemente y el texto exacto del error o trouble que muestra."},
-  REEMPLAZO_HARDWARE:{color:"#FF9F0A",colorLight:"#A85D00",bg:"rgba(255,159,10,0.14)",label:"Reemplazo HW",starter:"Modo Reemplazo de Hardware activo.\n\nIndica qué componente fue reemplazado (CPU, LCM, LEM, fuente, etc.) y el modelo del panel. Te guío paso a paso incluyendo la reprogramación en VeriFire."},
-  EXAMEN:{color:"#0A84FF",colorLight:"#0A66D0",bg:"rgba(10,132,255,0.14)",label:"Examen",starter:"Modo Examen activo.\n\n¿Sobre qué modelo o tema quieres ser evaluado?\n\n• NFS-320\n• NFS2-640\n• NFS2-3030\n• VeriFire Tools\n• Operación y mantenimiento"},
+  TROUBLESHOOTING:{color:"#FF453A",colorLight:"#C81E14",bg:"rgba(255,69,58,0.14)",label:"Troubleshooting",starter:"Modo Troubleshooting activo.\n\nDescribe el problema: modelo del panel (ONYX o N16), qué cambió recientemente y el texto exacto del error o trouble que muestra. Si es un NFS2-3030, incluye las versiones de CPU y LCM/LEM."},
+  REEMPLAZO_HARDWARE:{color:"#FF9F0A",colorLight:"#A85D00",bg:"rgba(255,159,10,0.14)",label:"Reemplazo HW",starter:"Modo Reemplazo de Hardware activo.\n\nIndica qué componente fue reemplazado o se va a actualizar (CPU, LCM, LEM, fuente, HS-NCM, CPU-N16LD, SLM-318, firmware) y el modelo del panel. Te guío paso a paso incluyendo la reprogramación en VeriFire y la prueba de reaceptación."},
+  EXAMEN:{color:"#0A84FF",colorLight:"#0A66D0",bg:"rgba(10,132,255,0.14)",label:"Examen",starter:"Modo Examen activo.\n\n¿Sobre qué modelo o tema quieres ser evaluado?\n\n• NFS-320\n• NFS2-640\n• NFS2-3030\n• INSPIRE N16\n• Zonas lógicas y ecuaciones\n• NotiFireNet\n• VeriFire Tools\n• Operación y mantenimiento"},
   DICCIONARIO:{color:"#30D158",colorLight:"#1E8E3E",bg:"rgba(48,209,88,0.14)",label:"Diccionario",starter:"Modo Diccionario activo.\n\n¿Qué término o función quieres consultar? (ej: Alarm Verification, Drift Compensation, Walk Test, SLC, NAC, LCM, etc.)"},
-  GUIA_RAPIDA:{color:"#BF5AF2",colorLight:"#8E24AA",bg:"rgba(191,90,242,0.14)",label:"Guía Rápida",starter:"Modo Guía Rápida activo.\n\n¿Qué parámetros necesitas?\n\n• Corrientes por dispositivo\n• Resistencias de fin de línea\n• Capacidades por lazo/panel\n• Límites de cableado SLC\n• Otro — especifica"},
+  GUIA_RAPIDA:{color:"#BF5AF2",colorLight:"#8E24AA",bg:"rgba(191,90,242,0.14)",label:"Guía Rápida",starter:"Modo Guía Rápida activo.\n\n¿Qué parámetros necesitas?\n\n• Corrientes por dispositivo\n• Resistencias de fin de línea\n• Capacidades por lazo/panel\n• Límites de cableado SLC\n• Procedimiento (walk test, contraseña, AMPS-24, firmware)\n• Otro — especifica"},
   DISENO:{color:"#5AC8FA",colorLight:"#0277BD",bg:"rgba(90,200,250,0.14)",label:"Diseño",starter:"Modo Diseño activo.\n\nConsulta abierta de ingeniería: cobertura/espaciamiento de detectores, cantidad de dispositivos para un área, selección o compatibilidad de equipos.\n\nPara cálculos de cobertura ten a mano: modelo exacto del dispositivo, altura y tipo de techo (liso / con vigas / con viguetas) y dimensiones del área. IFAS consulta la documentación automáticamente; si quieres, también puedes adjuntar la ficha técnica como foto o PDF."},
   BATERIA:{color:"#FFD60A",colorLight:"#9A7B00",bg:"rgba(255,214,10,0.14)",label:"Cálculo de Batería",starter:""}
 };
@@ -510,10 +536,13 @@ let activeMode = null;
 let messages = [];
 let pendingImages = [];
 let isLoading = false;
-// Indice de busqueda BM25 (se carga desde ifas_index.json)
-let docIndex = [];      // [{id,cat,doc,page,text,tokens,len}]
+// Índices de búsqueda BM25 por categoría (idx/manifest.json + idx/idx_<categoria>.json)
+let docIndex = [];      // [{id,cat,doc,titulo,page,text,familia,idioma,tipo,tf,len,nameTokens}]
 let bm25 = null;        // {df, avgdl, N}
 let indexReady = false;
+let manifest = null;    // contenido de idx/manifest.json
+const loadedCats = new Set();
+let familia = localStorage.getItem('ifas_familia') || 'ONYX';   // ONYX | N16 | TODOS
 const TOP_K = 8;        // fragmentos a inyectar por consulta
 
 // ── ELEMENTS ──
@@ -804,33 +833,101 @@ function tokenize(s){
     .filter(t => t.length > 1 && !STOP.has(t));
 }
 
+const IDX_DIR = 'idx/';
+// Índices que se cargan al inicio según la familia; el resto se carga bajo demanda.
+const BASE_CATS = {
+  ONYX:  ['paneles_onyx','fuentes','detectores','modulos','anunciadores_red','notificacion','compatibilidad','cable_norma','liberacion_swift','procedimientos','cursos_2026'],
+  N16:   ['paneles_n16','fuentes','detectores','modulos','anunciadores_red','notificacion','compatibilidad','cable_norma','liberacion_swift','procedimientos','cursos_2026'],
+  TODOS: null   // todos los del manifest
+};
+// Palabras de la consulta que fuerzan la carga de un índice aunque no esté en la base
+const CAT_TRIGGERS = {
+  paneles_n16:  ['n16','n16e','n16x','inspire','slm','slm-318','acm-30','cab-5','rld','n16ld'],
+  paneles_onyx: ['nfs','nfs-320','nfs2-640','nfs2-3030','onyx','lcm','lem','cpu2']
+};
+
+function ingest(cat, frs){
+  const base = docIndex.length;
+  frs.forEach((f,i)=>{
+    const toks = tokenize(f.texto);
+    const tf = {};
+    toks.forEach(t=>{ tf[t]=(tf[t]||0)+1; });
+    docIndex.push({id:base+i, cat, doc:f.doc, titulo:f.titulo||'', page:f.pag, text:f.texto,
+      familia:f.familia||'COMUN', idioma:f.idioma||'en', tipo:f.tipo||'manual', tf, len:toks.length,
+      nameTokens: tokenize((f.doc||'')+' '+(f.titulo||'')+' '+(f.modelos||[]).join(' '))});
+  });
+  loadedCats.add(cat);
+}
+function rebuildStats(){
+  const df = {}; let totalLen = 0;
+  for(const d of docIndex){ for(const t in d.tf) df[t]=(df[t]||0)+1; totalLen += d.len; }
+  bm25 = { df, N: docIndex.length, avgdl: totalLen/(docIndex.length||1) };
+  indexReady = docIndex.length > 0;
+}
+function setDocStatus(msg, ok){
+  docStatus.textContent = msg;
+  docStatus.style.color = ok ? 'rgba(48,209,88,0.8)' : 'rgba(255,159,10,0.8)';
+}
+function statusText(){
+  const cats = [...loadedCats].length;
+  return `${docIndex.length.toLocaleString('es')} fragmentos · ${cats}/${manifest?manifest.indices.length:0} índices · ${familia}`;
+}
+async function loadCat(cat){
+  if(loadedCats.has(cat) || !manifest) return false;
+  const parts = manifest.indices.filter(e=>e.categoria===cat);
+  if(!parts.length) return false;
+  for(const e of parts){
+    const res = await fetch(IDX_DIR + e.archivo, {cache:'no-cache'});
+    if(!res.ok) throw new Error(e.archivo+' HTTP '+res.status);
+    const data = await res.json();
+    ingest(cat, data.fragmentos||[]);
+  }
+  return true;
+}
 async function loadIndex(){
   try{
-    const res = await fetch('ifas_index.json', {cache:'no-cache'});
-    if(!res.ok) throw new Error('HTTP '+res.status);
-    const data = await res.json();
-    const df = {}; let totalLen = 0;
-    docIndex = (data.items||[]).map(it=>{
-      const toks = tokenize(it.text);
-      const tf = {};
-      toks.forEach(t=>{ tf[t]=(tf[t]||0)+1; });
-      for(const t in tf) df[t]=(df[t]||0)+1;
-      totalLen += toks.length;
-      return {id:it.id, cat:it.cat, doc:it.doc, page:it.page, text:it.text, tf, len:toks.length,
-              nameTokens: tokenize(it.doc)};
-    });
-    bm25 = { df, N: docIndex.length, avgdl: totalLen/(docIndex.length||1) };
-    indexReady = docIndex.length > 0;
-    docStatus.textContent = indexReady
-      ? `${docIndex.length.toLocaleString('es')} fragmentos listos`
-      : 'sin documentación';
-    docStatus.style.color = indexReady ? 'rgba(48,209,88,0.8)' : 'rgba(255,159,10,0.8)';
+    setDocStatus('cargando índices…', false);
+    const res = await fetch(IDX_DIR + 'manifest.json', {cache:'no-cache'});
+    if(!res.ok) throw new Error('manifest HTTP '+res.status);
+    manifest = await res.json();
+    const want = BASE_CATS[familia] || [...new Set(manifest.indices.map(e=>e.categoria))];
+    for(const cat of want){ await loadCat(cat); }
+    rebuildStats();
+    setDocStatus(indexReady ? statusText() : 'sin documentación', indexReady);
   }catch(e){
     indexReady = false;
-    docStatus.textContent = 'no disponible (revisa ifas_index.json)';
-    docStatus.style.color = 'rgba(255,159,10,0.8)';
+    setDocStatus('no disponible (revisa idx/manifest.json)', false);
   }
 }
+// Carga bajo demanda: si la consulta menciona modelos de un índice no cargado, lo trae antes de buscar.
+async function ensureIndexesFor(query){
+  if(!manifest) return;
+  const q = new Set(tokenize(query));
+  const qraw = query.toLowerCase();
+  const need = [];
+  for(const e of manifest.indices){
+    if(loadedCats.has(e.categoria) || need.includes(e.categoria)) continue;
+    const trig = CAT_TRIGGERS[e.categoria] || [];
+    const hitTrig = trig.some(t=>qraw.includes(t));
+    const hitModel = (e.modelos||[]).some(m=>tokenize(m).every(t=>q.has(t)));
+    if(hitTrig || hitModel) need.push(e.categoria);
+  }
+  if(!need.length) return;
+  try{
+    setDocStatus('cargando '+need.join(', ')+'…', false);
+    for(const c of need) await loadCat(c);
+    rebuildStats();
+    setDocStatus(statusText(), true);
+  }catch(e){ setDocStatus(statusText()+' (falló '+need.join(',')+')', false); }
+}
+async function setFamilia(f){
+  familia = f; localStorage.setItem('ifas_familia', f);
+  docIndex = []; loadedCats.clear(); bm25 = null; indexReady = false;
+  await loadIndex();
+}
+const famSelect = document.getElementById('fam-select');
+famSelect.value = familia;
+famSelect.addEventListener('change', ()=>setFamilia(famSelect.value));
 
 function retrieve(query, k){
   if(!indexReady) return [];
@@ -850,14 +947,26 @@ function retrieve(query, k){
       if(!f) continue;
       s += idf[t] * (f*(k1+1))/(f + k1*(1 - b + b*d.len/bm25.avgdl));
     }
-    // refuerzo si el NOMBRE del documento coincide con la consulta (modelos/códigos: FSP-851, NFS2-3030…)
+    if(s<=0) continue;
+    // refuerzo si el NOMBRE/título/modelos del documento coinciden con la consulta (FSP-851, NFS2-3030…)
     let nameBonus = 0;
-    for(const t of d.nameTokens){ if(idf[t]!==undefined) nameBonus += idf[t]; }
-    s += nameBonus * 2.5;
-    if(s>0) scored.push([s,d]);
+    for(const t of new Set(d.nameTokens)){ if(idf[t]!==undefined) nameBonus += idf[t]; }
+    s += nameBonus * 1.5;
+    // familia seleccionada: penaliza fragmentos de la otra familia (COMUN no se toca)
+    if(familia!=='TODOS' && d.familia!=='COMUN' && d.familia!==familia) s *= 0.5;
+    // leve preferencia por documentos en español
+    if(d.idioma==='es') s *= 1.1;
+    scored.push([s,d]);
   }
   scored.sort((a,b)=>b[0]-a[0]);
-  return scored.slice(0,k).map(x=>x[1]);
+  // máximo 3 fragmentos del mismo documento para diversificar fuentes
+  const out=[], perDoc={};
+  for(const [,d] of scored){
+    if((perDoc[d.doc]||0)>=3) continue;
+    perDoc[d.doc]=(perDoc[d.doc]||0)+1; out.push(d);
+    if(out.length>=k) break;
+  }
+  return out;
 }
 
 // ── BUILD API MESSAGES ──
@@ -878,9 +987,10 @@ async function send(){
     if(img.isPdf) userContent.push({type:'document',source:{type:'base64',media_type:'application/pdf',data:img.data}});
     else userContent.push({type:'image',source:{type:'base64',media_type:img.type,data:img.data}});
   });
-  const msgText=activeMode?`[Modo activo: ${activeMode}]\n${text}`:text;
+  const tag=`[Modo activo: ${activeMode||'NINGUNO'} | Familia: ${familia}]`;
+  const msgText=activeMode?`${tag}\n${text}`:`${tag}\n${text}`;
   if(text) userContent.push({type:'text',text:msgText});
-  else if(activeMode) userContent.push({type:'text',text:`[Modo activo: ${activeMode}]`});
+  else userContent.push({type:'text',text:tag});
 
   const userMsg={role:'user',display:text,images:imgs,content:userContent};
   messages.push(userMsg);
@@ -889,11 +999,12 @@ async function send(){
   isLoading=true;updateSendBtn();render();
 
   // ── RECUPERACIÓN BM25: busca fragmentos relevantes e inyéctalos como contexto ──
+  if(text) await ensureIndexesFor(text);
   const hits = text ? retrieve(text, TOP_K) : [];
   const apiMessages = buildApiMessages(messages);
   if(hits.length){
     const ctx = 'FRAGMENTOS DE LA DOCUMENTACIÓN OFICIAL (úsalos como referencia y cita documento y página cuando los uses):\n\n'
-      + hits.map(h=>`[${h.cat} · ${h.doc} · pág. ${h.page}]\n${h.text}`).join('\n\n---\n\n');
+      + hits.map(h=>`[${h.cat} · ${h.doc}${h.titulo?' · '+h.titulo:''} · ${h.tipo==='video'?'video':'pág. '+h.page}]\n${h.text}`).join('\n\n---\n\n');
     const last = apiMessages[apiMessages.length-1];
     const body = Array.isArray(last.content) ? last.content : [{type:'text',text:last.content}];
     last.content = [{type:'text', text: ctx}, ...body];   // solo para esta llamada, no se guarda
@@ -981,11 +1092,11 @@ const BAT = (function(){
     badge.className='bp-badge '+(f.verificado?'ok':'warn');
     badge.textContent=f.verificado?'✓ verificado':'⚠ por confirmar';
     specs.innerHTML=
-      `<span>Placa: ${f.placaStandby} sb / ${f.placaAlarma} al</span>`+
-      `<span>NAC: ${f.nacs}× ${f.nacMax!=null?f.nacMax+' A':'—'}</span>`+
+      `<span>Placa: ${f.placaStandby??'—'} sb / ${f.placaAlarma??'—'} al</span>`+
+      `<span>NAC: ${f.nacs??'—'}× ${f.nacMax!=null?f.nacMax+' A':'—'}</span>`+
       (f.perNacAdder?`<span>+${f.perNacAdder} A/NAC</span>`:'')+
       (f.tb4Max?`<span>TB4: ${f.tb4Max} A</span>`:'')+
-      `<span>Cargador: ${f.cargadorMin}–${f.cargadorMax} AH</span>`+
+      `<span>Cargador: ${f.cargadorMin??'—'}–${f.cargadorMax??'—'} AH</span>`+
       (f.nota?`<div class="bp-note" style="width:100%;margin:6px 0 0">${f.nota}</div>`:'');
     renderNAC();
   }
