@@ -18,13 +18,13 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 
 | Componente | Estado |
 |---|---|
-| Versión | v2026.3 |
+| Versión | v2026.4 |
 | Modos | Troubleshooting, Reemplazo HW, Examen, Diccionario, Guía Rápida, Diseño, Batería |
 | Familias | ONYX (NFS-320, NFS2-640, NFS2-3030) e INSPIRE N16; selector en la barra 📚 (localStorage `ifas_familia`) |
 | Modelo API | `claude-sonnet-4-6` (seleccionable: Haiku 4.5, Sonnet 3.5, Haiku 3) |
 | Documentación | Índices BM25 por categoría en `idx/` (manifest 2026.1, 12 índices, 18.197 fragmentos, 215 documentos + 8 presentaciones + 8 videos transcritos, 15 MB; gzip en Pages) |
 | Búsqueda | BM25 + sinónimos bilingües + búsqueda agéntica (`buscar_documentacion`, máx. 3 por pregunta, todos los modos salvo Diccionario) |
-| Datos externos | `fuentes.json` v2026.2 (14 fuentes, 5 verificadas), `ifas_device_library.json` (1.346 aparatos NAC), `examen.json` (79 preguntas, 9 temas, todas verificadas contra idx/) |
+| Datos externos | `fuentes.json` v2026.2 (14 fuentes, 5 verificadas), `ifas_device_library.json` (1.346 aparatos NAC), `examen.json` (91 preguntas, 9 temas) |
 | Tema | Claro/oscuro con botón 🌙/☀️, persistente (localStorage `ifas_theme`) |
 | Responsive | Breakpoints 380 / 768 / 1100 px; Batería en 2 columnas en escritorio |
 | Scripts de soporte | `add_to_index.py` v3 (escribe en `idx/`), `check_index.py`, `test_motor.js`, `contextualizar_indice.py` (ver `PROCEDIMIENTO.md`) |
@@ -40,6 +40,16 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 ---
 
 # Historial
+
+## 2026-11-05 — v2026.4: búsqueda forzada en modos de diagnóstico, reglas de examen externo, banco con Quiz Día 3
+**Archivos:** `index.html`, `examen.json`
+**Cambios:**
+- Verificado en producción (DevTools, Network): `tools` viaja en cada request pero Sonnet responde `end_turn` sin pedir búsquedas. Se fuerza la primera búsqueda con `tool_choice: {type:'tool', name:'buscar_documentacion'}` en Troubleshooting, Reemplazo HW, Examen y Guía Rápida (`FORZAR_BUSQUEDA`); el modelo formula la consulta con los términos del manual y recibe esos fragmentos además de los iniciales. Diccionario y Diseño no cambian. Una llamada extra por pregunta en esos modos.
+- Descripción de la herramienta reescrita para pedir términos técnicos del manual (nombre del trouble en inglés, conector, modelo, número de documento).
+- System prompt, Examen con pregunta externa: citar antes de elegir y comprobar que la cita no diga lo contrario; en "todas las válidas" evaluar cada opción por separado; buscar el equipo nombrado en una opción antes de descartarlo; nunca "confirmado" sin cita.
+- `examen.json` v2026.3: 91 preguntas; entran las 17 del Homework Quiz Día 3 con respuesta confirmada por Honeywell y documento/sección citados por el quiz; correcciones a nfs3030-12 (NCD como display primario, DN-7070) y campo-05 (Strobe FlashScan sin EOLR-1, 52544 4.2).
+- Resultado de la prueba contra el Quiz Día 3 con v2026.3: 11/17 (65 %); análisis en `IFAS_2026\07_validacion\RESULTADO_QUIZ_DIA3.md`.
+**Verificación:** sintaxis JS con node; `node test_motor.js` 30/30; bucle con `tool_choice` simulado con API falsa (llamada 1 con tool_choice, llamada 2 sin él, resultado de la búsqueda forzada = 52545 pág. 40 Supervision).
 
 ## 2026-11-05 — v2026.3: sinónimos bilingües, búsqueda agéntica, banco de examen, fuentes.json validado
 **Archivos:** `index.html`, `fuentes.json`, `examen.json` (nuevo), `add_to_index.py` (v3), `PROCEDIMIENTO.md` (v3), `test_motor.js` (nuevo), `contextualizar_indice.py` (nuevo), `CONTROL_CAMBIOS.md`

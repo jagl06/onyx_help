@@ -1,5 +1,5 @@
 {
- "version": "2026.2",
+ "version": "2026.3",
  "generado": "2026-11-05",
  "nota": "Banco de preguntas estilo Notifier ONYX University Quiz. Cada pregunta cita documento y página del índice idx/. tipo: unica (una respuesta), multiple (seleccione todas las válidas), vf (verdadero/falso). correcta: letras. Revisar y ampliar con las preguntas reales del curso.",
  "temas": {
@@ -638,7 +638,7 @@
    "correcta": [
     "D"
    ],
-   "explicacion": "AUXILIARY TROUBLE REPORTING: Yes si se conectó un cable de bus de trouble en J5 del CPU2-3030; el trouble AUXILIARY TROUBLE indica que ese dispositivo auxiliar tiene problema o falta el cable.",
+   "explicacion": "AUXILIARY TROUBLE REPORTING: Yes si se conectó un cable de bus de trouble en J5 del CPU2-3030; el trouble AUXILIARY TROUBLE indica que ese dispositivo auxiliar tiene problema o falta el cable. Confirmado por Honeywell (Quiz Día 3, P13; 52544 sección 2.3 y 53232 figura A.1: ejemplo de uso, supervisar fallas de una APS2-6R en bus).",
    "ref": {
     "doc": "52545SP",
     "pag": 40
@@ -1052,7 +1052,7 @@
    "correcta": [
     "A"
    ],
-   "explicacion": "52544 sección 4.2 Devices Requiring External Power Supervision: con LCM-320 rev 2.0 o superior, los type codes Strobe, Horn, Control, Gen Super, Release Ckt, Gen Alarm, etc. tienen la supervisión de alimentación externa incorporada en el software (solo FlashScan); el relé EOLR-1 no se requiere. El quiz de Honeywell marcó incorrecta la opción de bornes 3 y 4.",
+   "explicacion": "Confirmado por Honeywell (Quiz Día 3, P6; 52544 sección 4.2): con LCM-320 rev 2.0+ el type code Strobe (FlashScan) tiene supervisión de alimentación externa integrada en software; no se requiere EOLR-1. La opción de bornes 6 y 7 es incorrecta.",
    "ref": {
     "doc": "52544",
     "pag": 43
@@ -1428,7 +1428,7 @@
    "correcta": [
     "B"
    ],
-   "explicacion": "52544 pág. 14: J6 Security switch connection; pág. 47: conectar el STS-1 a J6 Security en el CPU y programar Tamper Input = Yes. J5 es el trouble bus.",
+   "explicacion": "52544 pág. 14: J6 Security switch connection; pág. 47: conectar el STS-1 a J6 Security en el CPU y programar Tamper Input = Yes. J5 es el trouble bus. Confirmado por Honeywell (Quiz Día 3, P7; 52544 secciones 2.3 y 4.5.3).",
    "ref": {
     "doc": "52544",
     "pag": 47
@@ -1449,7 +1449,7 @@
     "A",
     "B"
    ],
-   "explicacion": "DN-7070: la pantalla primaria del CPU2-3030ND puede ser una NCA-2, NCS/NCD u ONYXWorks; con NCA-2 como display primario la programación se hace desde VeriFire Tools. La FDU-80 es un anunciador EIA-485 y la KDM-R2 es el teclado del NFS-320/NFS2-640.",
+   "explicacion": "Confirmado por Honeywell (Quiz Día 3, P3; DN-7070 Networking Options / NCA-2 y NCD): como display primario de un CPU2-3030ND sirven la NCA-2 o la NCD vía NUP o NotiFireNet, con configuración 100 % en VeriFire Tools. FDU-80 es anunciador EIA-485 y KDM-R2 es el teclado del NFS-320/NFS2-640.",
    "ref": {
     "doc": "DN-7070",
     "pag": 2
@@ -1469,7 +1469,7 @@
    "correcta": [
     "D"
    ],
-   "explicacion": "52544 pág. 22: el NFS2-3030 se monta en un backbox CAB-4 usando CHS-M3 o CA-2 (chasis de audio); CHS-4, CHS-4N y CHS-4L son para filas adicionales de módulos.",
+   "explicacion": "52544 pág. 22: el NFS2-3030 se monta en un backbox CAB-4 usando CHS-M3 o CA-2 (chasis de audio); CHS-4, CHS-4N y CHS-4L son para filas adicionales de módulos. Confirmado por Honeywell (Quiz Día 3, P15; 52544 secciones 3.5 y 3.5.2).",
    "ref": {
     "doc": "52544",
     "pag": 22
@@ -1571,6 +1571,252 @@
    "ref": {
     "doc": "LS10239-000NF-E",
     "pag": 137
+   }
+  },
+  {
+   "id": "quiz3-01",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En una fuente AMPS-24(E) conectada a un FACP* NFS2-3030 y configurada como five-point trouble reporting por medio del software PK-PPS, ¿cuántas direcciones de SLC tomará la fuente AMPS-24(E)?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "5 direcciones de módulo de control",
+    "B": "5 direcciones de detector",
+    "C": "5 direcciones SR485",
+    "D": "5 direcciones de módulo monitor"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "51907 sección 3.1.1 Determining Address Consumption: en five-point trouble reporting la AMPS-24 ocupa 5 direcciones consecutivas de módulo monitor (base: General, +1 AC Fail, +2 Battery, +3 Earth Fault, +4 Charger). Confirmado por Honeywell (Quiz Día 3, P1).",
+   "ref": {
+    "doc": "51907",
+    "pag": 30
+   }
+  },
+  {
+   "id": "quiz3-02",
+   "tema": "nfs3030",
+   "tipo": "multiple",
+   "pregunta": "El FACP* NFS2-3030 tiene disponible un puerto RDP para instalar anunciadores remotos LCD-160 o LCD2-80. ¿Cuáles de las siguientes consideraciones debo tener en cuenta? Seleccione todas las válidas.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "El puerto RDP soporta anunciadores LCD-160 y LCD2-80 simultáneamente",
+    "B": "Si instalo anunciadores LCD2-80 no puedo instalar anunciadores LCD-160",
+    "C": "El puerto RDP soporta hasta 32 anunciadores remotos",
+    "D": "Si instalo anunciadores LCD-160 no puedo instalar anunciadores LCD2-80"
+   },
+   "correcta": [
+    "B",
+    "C",
+    "D"
+   ],
+   "explicacion": "DN-7070: CPU2-3030 firmware 14.0+ soporta LCD-160 en el puerto RDP o LCD2-80 en modo terminal, pero no ambos a la vez; hasta 32 por FACP. Honeywell (Quiz Día 3, P2) marcó incorrecta la selección B+D sola y remite a 52544 2.3/TB9, 51850 6.2 y 53242 2.2: las tres (B, C y D) son válidas.",
+   "ref": {
+    "doc": "DN-7070",
+    "pag": 5
+   }
+  },
+  {
+   "id": "quiz3-03",
+   "tema": "nfs3030",
+   "tipo": "vf",
+   "pregunta": "La instalación de múltiples lazos SLC en los FACP* NFS2-3030 implica pares de tarjetas LCM-320/LEM-320 conectados en cadena (daisy-chain) con cables planos ribbon, siguiendo las indicaciones de conexión J7 a J1, J3 a J1, J3 a J1 (52544 figura 3.15); sin embargo, es posible modificar la ruta de los cables ribbon J* a J* sin afectar el funcionamiento del sistema.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "52544 figura 3.15 y su WARNING: instalar el cable plano tal como se indica; no forzar ni modificar el cable para instalarlo de otro modo, pueden producirse daños. Confirmado por Honeywell (Quiz Día 3, P4).",
+   "ref": {
+    "doc": "52544",
+    "pag": 34
+   }
+  },
+  {
+   "id": "quiz3-05",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "La fuente AMPS-24(E) distribuye energía al FACP* NFS2-3030 vía TB1, al cargador de baterías vía TB3 y a la auxiliar de 24 VDC AUX TB3. Si con PK-PPS se destinan 5 A al cargador de baterías y 5 A al FACP (Main 24V TB1), ¿cuál sería la corriente destinada a la salida AUX 24V TB3?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "5 A",
+    "B": "0 A (OFF)",
+    "C": "1 A",
+    "D": "2 A"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "51907 sección 1.2.2 AMPS-K2 Board, Table 1.1 Output Current for Each Configuration: con cargador a 5 A (configuración 1) y Main 24 V a 5 A, la salida AUX 24 V queda en OFF (0 A). Confirmado por Honeywell (Quiz Día 3, P5).",
+   "ref": {
+    "doc": "51907",
+    "pag": 8
+   }
+  },
+  {
+   "id": "quiz3-08",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "El cargador de baterías de una fuente AMPS-24 tiene capacidad de carga de baterías de plomo-ácido desde 7 hasta 200 AH. Si configura la fuente con PK-PPS para destinar 1 A al cargador de batería, ¿cuál sería el rango de baterías en AH permitido para esa configuración?",
+   "opciones": {
+    "A": "Desde 7 hasta 26 AH",
+    "B": "Desde 12 hasta 60 AH",
+    "C": "Desde 55 hasta 200 AH",
+    "D": "El cargador quedará deshabilitado"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "51907 Table 1.1: 1 A → 7-26 AH; 2 A → 12-60 AH; 5 A → 55-200 AH; Disabled → sin carga. Confirmado por Honeywell (Quiz Día 3, P8).",
+   "ref": {
+    "doc": "51907",
+    "pag": 8
+   }
+  },
+  {
+   "id": "quiz3-09",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "La fuente de poder principal utilizada con el FACP* NFS2-3030 es:\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "AMPS-24 / AMPS-24E",
+    "B": "ACPS-2406",
+    "C": "APS-6R",
+    "D": "FCPS-24"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "52544 sección 2.2 System Components / Power supply: la AMPS-24(E) es la fuente principal del NFS2-3030; una por panel (DN-7070). Confirmado por Honeywell (Quiz Día 3, P9).",
+   "ref": {
+    "doc": "52544",
+    "pag": 10
+   }
+  },
+  {
+   "id": "quiz3-10",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, ¿qué consideración se debe tener en cuenta para la instalación de tarjetas SLC en pares (LCM-320/LEM-320)?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Opcionalmente utilice los agujeros en las esquinas de las tarjetas SLC para fines de instalación",
+    "B": "Conecte el arreglo de pines (largos/cortos) de la manera indicada; instalarlo al revés puede ocasionar falsos contactos entre las dos tarjetas",
+    "C": "Utilice únicamente las ubicaciones de montaje especificadas marcadas como STAND-OFF",
+    "D": "Siga las instrucciones de instalación de las tarjetas SLC en los chasis CHS-M3, CHS-4N o CHS-4L"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "Honeywell (Quiz Día 3, P10) marcó incorrecta la opción B y remite a 52544 sección 3.4 Laying Out Equipment in Cabinet and Chassis e Installation Precautions: usar solo las ubicaciones STAND-OFF especificadas (figura 3.12 'Stand-off locations'). El CAUTION del stacker-connector existe, pero no es la respuesta que Honeywell admite para esta pregunta de opción única.",
+   "ref": {
+    "doc": "52544",
+    "pag": 31
+   }
+  },
+  {
+   "id": "quiz3-11",
+   "tema": "nfs3030",
+   "tipo": "vf",
+   "pregunta": "Para que el FACP* NFS2-3030 pueda identificar cada SLC, se debe asignar a cada tarjeta LCM-320 un par de direcciones (1/2, 3/4, 5/6, 7/8, 9/10), que debe coincidir con la ubicación del módulo en la conexión en cadena (daisy-chain).\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "52544 sección 3.8 / 3.8.1: cada módulo recibe un número de lazo único con SW1 (la LEM toma el siguiente par), pero el número no necesita coincidir con la posición del módulo en la cadena. Confirmado por Honeywell (Quiz Día 3, P11).",
+   "ref": {
+    "doc": "52544",
+    "pag": 29
+   }
+  },
+  {
+   "id": "quiz3-12",
+   "tema": "nfs3030",
+   "tipo": "multiple",
+   "pregunta": "Una AMPS-24/E configurada con PK-PPS para 5 puntos SLC de monitoreo, con dirección base 150 fijada en SW2 = 15 y SW3 = 0, y TB2 conectado al SLC 1 de un FACP* NFS2-3030. Seleccione todas las afirmaciones válidas.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Las direcciones se asignan así: L1M150 Monitor Earth Fault, L1M151 AC Fail, L1M152 General, L1M153 Battery, L1M154 Charger Fault",
+    "B": "Para quitar el trouble NO PWR SUPPLY INSTALL debo indicar en el menú de supervisión la dirección de AC Fail de la fuente principal = base + 1, es decir L1M151",
+    "C": "Para quitar el trouble NO PWR SUPPLY INSTALL debo indicar la dirección de AC Fail = base + 2, es decir L1M152",
+    "D": "Las direcciones se asignan así: L1M150 Monitor General, L1M151 AC Fail, L1M152 Battery, L1M153 Earth Fault, L1M154 Charger Fault",
+    "E": "Tras el Autoprogram y aceptar las direcciones encontradas, el panel aún muestra el trouble NO PWR SUPPLY INSTALL",
+    "F": "Al hacer Autoprogram el panel encontrará 5 direcciones de módulo a partir de L1M150: L1M150 a L1M154"
+   },
+   "correcta": [
+    "B",
+    "D",
+    "E",
+    "F"
+   ],
+   "explicacion": "51907 sección 3.1.1 (orden: General, AC Fail, Battery, Earth Fault, Charger) y pág. 37 (3.4.1: la dirección de AC Fail se asigna a mano en Supervision o en VeriFire General II; el Autoprogram solo muestra las otras cuatro); 52545 sección 3.2.9 (MAIN PS AC FAIL ADDRESS = base + 1); 52546 pág. 35 (NO POWER SUPPLY INST persiste hasta ingresarla). Según los manuales, B, D, E y F son ciertas. Honeywell (Quiz Día 3, P12) calificó incorrecta una selección cuyo contenido completo no quedó registrado; si vuelve a salir, probar B, D, F sin la E y anotar el resultado.",
+   "ref": {
+    "doc": "51907",
+    "pag": 38
+   }
+  },
+  {
+   "id": "quiz3-14",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "El FACP* NFS2-3030 puede alcanzar un máximo de diez tarjetas de lazo SLC, utilizando una combinación de hasta cinco tarjetas LCM-320 y hasta cinco tarjetas:\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "ACM-48",
+    "B": "NCM-W",
+    "C": "FACP",
+    "D": "LEM-320"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "52544 sección 2.2 System Components / SLC Loops: hasta 5 LCM-320 y 5 LEM-320 para 10 lazos. Confirmado por Honeywell (Quiz Día 3, P14).",
+   "ref": {
+    "doc": "52544",
+    "pag": 10
+   }
+  },
+  {
+   "id": "quiz3-16",
+   "tema": "nfs3030",
+   "tipo": "multiple",
+   "pregunta": "En un FACP* NFS2-3030, ¿qué consideraciones se deben tener en cuenta para la instalación de tarjetas SLC en pares? Seleccione todas las válidas.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Opcionalmente utilice los agujeros en las esquinas de las tarjetas SLC para fines de instalación",
+    "B": "Utilice únicamente las ubicaciones de montaje especificadas marcadas como STAND-OFF",
+    "C": "Siga las instrucciones de instalación de las tarjetas SLC en los chasis CHS-M3, CHS-4N o CHS-4L",
+    "D": "Utilice manilla antiestática para manipular las tarjetas durante su ensamble",
+    "E": "Conecte el arreglo de pines (largos/cortos) de la manera indicada; instalarlo al revés puede ocasionar falsos contactos entre las dos tarjetas SLC",
+    "F": "La tarjeta LCM-320 se debe instalar siempre detrás de la tarjeta LEM-320"
+   },
+   "correcta": [
+    "B",
+    "C",
+    "D",
+    "E"
+   ],
+   "explicacion": "52544: stand-offs especificados (fig. 3.12), instalación en CHS-M3/CHS-4N/CHS-4L (3.8.5, fig. 3.14), componentes sensibles a estática → manilla (Installation Precautions), y CAUTION del stacker-connector instalado al revés (fig. 3.12). La LEM va montada detrás de la LCM, no al revés. Honeywell (Quiz Día 3, P16) marcó incorrecta B+C+D sin E: el CAUTION del stacker cuenta en la versión múltiple.",
+   "ref": {
+    "doc": "52544",
+    "pag": 31
+   }
+  },
+  {
+   "id": "quiz3-17",
+   "tema": "nfs3030",
+   "tipo": "vf",
+   "pregunta": "Un FACP* NFS2-3030 tiene cuatro relés Form-C: TB1 Seguridad, TB2 Supervisión, TB3 Problema y TB4 Alarma de fuego; cualquiera de los cuatro se puede configurar como Alarma de fuego general por medio de los interruptores de la placa madre.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "52544 sección 3.9 Form-C Relays on the CPU: solo los contactos de Supervisión y Seguridad pueden configurarse como Alarma moviendo SW1 y SW2 de su posición de fábrica; el relé de Problema no. Confirmado por Honeywell (Quiz Día 3, P17).",
+   "ref": {
+    "doc": "52544",
+    "pag": 33
    }
   }
  ],

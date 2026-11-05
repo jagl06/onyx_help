@@ -291,7 +291,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
       <div class="logo">🔥</div>
       <div class="title-block">
         <h1>IFAS</h1>
-        <p>ISELEC Fire Alarm Support · v2026.3</p>
+        <p>ISELEC Fire Alarm Support · v2026.4</p>
       </div>
     </div>
     <div class="hdr-actions">
@@ -514,6 +514,7 @@ CPU: CPU2-3030D (con display) | Fuente: AMPS-24
 ## MODOS DE OPERACIÓN
 TROUBLESHOOTING: Aplica Reglas 1-6. Diagnóstico contextual y conciso.
 REEMPLAZO_HARDWARE: Aplica Regla 2 obligatoriamente. Incluye verificación física + programación VeriFire + validación post-intervención.
+EXAMEN (pregunta externa pegada por el técnico, p. ej. quiz de Honeywell): (1) Cita el fragmento textual que sustenta la opción elegida ANTES de elegirla y comprueba que la cita diga lo mismo que tu conclusión; si el manual dice "no se requiere" o "not required", la respuesta es "no es necesario", nunca lo contrario. (2) En "seleccione todas las respuestas válidas" evalúa cada opción por separado contra la documentación y marca TODAS las que sean ciertas aunque parezcan redundantes entre sí; Honeywell suele poner 3 o 4 válidas de 4-6. (3) Si una opción habla de un equipo (NCD, NCA-2, FDU-80, KDM-R2), busca ese equipo en el datasheet del panel antes de descartarlo. (4) Si no encuentras el dato, usa buscar_documentacion con el número de documento y la sección que el quiz suele citar (52544, 52545, 51907, DN-7070). (5) Nunca afirmes "confirmado" o "100 %" si la cita no está en los fragmentos recibidos.
 EXAMEN: Si el mensaje trae un bloque [BANCO DE EXAMEN], obedécelo al pie de la letra: presenta la pregunta tal cual con sus letras, evalúa con la RESPUESTA CORRECTA indicada (nunca la cambies) y cita la referencia. Si no hay bloque, formula preguntas una a la vez a partir de los fragmentos de Notifier University 2026 del tema elegido, en el estilo del quiz Honeywell (enunciado con "En un FACP* NFS2-640 o NFS-320…", 4 opciones o verdadero/falso). No des la respuesta antes de que el técnico responda; lleva el puntaje acumulado. No des la respuesta antes de que el usuario responda. Evalúa, da retroalimentación con referencia al manual y muestra puntaje acumulado.
 DICCIONARIO: Definición técnica + aplicación práctica + referencia manual. Máximo 5 líneas por término.
 GUIA_RAPIDA: Solo tablas con valores, límites y parámetros, o pasos numerados cuando se pida un procedimiento (walk test, recuperación de contraseña, configuración de AMPS-24, actualización de firmware, instalación de VeriFire Tools). Sin explicaciones largas.
@@ -545,13 +546,15 @@ const loadedCats = new Set();
 let familia = localStorage.getItem('ifas_familia') || 'ONYX';   // ONYX | N16 | TODOS
 const TOP_K = 10;       // fragmentos a inyectar por consulta
 const MAX_BUSQUEDAS = 3; // búsquedas adicionales que el modelo puede pedir por pregunta
+const FORZAR_BUSQUEDA = new Set(['TROUBLESHOOTING','REEMPLAZO_HARDWARE','EXAMEN','GUIA_RAPIDA']); // modos donde la primera búsqueda es obligatoria (tool_choice)
 const BUSCAR_TOOL = {
   name:'buscar_documentacion',
-  description:'Busca fragmentos en los manuales, hojas de datos y presentaciones Notifier cargados en IFAS (búsqueda léxica BM25, español e inglés). Úsala cuando los fragmentos recibidos no contengan el dato que necesitas. Funciona mejor con términos concretos: códigos de conector o jumper (J5, TB4, SW2), modelos (FSP-951, CPU2-3030), número de documento (52545SP, DN-7111), nombres de parámetro o trouble en inglés (AUXILIARY TROUBLE, GROUND FAULT) y títulos de tabla (Table H.2).',
+  description:'Busca fragmentos en los manuales, hojas de datos y presentaciones Notifier cargados en IFAS (búsqueda léxica BM25, español e inglés). Formula la consulta con los términos técnicos que usaría el manual, no con las palabras del técnico: nombre exacto del trouble o parámetro en inglés, código de conector, modelo y número de documento. Funciona mejor con términos concretos: códigos de conector o jumper (J5, TB4, SW2), modelos (FSP-951, CPU2-3030), número de documento (52545SP, DN-7111), nombres de parámetro o trouble en inglés (AUXILIARY TROUBLE, GROUND FAULT) y títulos de tabla (Table H.2).',
   input_schema:{type:'object',properties:{consulta:{type:'string',description:'Términos de búsqueda, 2 a 8 palabras, sin frases largas.'}},required:['consulta']}
 };
 // ── BANCO DE EXAMEN (examen.json) ──
 let EXAMEN = null;                 // {temas:{}, preguntas:[]}
+const EXAMEN_MAX = 10;             // preguntas por sesión de examen (barajadas del tema)
 let exam = {tema:null, cola:[], actual:null, n:0, total:0};
 async function loadExamen(){
   if(EXAMEN) return EXAMEN;
@@ -576,6 +579,7 @@ function examPick(texto){
   let pool = tema==='todos' ? EXAMEN.preguntas.slice() : EXAMEN.preguntas.filter(q=>q.tema===tema);
   if(!pool.length) return null;
   for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+  pool = pool.slice(0, EXAMEN_MAX);
   exam={tema, cola:pool, actual:null, n:0, total:pool.length};
   return tema;
 }
@@ -997,8 +1001,8 @@ famSelect.addEventListener('change', ()=>setFamilia(famSelect.value));
 // ── SINÓNIMOS (español de campo ↔ inglés de los manuales). Clave: término o frase en minúsculas sin acentos.
 // Los términos expandidos pesan 0.4 respecto a los escritos por el técnico. Ampliar con las preguntas que fallen.
 const SINONIMOS = {
-  'jumper':['j','puente','conector'], 'puente':['jumper','j'],
-  'puerto':['conector','tb','terminal','port','connector'], 'conector':['connector','tb','terminal','j'],
+  'jumper':['puente','conector','jp'], 'puente':['jumper','jp'],
+  'puerto':['conector','tb','terminal','port','connector'], 'conector':['connector','tb','terminal'],
   'terminal':['tb','terminal block'], 'tarjeta madre':['cpu','main board','board','placa','cpu2','tarjeta'],
   'tarjeta':['board','card','modulo','module'], 'placa':['board','tarjeta','cpu'],
   'falla a tierra':['ground fault','earth fault','tierra'], 'falla tierra':['ground fault','tierra'], 'tierra':['ground','earth'],
@@ -1142,7 +1146,11 @@ async function send(){
         system:[{type:'text',text:SYSTEM_PROMPT + (useTool ? TOOL_PROMPT : ''),cache_control:{type:'ephemeral'}}],
         messages:apiMessages
       };
-      if(useTool) body.tools = [BUSCAR_TOOL];   // siempre presente mientras haya bloques tool_use en el historial
+      if(useTool){
+        body.tools = [BUSCAR_TOOL];   // siempre presente mientras haya bloques tool_use en el historial
+        // Primera llamada en modos de diagnóstico: búsqueda obligatoria. Sonnet, si puede elegir, casi nunca busca (verificado en producción 2026-11-05).
+        if(turno===0 && FORZAR_BUSQUEDA.has(activeMode) && text) body.tool_choice = {type:'tool', name:'buscar_documentacion'};
+      }
       const res=await fetch('https://api.anthropic.com/v1/messages',{
         method:'POST',
         headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
