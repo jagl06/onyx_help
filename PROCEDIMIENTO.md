@@ -16,7 +16,7 @@ Origen del corpus 2026: `C:\Users\Jesus\OneDrive - ISELEC\PRODUCTOS\NOTIFIER\Cer
 
 ## Preparación (una sola vez)
 
-1. Clon local de `onyx_help` al día (`git pull`). Los scripts `add_to_index.py` (v3), `ifas_pdf_utils.py`, `check_index.py` y `test_motor.js` viven en la raíz del repo.
+1. Clon local de `onyx_help` al día (`git pull`). Los scripts `add_to_index.py` (v3), `ifas_pdf_utils.py`, `check_index.py`, `hereda_encabezado.py` y `test_motor.js` viven en la raíz del repo.
 2. `pip install pymupdf`
 3. Opcional, para PDFs escaneados: Tesseract OCR (instalador Windows de UB Mannheim). Sin Tesseract el script omite las páginas escaneadas y lo avisa.
 4. Node.js (para `test_motor.js`).
@@ -38,6 +38,8 @@ python add_to_index.py "ruta\carpeta" -c modulos --reemplazar
 Opciones: `--familia ONYX|N16|COMUN` (por defecto ONYX), `--idioma es|en` (por defecto se deduce: SP, "Manual de", "Hoja de Datos" → es), `--tipo` (por defecto datasheet si DN, install_sheet si I56, manual en otro caso), `--modelos FSP-961,B710LP` si el nombre no los trae, `--reemplazar` para revisiones nuevas.
 
 El script fragmenta en trozos de 700-900 caracteres con solapamiento de 120, escribe `idx/idx_<categoria>.json` y actualiza `idx/manifest.json`. Avisa si el índice pasa de 8 MB.
+
+Después de `add_to_index.py`, y sobre la misma categoría, ejecutar `python hereda_encabezado.py --dir idx -c <categoria> --sin-original --manifest`: antepone a cada fragmento sin encabezado propio la sección más cercana hacia atrás y, si parece tabla, el rótulo del fragmento vecino, porque al trocear un manual la tabla y su rótulo ("Table 3.4 Default Timers") caen en fragmentos distintos y BM25 no encuentra la que se queda sin nombre. Es idempotente, así que repetirlo no acumula prefijos, y `--revertir` lo deshace byte a byte.
 
 4. Copiar los dos archivos modificados a `IFAS_2026\02_index` (copia maestra) y el PDF a `00_pdf_limpio\<categoria>`.
 5. `git add idx/` → commit → push (GitHub Desktop o Code). No usar la subida web de GitHub para los índices grandes.
@@ -86,6 +88,8 @@ Regla: ningún valor entra a estos archivos sin datasheet o manual del fabricant
 - [ ] PDF con nº de documento + modelo en el nombre
 - [ ] No está ya en el índice
 - [ ] `python add_to_index.py "ruta.pdf" -c <categoria> [--familia] [--reemplazar]`
+- [ ] `python hereda_encabezado.py --dir idx -c <categoria> --sin-original --manifest`
+- [ ] `node test_motor.js ONYX` y `node test_motor.js N16` sin fallos
 - [ ] Copia a `IFAS_2026\02_index` y `00_pdf_limpio`
 - [ ] `git add idx/` → commit → push
 - [ ] 1-2 min → Ctrl+Shift+R → 📚 muestra el total nuevo → consulta de prueba cita el documento
