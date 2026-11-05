@@ -22,17 +22,17 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 | Modos | Troubleshooting, Reemplazo HW, Examen, Diccionario, Guía Rápida, Diseño, Batería |
 | Familias | ONYX (NFS-320, NFS2-640, NFS2-3030) e INSPIRE N16; selector en la barra 📚 (localStorage `ifas_familia`) |
 | Modelo API | `claude-sonnet-4-6` (seleccionable: Haiku 4.5, Sonnet 3.5, Haiku 3) |
-| Documentación | Índices BM25 por categoría en `idx/` (manifest 2026.1, 12 índices, 18.197 fragmentos, 215 documentos únicos: 197 PDF, 8 presentaciones y 10 procedimientos de video, de los que 8 tienen narración; 15 MB; gzip en Pages) |
+| Documentación | Índices BM25 por categoría en `idx/` (manifest 2026.2, 12 índices, 18.197 fragmentos —6.298 con encabezado heredado—, 215 documentos únicos: 197 PDF, 8 presentaciones y 10 procedimientos de video, de los que 8 tienen narración; 15 MB; gzip en Pages) |
 | Búsqueda | BM25 + sinónimos bilingües + búsqueda agéntica (`buscar_documentacion`, máx. 3 por pregunta, todos los modos salvo Diccionario) |
 | Datos externos | `fuentes.json` v2026.2 (14 fuentes, 5 verificadas), `ifas_device_library.json` (1.346 aparatos NAC), `examen.json` (104 preguntas, 9 temas) |
 | Tema | Claro/oscuro con botón 🌙/☀️, persistente (localStorage `ifas_theme`) |
 | Responsive | Breakpoints 380 / 768 / 1100 px; Batería en 2 columnas en escritorio |
-| Scripts de soporte | `add_to_index.py` v3 (escribe en `idx/`), `check_index.py`, `test_motor.js`, `contextualizar_indice.py` (ver `PROCEDIMIENTO.md`) |
+| Scripts de soporte | `add_to_index.py` v3 (escribe en `idx/`), `hereda_encabezado.py` (encabezados heredados, idempotente, `--revertir`), `check_index.py`, `test_motor.js` (casos por familia), `contextualizar_indice.py` (ver `PROCEDIMIENTO.md`) |
 
 **Pendientes / hoja de ruta**
 
 - Completar las 9 fuentes nuevas de `fuentes.json` (qué falta a cada una: `IFAS_2026\07_validacion\VALIDACION_DATOS_2026.md`).
-- Correr `contextualizar_indice.py` (recuperación contextual con Haiku) y republicar `idx/`.
+- Recuperación: el siguiente objetivo es la consulta, no el índice (la primera llamada busca con el texto crudo de la pregunta y los enunciados largos la diluyen). `contextualizar_indice.py` (contexto por fragmento con Haiku, ~16-27 USD y ~6 h, pide API key) queda como segunda pasada sobre el índice ya ordenado por `hereda_encabezado.py`, no como primer intento.
 - Procedimientos de los dos videos sin narración (firmware HS-NCM, diagrama de estación).
 - Expansión de marcas: Hochiki, Siemens, Simplex (una a la vez, misma metodología).
 - IBAS (bombeo de agua): crear repo `ibas_help`, CNAME `ibas.iselec.com.pa`, desplegar v4.
@@ -40,6 +40,18 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 ---
 
 # Historial
+
+## 2026-11-05 — idx 2026.2: encabezados heredados en los fragmentos (tablas huérfanas)
+**Archivos:** `idx/` (manifest + los 12 índices), `hereda_encabezado.py` (nuevo), `test_motor.js`, `PROCEDIMIENTO.md`
+**Cambios:**
+- Al trocear los manuales, una tabla queda en un fragmento y su rótulo ("Table 3.4 Default Timers") en el siguiente, así que el fragmento con el dato no conserva ninguna palabra que lo nombre y BM25 no lo encuentra salvo citando sus propias celdas. Es lo que hizo fallar la P8 del Quiz Día 4: la tabla con los valores por defecto (PAS = OFF, PRESIGNAL DELAY = 3:00) no llegaba nunca al contexto, así que el modelo no podía saber que una sola tecla cumplía las dos condiciones.
+- `hereda_encabezado.py` antepone a cada fragmento sin encabezado propio la sección más cercana hacia atrás y, si parece tabla, el rótulo del fragmento vecino (hacia adelante primero, que es donde los manuales ponen el pie de tabla). Determinista, sin API y sin coste. Afecta 6.298 de 18.197 fragmentos (34,6 %); `idx_cable_norma` e `idx_procedimientos` no tenían ninguno que lo necesitara. Es idempotente —deshace lo anterior y recalcula, así que un encabezado heredado nunca sirve de fuente para el vecino— y `--revertir` lo deshace byte a byte.
+- `version` de los 12 índices y del manifest a 2026.2; `bytes` y `generado` del manifest recalculados.
+- `test_motor.js`: cada caso declara ahora la familia en la que se evalúa (`ONYX`, `N16` o `AMBAS`) y los de otra familia se saltan en vez de contarse como fallo. Solo dos son `ONYX`, los únicos en los que la familia cambia la respuesta correcta: `FSP-851 → DN-6935` pierde con N16 contra `LS10238-000GE-E` (manual del ACS-30) y `HS-NCM → DN-60454` contra `DN-62112` (datasheet del N16); en ambos el ganador es el documento bueno para quien tiene N16 seleccionada.
+- `PROCEDIMIENTO.md`: paso A.3 y checklist rápido, ejecutar el script después de `add_to_index.py` sobre la misma categoría.
+- Sin cambios en `index.html`, `examen.json` ni `fuentes.json`: la app sigue en v2026.4.1. Esta entrada versiona el índice, no la aplicación.
+- Lo que NO arregla: la recuperación automática de la primera llamada usa el texto crudo de la pregunta, y las preguntas de quiz son párrafos largos con pantallas y opciones que diluyen la consulta. Todo lo que gana el enriquecimiento lo gana con consultas cortas, las que escribe el modelo al buscar. El siguiente objetivo es la consulta, no el índice.
+**Verificación:** `node test_motor.js` 30/30 en ONYX, 28/28 en N16 (2 saltadas por familia) y 30/30 en TODOS. La tabla 3.4 pasa de no entrar en el TOP_10 con ninguna consulta a #1 en el motor real. De 36 dianas medidas sobre los tres fallos del Día 4: 4 mejoran, 3 empeoran un puesto dentro del TOP_10 y 29 quedan igual. Peso 14,46 → 14,99 MB en crudo y 2,81 → 2,85 MB en gzip. Ida y vuelta del script sobre los 12 índices con los mismos SHA-256. En producción (commit `431108f`): los 16 archivos servidos por Pages idénticos byte a byte al commit, manifest 2026.2, 16.287 fragmentos con ONYX y 10.148 con N16, la tabla 3.4 en #1 y la de 51907 (`Monitor AC Fail | B + 1`) en #2, sin errores de consola.
 
 ## 2026-11-05 — v2026.4.1: banco con Quiz Día 4, reglas de examen (respuesta única al final, datos fijos, soft keys)
 **Archivos:** `index.html`, `examen.json`
