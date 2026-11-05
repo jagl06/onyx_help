@@ -18,13 +18,13 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 
 | Componente | Estado |
 |---|---|
-| Versión | v2026.4 |
+| Versión | v2026.4.1 |
 | Modos | Troubleshooting, Reemplazo HW, Examen, Diccionario, Guía Rápida, Diseño, Batería |
 | Familias | ONYX (NFS-320, NFS2-640, NFS2-3030) e INSPIRE N16; selector en la barra 📚 (localStorage `ifas_familia`) |
 | Modelo API | `claude-sonnet-4-6` (seleccionable: Haiku 4.5, Sonnet 3.5, Haiku 3) |
 | Documentación | Índices BM25 por categoría en `idx/` (manifest 2026.1, 12 índices, 18.197 fragmentos, 215 documentos únicos: 197 PDF, 8 presentaciones y 10 procedimientos de video, de los que 8 tienen narración; 15 MB; gzip en Pages) |
 | Búsqueda | BM25 + sinónimos bilingües + búsqueda agéntica (`buscar_documentacion`, máx. 3 por pregunta, todos los modos salvo Diccionario) |
-| Datos externos | `fuentes.json` v2026.2 (14 fuentes, 5 verificadas), `ifas_device_library.json` (1.346 aparatos NAC), `examen.json` (91 preguntas, 9 temas) |
+| Datos externos | `fuentes.json` v2026.2 (14 fuentes, 5 verificadas), `ifas_device_library.json` (1.346 aparatos NAC), `examen.json` (104 preguntas, 9 temas) |
 | Tema | Claro/oscuro con botón 🌙/☀️, persistente (localStorage `ifas_theme`) |
 | Responsive | Breakpoints 380 / 768 / 1100 px; Batería en 2 columnas en escritorio |
 | Scripts de soporte | `add_to_index.py` v3 (escribe en `idx/`), `check_index.py`, `test_motor.js`, `contextualizar_indice.py` (ver `PROCEDIMIENTO.md`) |
@@ -40,6 +40,14 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 ---
 
 # Historial
+
+## 2026-11-05 — v2026.4.1: banco con Quiz Día 4, reglas de examen (respuesta única al final, datos fijos, soft keys)
+**Archivos:** `index.html`, `examen.json`
+**Cambios:**
+- Prueba de v2026.4 contra el Quiz Día 4: 10/13 (77 %), frente a 65 % del Día 3 con v2026.3. Con búsqueda forzada, todas las respuestas citan documento y página y las correctas coinciden con la sección que cita Honeywell. Los 3 fallos son de razonamiento con el fragmento correcto ya en contexto (análisis en `IFAS_2026\07_validacion\RESULTADO_QUIZ_DIA4.md`).
+- System prompt, Examen con pregunta externa: la línea "Respuesta:" va una sola vez y al final (el técnico copiaba la provisional); datos fijos que no se vuelven a razonar (AMPS-24 base = General, base+1 = AC Fail; sensibilidad 1 = más sensible; type codes FlashScan sin EOLR-1); con pantallas de soft keys, leer la función de cada tecla en el manual.
+- `examen.json` v2026.4: 104 preguntas; 13 nuevas del Quiz Día 4 con respuesta confirmada por Honeywell.
+**Verificación:** sintaxis JS con node; `node test_motor.js` 30/30; 104 referencias doc/pág. validadas contra `idx/`.
 
 ## 2026-11-05 — v2026.4: búsqueda forzada en modos de diagnóstico, reglas de examen externo, banco con Quiz Día 3
 **Archivos:** `index.html`, `examen.json`

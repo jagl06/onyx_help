@@ -1,5 +1,5 @@
 {
- "version": "2026.3",
+ "version": "2026.4",
  "generado": "2026-11-05",
  "nota": "Banco de preguntas estilo Notifier ONYX University Quiz. Cada pregunta cita documento y página del índice idx/. tipo: unica (una respuesta), multiple (seleccione todas las válidas), vf (verdadero/falso). correcta: letras. Revisar y ampliar con las preguntas reales del curso.",
  "temas": {
@@ -1817,6 +1817,264 @@
    "ref": {
     "doc": "52544",
     "pag": 33
+   }
+  },
+  {
+   "id": "quiz4-01",
+   "tema": "nfs3030",
+   "tipo": "vf",
+   "pregunta": "En un FACP* NFS2-3030, un ingeniero programador tiene que borrar toda la base de datos al programar inicialmente un NFS2-3030 con una base de datos descargada de VeriFire Tools.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "52545 sección 3.1, tercera NOTE: clearing all programs is not necessary when initial programming with a database downloaded from VeriFire Tools. Confirmado por Honeywell (Quiz Día 4, P1).",
+   "ref": {
+    "doc": "52545",
+    "pag": 18
+   }
+  },
+  {
+   "id": "quiz4-02",
+   "tema": "zonas",
+   "tipo": "unica",
+   "pregunta": "Al evaluar cualquier ecuación lógica utilizada con un FACP* NFS2-3030, ¿por dónde empezaría su revisión?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Desde la última función de la ecuación hacia atrás",
+    "B": "Desde el primer argumento hacia adelante",
+    "C": "Desde la primera zona de software utilizada como argumento hacia adelante",
+    "D": "Desde la parte más interna de la ecuación hacia la parte externa"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "52545 apéndice E.2.2 Evaluating an Equation: start from the innermost part of the equation and work outward. Confirmado por Honeywell (Quiz Día 4, P2).",
+   "ref": {
+    "doc": "52545SP",
+    "pag": 147
+   }
+  },
+  {
+   "id": "quiz4-03",
+   "tema": "zonas",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, ¿qué ecuación activará una salida cuando se active una estación manual en la dirección L1M1 y el detector L2D2 o L1D5?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "OR(L1M1, L2D2, L1D5)",
+    "B": "AND(L1M1, OR(L2D2, L1D5))",
+    "C": "AND(L1M1, L2D2, L1D5)",
+    "D": "OR(L1M1, AND(L2D2, L1D5))"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "AND exige todos los argumentos activos y OR cualquiera: L1M1 Y (L2D2 O L1D5) = AND(L1M1, OR(L2D2, L1D5)). Ejemplo del manual: AND(Z20, OR(L2D159, L2D14)). Confirmado por Honeywell (Quiz Día 4, P3).",
+   "ref": {
+    "doc": "52545",
+    "pag": 66
+   }
+  },
+  {
+   "id": "quiz4-04",
+   "tema": "procedimientos",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030 con SOFTWARE MISMATCH, el programador puede descargar a las LCM y a los LCD-160 la versión de firmware que tiene el panel a través del menú oculto BOOTLOADER. ¿Qué tecla debe mantener oprimida durante el encendido del panel para entrar a ese menú?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "LAMP TEST (prueba de LEDs)",
+    "B": "ACKNOWLEDGE (confirmación)",
+    "C": "DRILL (evacuación)",
+    "D": "RESET (rearme del sistema)"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "52545 sección 5.3 Bootloader Screen: press the RESET key during the entire power-up self-testing process, then release. Opciones del menú: LCD-160 DOWNLOAD, LOOP DOWNLOAD, REBOOT. Confirmado por Honeywell (Quiz Día 4, P4).",
+   "ref": {
+    "doc": "52545",
+    "pag": 104
+   }
+  },
+  {
+   "id": "quiz4-05",
+   "tema": "nfs3030",
+   "tipo": "vf",
+   "pregunta": "Para supervisar la fuente de alimentación principal AMPS-24(E) con el FACP* NFS2-3030, elija SÍ (YES) en AUXILIARY TROUBLE REPORTING de la pantalla SUPERVISION.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "52545 sección 3.2.9: AUXILIARY TROUBLE REPORTING es para el cable de trouble bus en J5; la AMPS-24 se supervisa con MAIN PS AC FAIL ADDRESS (base + 1) y con SLC Trouble Reporting en la fuente. Confirmado por Honeywell (Quiz Día 4, P5).",
+   "ref": {
+    "doc": "52545",
+    "pag": 40
+   }
+  },
+  {
+   "id": "quiz4-06",
+   "tema": "procedimientos",
+   "tipo": "unica",
+   "pregunta": "Según los videos No Correspondencia de Software 1 y 2: en un FACP* NFS2-3030 cuyas LCM y LCD-160 tienen un firmware distinto al del panel aparece SOFTWARE MISMATCH. ¿Qué procedimiento se sigue para solucionarlo?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Hacer CLEAR ALL PROGRAMMING y reprogramar el panel desde cero",
+    "B": "Reemplazar las tarjetas de lazo SLC (LCM) y el LCD-160",
+    "C": "Hacer un procedimiento de FIRMWARE DOWNGRADE/DOWNLOAD a las LCM y a los LCD-160 desde el teclado del FACP (menú BOOTLOADER)",
+    "D": "Hacer un FIRMWARE UPGRADE del FACP a través de VeriFire Tools"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "Videos No Correspondencia de Software 1 y 2 y 52545 sección 5.3: desde el BOOTLOADER (RESET durante el arranque) se descarga a las LCM (LOOP DOWNLOAD) y a los LCD-160 (LCD-160 DOWNLOAD) la versión que tiene el panel. Confirmado por Honeywell (Quiz Día 4, P6).",
+   "ref": {
+    "doc": "No_Correspondencia_de_Software_1",
+    "pag": 1
+   }
+  },
+  {
+   "id": "quiz4-07",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En la pantalla de sensibilidad de un detector de un FACP* NFS2-3030 se muestra: OCCUPIED ALARM SENSITIVITY = 7, UNOCCUPIED ALARM SENSITIVITY = 5, OCCUPIED PREALARM SENSITIVITY = 5, UNOCCUPIED PREALARM SENSITIVITY = 3. ¿Cuál es la configuración de nivel de sensibilidad en alarma más sensible?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "UNOCCUPIED ALARM SENSITIVITY",
+    "B": "OCCUPIED PREALARM SENSITIVITY",
+    "C": "OCCUPIED ALARM SENSITIVITY",
+    "D": "UNOCCUPIED PREALARM SENSITIVITY"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "52545 apéndice D.4 / tabla D.2: alarm sensitivity settings range from one to nine, with one representing the most sensitive. De los dos niveles de ALARMA, 5 (unoccupied) es más sensible que 7 (occupied); los de prealarma no cuentan. Confirmado por Honeywell (Quiz Día 4, P7).",
+   "ref": {
+    "doc": "52545",
+    "pag": 54
+   }
+  },
+  {
+   "id": "quiz4-08",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En la pantalla PANEL TIMERS (Menu 2) de un FACP* NFS2-3030 (soft keys: A = PAS, B = PRESIGNAL DELAY, C = DEFAULT TIMERS, D = ACCEPT, E = BACK), ¿qué soft key debe presionar el programador para activar un tiempo de preseñal de 3 minutos y apagar la opción de PAS?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "A",
+    "B": "B",
+    "C": "C",
+    "D": "D",
+    "E": "E"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "52545 sección 3.2.6 Panel Timers (Menu 2): DEFAULT TIMERS restaura los valores por defecto, que son PAS = OFF y PRESIGNAL DELAY = 3:00; una sola tecla hace las dos cosas. Confirmado por Honeywell (Quiz Día 4, P8).",
+   "ref": {
+    "doc": "52545",
+    "pag": 33
+   }
+  },
+  {
+   "id": "quiz4-09",
+   "tema": "zonas",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, ¿qué ecuación activará una salida cuando se active Z20 o Z30 y no se active Z40?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "OR(AND(Z20,Z30),NOT(Z40))",
+    "B": "DEL(OR(Z20,Z30),NOT(Z40))",
+    "C": "NOT(AND(Z20,Z30),OR(Z40))",
+    "D": "AND(OR(Z20,Z30),NOT(Z40))",
+    "E": "ANYX(2,OR(Z20,Z30),NOT(Z40))"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "(Z20 O Z30) Y NO Z40 = AND(OR(Z20,Z30), NOT(Z40)). NOT requiere que el argumento esté inactivo. Confirmado por Honeywell (Quiz Día 4, P9).",
+   "ref": {
+    "doc": "52545",
+    "pag": 66
+   }
+  },
+  {
+   "id": "quiz4-10",
+   "tema": "nfs3030",
+   "tipo": "vf",
+   "pregunta": "En un FACP* NFS2-3030, el uso de un temporizador de retardo de falla de AC (AC FAIL DELAY) de 6 horas requiere la aprobación de la autoridad local con jurisdicción (AHJ).\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "52545 sección 3.2.5 Panel Timers (Menu 1), NOTE: AC FAIL DELAY settings other than 1-3 hours for off-premises notification require the approval of the local AHJ. Rango 1-12 h o NONE; default 8. Confirmado por Honeywell (Quiz Día 4, P10).",
+   "ref": {
+    "doc": "52545",
+    "pag": 31
+   }
+  },
+  {
+   "id": "quiz4-11",
+   "tema": "red",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, ¿qué TIPO DE ANUNCIADOR (ACS) debe elegir el programador para que el sistema solicite automáticamente la contraseña de un usuario al oprimir un botón de control de punto desde un anunciador remoto ACM-24AT?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "FSCS",
+    "B": "64PT / 96PT",
+    "C": "64SVC / 96SVC",
+    "D": "96SYS / 64SYS"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "52545 sección 3.2.8 ACS Programming, Two Level Bypass: con un ACS programado como 64SVC o 96SVC, al presionar un botón fuera del modo Program/Alter Status aparece automáticamente la pantalla de contraseña. Confirmado por Honeywell (Quiz Día 4, P11).",
+   "ref": {
+    "doc": "52545",
+    "pag": 35
+   }
+  },
+  {
+   "id": "quiz4-12",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "Una AMPS-24(E) configurada con PK-PPS para 5 puntos SLC de monitoreo, con dirección 15 fijada en SW2 = 1 y SW3 = 5, y TB2 conectado al SLC 1 de un FACP* NFS2-3030. Para eliminar el trouble NO POWER SUPPLY INST, ¿qué dirección se configura en SUPERVISION / MAIN PS AC FAIL ADDRESS?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "L1M16",
+    "B": "L1M18",
+    "C": "L1M17",
+    "D": "L1M19",
+    "E": "L1M15"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "51907 tabla 3.1: base 15 → direcciones 15-19, con 15 = Monitor General y 16 = Monitor AC Fail. 52545 sección 3.2.9: MAIN PS AC FAIL ADDRESS = base + 1 = L1M16. Confirmado por Honeywell (Quiz Día 4, P12). IFAS v2026.4 respondió L1M15 (base) y falló: la dirección base NO es la de AC Fail.",
+   "ref": {
+    "doc": "52545",
+    "pag": 40
+   }
+  },
+  {
+   "id": "quiz4-13",
+   "tema": "zonas",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, ¿qué ecuación activará una salida cuando dos o más zonas del grupo Z1-Z6 se activen?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "AND(Z1,Z2,Z3,Z4,Z5,Z6)",
+    "B": "ANYX(3,Z1,Z2,Z3,Z4,Z5,Z6)",
+    "C": "ANYX(2,Z1,Z2,Z3,Z4,Z5,Z6)",
+    "D": "ANYX(6,Z1,Z2,Z3,Z4,Z5,Z6)",
+    "E": "XZONE(Z1,Z2,Z3,Z4,Z5,Z6)"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "ANYX(N, args): N es la cantidad mínima de argumentos activos; dos o más = ANYX(2, …). 52545 apéndice E: ANYX(2,L1M13,L1M14,L1M15) → any two have to be ON. Confirmado por Honeywell (Quiz Día 4, P13).",
+   "ref": {
+    "doc": "52545",
+    "pag": 156
    }
   }
  ],
