@@ -22,7 +22,7 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 | Modos | Troubleshooting, Reemplazo HW, Examen, Diccionario, Guía Rápida, Diseño, Batería |
 | Familias | ONYX (NFS-320, NFS2-640, NFS2-3030) e INSPIRE N16; selector en la barra 📚 (localStorage `ifas_familia`) |
 | Modelo API | `claude-sonnet-4-6` (seleccionable: Haiku 4.5, Sonnet 3.5, Haiku 3) |
-| Documentación | Índices BM25 por categoría en `idx/` (manifest 2026.1, 12 índices, 18.197 fragmentos, 215 documentos + 8 presentaciones + 8 videos transcritos, 15 MB; gzip en Pages) |
+| Documentación | Índices BM25 por categoría en `idx/` (manifest 2026.1, 12 índices, 18.197 fragmentos, 215 documentos únicos: 197 PDF, 8 presentaciones y 10 procedimientos de video, de los que 8 tienen narración; 15 MB; gzip en Pages) |
 | Búsqueda | BM25 + sinónimos bilingües + búsqueda agéntica (`buscar_documentacion`, máx. 3 por pregunta, todos los modos salvo Diccionario) |
 | Datos externos | `fuentes.json` v2026.2 (14 fuentes, 5 verificadas), `ifas_device_library.json` (1.346 aparatos NAC), `examen.json` (91 preguntas, 9 temas) |
 | Tema | Claro/oscuro con botón 🌙/☀️, persistente (localStorage `ifas_theme`) |
@@ -50,6 +50,14 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 - `examen.json` v2026.3: 91 preguntas; entran las 17 del Homework Quiz Día 3 con respuesta confirmada por Honeywell y documento/sección citados por el quiz; correcciones a nfs3030-12 (NCD como display primario, DN-7070) y campo-05 (Strobe FlashScan sin EOLR-1, 52544 4.2).
 - Resultado de la prueba contra el Quiz Día 3 con v2026.3: 11/17 (65 %); análisis en `IFAS_2026\07_validacion\RESULTADO_QUIZ_DIA3.md`.
 **Verificación:** sintaxis JS con node; `node test_motor.js` 30/30; bucle con `tool_choice` simulado con API falsa (llamada 1 con tool_choice, llamada 2 sin él, resultado de la búsqueda forzada = 52545 pág. 40 Supervision).
+
+## 2026-11-05 — v2026.3.1: ajustes posteriores al despliegue
+**Archivos:** `index.html`
+**Cambios:**
+- Examen: el pool por tema se acota a `EXAMEN_MAX` = 10 preguntas barajadas (antes servía el tema completo, ej. "1 de 16" en nfs3030).
+- Sinónimos: eliminadas las expansiones de un carácter (`j`) en jumper, puente y conector, que `tokenize` descartaba; se añade `jp`. Los códigos J5/J6 siguen entrando por el término raro de la consulta.
+- Sin cambios en `idx/`, `examen.json` ni `fuentes.json`.
+**Verificación:** sintaxis JS con node; `node test_motor.js` 30/30.
 
 ## 2026-11-05 — v2026.3: sinónimos bilingües, búsqueda agéntica, banco de examen, fuentes.json validado
 **Archivos:** `index.html`, `fuentes.json`, `examen.json` (nuevo), `add_to_index.py` (v3), `PROCEDIMIENTO.md` (v3), `test_motor.js` (nuevo), `contextualizar_indice.py` (nuevo), `CONTROL_CAMBIOS.md`
@@ -79,7 +87,7 @@ Cómo usar este documento: cada vez que se haga un commit relevante en el repo, 
 ## 2026-11-04 — v2026.1: índices por categoría (Notifier University 2026) + INSPIRE N16
 **Archivos:** `index.html`, `fuentes.json`, `idx/` (nuevo, 13 archivos), `ifas_index.json` (eliminado)
 **Cambios:**
-- Corpus Notifier University 2026 (215 PDF deduplicados, 8 presentaciones, 10 videos transcritos) convertido a 12 índices por categoría con `manifest.json` (18.197 fragmentos, 15 MB). Pipeline documentado en `INSTRUCCIONES_CHATGPT_IFAS_2026.md`.
+- Corpus Notifier University 2026 (197 PDF deduplicados, 8 presentaciones y 10 videos: 8 transcritos y 2 sin narración; 215 documentos en el índice) convertido a 12 índices por categoría con `manifest.json` (18.197 fragmentos, 15 MB). Pipeline documentado en `INSTRUCCIONES_CHATGPT_IFAS_2026.md`.
 - Loader nuevo: lee `idx/manifest.json`, carga los índices base según la familia (ONYX / INSPIRE N16 / Todas) y el otro índice de panel bajo demanda cuando la consulta menciona sus modelos (`CAT_TRIGGERS`, lista `modelos` del manifest).
 - Ranking: penalización ×0.5 a la familia no seleccionada, preferencia ×1.1 por español, máximo 3 fragmentos por documento. Cada mensaje al modelo lleva `[Modo activo | Familia]`.
 - System prompt: identidad ONYX + N16; tabla de diagnóstico ampliada (software mismatch, ground fault, nodo perdido, trouble AMPS-24); Regla 4 reforzada; Reglas 8 (firmware antes que hardware), 9 (recuperación de contraseña solo por Password Agreement), 10 (prueba de reaceptación NFPA 72 / 15378: 100 % afectados + 10 % no afectados, máx. 50) y 11 (N16: capacidades, exclusiones, conversión de base de datos VFT 12.45 → V27 → N16 V5.0, nunca VFT 11.xx).
