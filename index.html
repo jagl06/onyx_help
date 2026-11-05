@@ -291,7 +291,7 @@ body{font-family:'DM Sans',system-ui,sans-serif;background:var(--bg);color:var(-
       <div class="logo">🔥</div>
       <div class="title-block">
         <h1>IFAS</h1>
-        <p>ISELEC Fire Alarm Support · v2026.2</p>
+        <p>ISELEC Fire Alarm Support · v2026.3</p>
       </div>
     </div>
     <div class="hdr-actions">
@@ -514,7 +514,7 @@ CPU: CPU2-3030D (con display) | Fuente: AMPS-24
 ## MODOS DE OPERACIÓN
 TROUBLESHOOTING: Aplica Reglas 1-6. Diagnóstico contextual y conciso.
 REEMPLAZO_HARDWARE: Aplica Regla 2 obligatoriamente. Incluye verificación física + programación VeriFire + validación post-intervención.
-EXAMEN: Formula preguntas una a la vez a partir de los fragmentos de Notifier University 2026 (presentaciones PPT01-PPT08, LAB 1 y manuales) del tema elegido. No des la respuesta antes de que el usuario responda. Evalúa, da retroalimentación con referencia al manual y muestra puntaje acumulado.
+EXAMEN: Si el mensaje trae un bloque [BANCO DE EXAMEN], obedécelo al pie de la letra: presenta la pregunta tal cual con sus letras, evalúa con la RESPUESTA CORRECTA indicada (nunca la cambies) y cita la referencia. Si no hay bloque, formula preguntas una a la vez a partir de los fragmentos de Notifier University 2026 del tema elegido, en el estilo del quiz Honeywell (enunciado con "En un FACP* NFS2-640 o NFS-320…", 4 opciones o verdadero/falso). No des la respuesta antes de que el técnico responda; lleva el puntaje acumulado. No des la respuesta antes de que el usuario responda. Evalúa, da retroalimentación con referencia al manual y muestra puntaje acumulado.
 DICCIONARIO: Definición técnica + aplicación práctica + referencia manual. Máximo 5 líneas por término.
 GUIA_RAPIDA: Solo tablas con valores, límites y parámetros, o pasos numerados cuando se pida un procedimiento (walk test, recuperación de contraseña, configuración de AMPS-24, actualización de firmware, instalación de VeriFire Tools). Sin explicaciones largas.
 DISENO: Consultas abiertas de ingeniería y diseño (cobertura, espaciamiento, cantidad/ubicación de dispositivos, selección y compatibilidad de equipos). Aplica Regla 7. No exijas el triage de troubleshooting. Fundamenta en ficha técnica del dispositivo + NFPA 72 y nunca inventes valores de cobertura o espaciamiento.`;
@@ -522,7 +522,7 @@ DISENO: Consultas abiertas de ingeniería y diseño (cobertura, espaciamiento, c
 const MODE_CONFIG = {
   TROUBLESHOOTING:{color:"#FF453A",colorLight:"#C81E14",bg:"rgba(255,69,58,0.14)",label:"Troubleshooting",starter:"Modo Troubleshooting activo.\n\nDescribe el problema: modelo del panel (ONYX o N16), qué cambió recientemente y el texto exacto del error o trouble que muestra. Si es un NFS2-3030, incluye las versiones de CPU y LCM/LEM."},
   REEMPLAZO_HARDWARE:{color:"#FF9F0A",colorLight:"#A85D00",bg:"rgba(255,159,10,0.14)",label:"Reemplazo HW",starter:"Modo Reemplazo de Hardware activo.\n\nIndica qué componente fue reemplazado o se va a actualizar (CPU, LCM, LEM, fuente, HS-NCM, CPU-N16LD, SLM-318, firmware) y el modelo del panel. Te guío paso a paso incluyendo la reprogramación en VeriFire y la prueba de reaceptación."},
-  EXAMEN:{color:"#0A84FF",colorLight:"#0A66D0",bg:"rgba(10,132,255,0.14)",label:"Examen",starter:"Modo Examen activo.\n\n¿Sobre qué modelo o tema quieres ser evaluado?\n\n• NFS-320\n• NFS2-640\n• NFS2-3030\n• INSPIRE N16\n• Zonas lógicas y ecuaciones\n• NotiFireNet\n• VeriFire Tools\n• Operación y mantenimiento"},
+  EXAMEN:{color:"#0A84FF",colorLight:"#0A66D0",bg:"rgba(10,132,255,0.14)",label:"Examen",starter:"Modo Examen activo (banco Notifier University 2026, estilo quiz Honeywell).\n\nEscribe el tema para empezar:\n\n• hw640 — NFS2-640/NFS-320 hardware y SLC\n• prog640 — NFS2-640/NFS-320 programación\n• zonas — Zonas lógicas, CBE y ecuaciones\n• nfs3030 — NFS2-3030, AMPS-24 y programación\n• red — NotiFireNet y anunciadores\n• n16 — INSPIRE N16\n• campo — Detectores, módulos y notificación\n• bateria — Baterías, fuentes y NFPA 72\n• procedimientos — Firmware, contraseñas, pruebas\n• todos — mezcla de todo el banco\n\nResponde con la letra de la opción. Al final te doy el puntaje por tema."},
   DICCIONARIO:{color:"#30D158",colorLight:"#1E8E3E",bg:"rgba(48,209,88,0.14)",label:"Diccionario",starter:"Modo Diccionario activo.\n\n¿Qué término o función quieres consultar? (ej: Alarm Verification, Drift Compensation, Walk Test, SLC, NAC, LCM, etc.)"},
   GUIA_RAPIDA:{color:"#BF5AF2",colorLight:"#8E24AA",bg:"rgba(191,90,242,0.14)",label:"Guía Rápida",starter:"Modo Guía Rápida activo.\n\n¿Qué parámetros necesitas?\n\n• Corrientes por dispositivo\n• Resistencias de fin de línea\n• Capacidades por lazo/panel\n• Límites de cableado SLC\n• Procedimiento (walk test, contraseña, AMPS-24, firmware)\n• Otro — especifica"},
   DISENO:{color:"#5AC8FA",colorLight:"#0277BD",bg:"rgba(90,200,250,0.14)",label:"Diseño",starter:"Modo Diseño activo.\n\nConsulta abierta de ingeniería: cobertura/espaciamiento de detectores, cantidad de dispositivos para un área, selección o compatibilidad de equipos.\n\nPara cálculos de cobertura ten a mano: modelo exacto del dispositivo, altura y tipo de techo (liso / con vigas / con viguetas) y dimensiones del área. IFAS consulta la documentación automáticamente; si quieres, también puedes adjuntar la ficha técnica como foto o PDF."},
@@ -550,6 +550,53 @@ const BUSCAR_TOOL = {
   description:'Busca fragmentos en los manuales, hojas de datos y presentaciones Notifier cargados en IFAS (búsqueda léxica BM25, español e inglés). Úsala cuando los fragmentos recibidos no contengan el dato que necesitas. Funciona mejor con términos concretos: códigos de conector o jumper (J5, TB4, SW2), modelos (FSP-951, CPU2-3030), número de documento (52545SP, DN-7111), nombres de parámetro o trouble en inglés (AUXILIARY TROUBLE, GROUND FAULT) y títulos de tabla (Table H.2).',
   input_schema:{type:'object',properties:{consulta:{type:'string',description:'Términos de búsqueda, 2 a 8 palabras, sin frases largas.'}},required:['consulta']}
 };
+// ── BANCO DE EXAMEN (examen.json) ──
+let EXAMEN = null;                 // {temas:{}, preguntas:[]}
+let exam = {tema:null, cola:[], actual:null, n:0, total:0};
+async function loadExamen(){
+  if(EXAMEN) return EXAMEN;
+  try{
+    const r=await fetch('examen.json',{cache:'no-cache'}); if(!r.ok) throw 0;
+    EXAMEN=await r.json(); EXAMEN.preguntas=(EXAMEN.preguntas||[]).filter(q=>!q.verificar);
+  }catch(e){ EXAMEN={temas:{},preguntas:[]}; toast('No se cargó examen.json; el examen será improvisado desde la documentación.'); }
+  return EXAMEN;
+}
+function examReset(){ exam={tema:null, cola:[], actual:null, n:0, total:0}; }
+function examFmt(q){
+  const ops=Object.entries(q.opciones).map(([k,v])=>`${k}) ${v}`).join('\n');
+  const tipo=q.tipo==='multiple'?'Seleccione todas las respuestas que sean válidas.':q.tipo==='vf'?'Verdadero o falso.':'Una sola respuesta.';
+  return `${q.pregunta}\n${tipo}\n${ops}`;
+}
+function examPick(texto){
+  const t=texto.toLowerCase();
+  const temas=Object.keys(EXAMEN.temas||{});
+  let tema = temas.find(k=>t.includes(k)) || (t.includes('todo')?'todos':null);
+  if(!tema){ for(const k of temas){ const nom=(EXAMEN.temas[k]||'').toLowerCase(); if(nom.split(/[ ,\/]+/).some(w=>w.length>4&&t.includes(w))){tema=k;break;} } }
+  if(!tema) return null;
+  let pool = tema==='todos' ? EXAMEN.preguntas.slice() : EXAMEN.preguntas.filter(q=>q.tema===tema);
+  if(!pool.length) return null;
+  for(let i=pool.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [pool[i],pool[j]]=[pool[j],pool[i]]; }
+  exam={tema, cola:pool, actual:null, n:0, total:pool.length};
+  return tema;
+}
+// Devuelve el bloque de texto que se antepone al mensaje del técnico en modo EXAMEN (o '' si no aplica)
+function examContext(texto){
+  if(!EXAMEN || !EXAMEN.preguntas.length) return '';
+  if(!exam.tema){
+    const tema=examPick(texto);
+    if(!tema) return '[BANCO DE EXAMEN] El técnico aún no eligió un tema válido. Pídele que escriba uno de: '+Object.keys(EXAMEN.temas).join(', ')+' o "todos".';
+    exam.actual=exam.cola.shift(); exam.n=1;
+    return `[BANCO DE EXAMEN] Tema: ${EXAMEN.temas[tema]||tema}. Presenta al técnico la pregunta ${exam.n} de ${exam.total} TAL CUAL (enunciado y opciones con sus letras), sin revelar la respuesta ni pistas. Pregunta:\n${examFmt(exam.actual)}`;
+  }
+  const q=exam.actual;
+  if(!q) return '[BANCO DE EXAMEN] El examen terminó. Da el resumen final (aciertos/total y temas a repasar) y ofrece empezar otro tema.';
+  const sig=exam.cola.shift(); exam.actual=sig||null;
+  let out=`[BANCO DE EXAMEN] Pregunta ${exam.n} de ${exam.total} que acaba de responder el técnico:\n${examFmt(q)}\nRESPUESTA CORRECTA: ${q.correcta.join(', ')}. Explicación: ${q.explicacion} Referencia: ${q.ref.doc} pág. ${q.ref.pag}.\nInstrucciones: (1) Evalúa la respuesta del técnico (acepta letra o texto equivalente; en preguntas múltiples debe marcar todas las válidas y ninguna inválida). (2) Di ✓ Correcto o ✗ Incorrecto y explica en máximo 3 líneas citando la referencia. (3) Mantén el puntaje acumulado (aciertos de respondidas) y muéstralo en una línea.`;
+  if(sig){ exam.n++; out+=` (4) Presenta la pregunta ${exam.n} de ${exam.total} TAL CUAL, sin revelar la respuesta:\n${examFmt(sig)}`; }
+  else out+=' (4) Era la última: da el resumen final con puntaje y temas a repasar, y ofrece otro tema.';
+  return out;
+}
+
 const TOOL_PROMPT = `
 
 ## HERRAMIENTA DE BÚSQUEDA
@@ -654,7 +701,7 @@ applyTheme(localStorage.getItem('ifas_theme') || 'dark');
 
 
 clearBtn.addEventListener('click',()=>{
-  messages=[];activeMode=null;pendingImages=[];
+  messages=[];activeMode=null;pendingImages=[];examReset();
   const bp=document.getElementById('battery-panel');if(bp)bp.classList.remove('active');
   ['messages','manual-bar','input-area','img-preview'].forEach(x=>{const e=document.getElementById(x);if(e)e.style.display='';});
   renderPreview();
@@ -765,7 +812,8 @@ document.querySelectorAll('.mode-btn').forEach(btn=>{
 });
 
 function selectMode(id){
-  activeMode=id;
+  activeMode=id; examReset();
+  if(id==='EXAMEN') loadExamen();
   const cfg=MODE_CONFIG[id];
   document.querySelectorAll('.mode-btn').forEach(b=>{
     const bc=MODE_CONFIG[b.dataset.id];
@@ -863,7 +911,7 @@ function ingest(cat, frs){
     const toks = tokenize(f.texto);
     const tf = {};
     toks.forEach(t=>{ tf[t]=(tf[t]||0)+1; });
-    docIndex.push({id:base+i, cat, doc:f.doc, titulo:f.titulo||'', page:f.pag, text:f.texto,
+    docIndex.push({id:base+i, cat, doc:f.doc, titulo:f.titulo||'', page:f.pag, text:f.texto, toc:(f.texto.match(/\.{6,}/g)||[]).length>=3,
       familia:f.familia||'COMUN', idioma:f.idioma||'en', tipo:f.tipo||'manual', tf, len:toks.length,
       nameTokens: tokenize((f.doc||'')+' '+(f.titulo||'')+' '+(f.modelos||[]).join(' '))});
   });
@@ -974,7 +1022,7 @@ const SINONIMOS = {
   'red':['network','noti-fire-net','ncm','hs-ncm'], 'nodo':['node'], 'fibra':['fiber','optic'],
   'gabinete':['cabinet','backbox','cab','enclosure'], 'compatibilidad':['compatibility','compatible'], 'listado':['listing','ul'],
   'incompatibilidad de software':['software mismatch'], 'no correspondencia':['mismatch'], 'extincion':['release','releasing','agent'],
-  'inalambrico':['wireless','swift'], 'conducto':['duct','dnr'], 'haz':['beam','fsb'], 'calor':['heat','thermal','fst'], 'humo':['smoke','photo','fsp'],
+  'liberacion':['release','releasing','rel'], 'inalambrico':['wireless','swift'], 'conducto':['duct','dnr'], 'haz':['beam','fsb'], 'calor':['heat','thermal','fst'], 'humo':['smoke','photo','fsp'],
   'co':['carbon monoxide','fco','fsco'], 'aislador':['isolator','iso-x','iso'], 'repetidor':['repeater','rpt'], 'impresora':['printer','prn']
 };
 function expandQuery(query){
@@ -1020,7 +1068,9 @@ function retrieve(query, k){
     // refuerzo acotado si el nombre/título/modelos del documento coinciden con la consulta (FSP-851, NFS2-3030…)
     let nameBonus = 0;
     for(const t of new Set(d.nameTokens)){ if(idf[t]!==undefined) nameBonus += idf[t]; }
-    s += Math.min(nameBonus, 4) * 1.5;
+    s += Math.min(nameBonus, 8) * 1.5;
+    // páginas de índice/tabla de contenido (líneas de puntos) valen poco como respuesta
+    if(d.toc) s *= 0.3;
     if(askedDocs.length) s *= askedDocs.includes(String(d.doc).toLowerCase()) ? 3 : 1;
     // familia seleccionada: penaliza fragmentos de la otra familia (COMUN no se toca)
     if(familia!=='TODOS' && d.familia!=='COMUN' && d.familia!==familia) s *= 0.5;
@@ -1058,7 +1108,8 @@ async function send(){
     else userContent.push({type:'image',source:{type:'base64',media_type:img.type,data:img.data}});
   });
   const tag=`[Modo activo: ${activeMode||'NINGUNO'} | Familia: ${familia}]`;
-  const msgText=activeMode?`${tag}\n${text}`:`${tag}\n${text}`;
+  let msgText=`${tag}\n${text}`;
+  if(activeMode==='EXAMEN'){ await loadExamen(); const ex=examContext(text); if(ex) msgText=`${tag}\n${ex}\n\nMENSAJE DEL TÉCNICO: ${text}`; }
   if(text) userContent.push({type:'text',text:msgText});
   else userContent.push({type:'text',text:tag});
 

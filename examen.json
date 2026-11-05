@@ -1,0 +1,1578 @@
+{
+ "version": "2026.2",
+ "generado": "2026-11-05",
+ "nota": "Banco de preguntas estilo Notifier ONYX University Quiz. Cada pregunta cita documento y página del índice idx/. tipo: unica (una respuesta), multiple (seleccione todas las válidas), vf (verdadero/falso). correcta: letras. Revisar y ampliar con las preguntas reales del curso.",
+ "temas": {
+  "hw640": "NFS2-640 / NFS-320 hardware y SLC",
+  "prog640": "NFS2-640 / NFS-320 programación",
+  "zonas": "Zonas lógicas, CBE y ecuaciones",
+  "nfs3030": "NFS2-3030 hardware, AMPS-24 y programación",
+  "red": "NotiFireNet y anunciadores",
+  "n16": "INSPIRE N16",
+  "campo": "Detectores, módulos y notificación",
+  "bateria": "Baterías, fuentes y NFPA 72",
+  "procedimientos": "Firmware, contraseñas, pruebas y mantenimiento"
+ },
+ "preguntas": [
+  {
+   "id": "hw640-01",
+   "tema": "hw640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 con una tarjeta SLC, ¿cuántos dispositivos direccionables inteligentes admite cada lazo en protocolo FlashScan?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "99 módulos y 99 detectores",
+    "B": "159 módulos y 159 detectores",
+    "C": "318 detectores",
+    "D": "127 módulos y 127 detectores"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Hasta 318 dispositivos por SLC: 159 módulos y 159 detectores en FlashScan; en CLIP son 99 y 99.",
+   "ref": {
+    "doc": "PPT02",
+    "pag": 5
+   }
+  },
+  {
+   "id": "hw640-02",
+   "tema": "hw640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS-320 o NFS2-640 configurado en protocolo CLIP, ¿cuál es la capacidad máxima por SLC?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "159 módulos y 159 detectores",
+    "B": "99 módulos y 99 detectores",
+    "C": "64 módulos y 64 detectores",
+    "D": "199 dispositivos en total"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "En CLIP el SLC admite 99 módulos y 99 detectores; FlashScan amplía a 159 y 159.",
+   "ref": {
+    "doc": "PPT02",
+    "pag": 4
+   }
+  },
+  {
+   "id": "hw640-03",
+   "tema": "hw640",
+   "tipo": "vf",
+   "pregunta": "En un SLC Clase B con ramificaciones (T-tap), la resistencia DC máxima desde el panel hasta el final de cada ramificación es de 50 Ω.",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "Las derivaciones en estrella o T-tap están permitidas en Clase B respetando 50 Ω de resistencia DC máxima desde el panel al final de cada ramificación.",
+   "ref": {
+    "doc": "PPT02",
+    "pag": 8
+   }
+  },
+  {
+   "id": "hw640-04",
+   "tema": "hw640",
+   "tipo": "vf",
+   "pregunta": "En un SLC Clase A se permiten ramificaciones (T-tap) siempre que no se superen los 50 Ω de resistencia DC.",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "En Clase A no se permiten ramificaciones; la resistencia máxima de 50 Ω se mide desde la salida del panel hasta el retorno al panel.",
+   "ref": {
+    "doc": "PPT02",
+    "pag": 12
+   }
+  },
+  {
+   "id": "hw640-05",
+   "tema": "hw640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640, ¿cuántas tarjetas SLC puede tener como máximo?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "1",
+    "B": "2",
+    "C": "4",
+    "D": "10"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "El NFS2-640 es expandible a 2 tarjetas SLC (318 dispositivos por tarjeta); el NFS-320 tiene un solo SLC.",
+   "ref": {
+    "doc": "PPT02",
+    "pag": 5
+   }
+  },
+  {
+   "id": "hw640-06",
+   "tema": "hw640",
+   "tipo": "unica",
+   "pregunta": "Según el manual 51253 (SLC Wiring Manual), ¿qué valor tiene la resistencia de fin de línea (EOL) del circuito de un módulo monitor mini?",
+   "opciones": {
+    "A": "4.7 kΩ",
+    "B": "2.2 kΩ",
+    "C": "47 kΩ",
+    "D": "10 kΩ"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "El detalle de conexionado del módulo monitor mini indica EOL resistance: 47K ohms.",
+   "ref": {
+    "doc": "PPT03",
+    "pag": 16
+   }
+  },
+  {
+   "id": "hw640-07",
+   "tema": "hw640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, ¿qué ocurre con la protección contra incendio del panel mientras se ejecuta la rutina de inicialización de un detector?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "El panel sale de servicio durante 60 minutos",
+    "B": "El panel permanece en funcionamiento; la rutina tarda aproximadamente 2,5 minutos",
+    "C": "El SLC completo se desactiva",
+    "D": "Solo se puede hacer con VeriFire Tools"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "La rutina de inicialización del detector tarda aproximadamente 2,5 minutos y durante ese tiempo el FACP permanece en funcionamiento.",
+   "ref": {
+    "doc": "52748SP",
+    "pag": 109
+   }
+  },
+  {
+   "id": "hw640-08",
+   "tema": "hw640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS-320, ¿cuántos circuitos de notificación (NAC) estándar tiene y cuál es la corriente máxima de cada uno?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "2 NAC de 3.0 A",
+    "B": "4 NAC de 1.5 A",
+    "C": "4 NAC de 3.0 A",
+    "D": "6 NAC de 1.0 A"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Datasheet DN-7112: Standard notification circuits (4): 1.5 A each; salida total 24 V de 6.0 A en alarma.",
+   "ref": {
+    "doc": "DN-7112",
+    "pag": 7
+   }
+  },
+  {
+   "id": "hw640-09",
+   "tema": "hw640",
+   "tipo": "unica",
+   "pregunta": "Según el datasheet DN-7112, la corriente de la tarjeta del NFS-320 es de 0.250 A. ¿Cuánto se debe sumar por cada NAC en uso?",
+   "opciones": {
+    "A": "0.010 A",
+    "B": "0.035 A",
+    "C": "0.100 A",
+    "D": "0.250 A"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Current draw (standby/alarm): NFS-320(E) board 0.250 A, add 0.035 A for each NAC in use; KDM-R2 con backlight 0.100 A.",
+   "ref": {
+    "doc": "DN-7112",
+    "pag": 7
+   }
+  },
+  {
+   "id": "prog640-01",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En los FACP* NFS-320 y NFS2-640, ¿cuál de las opciones del menú PROGRAM CHANGE usaría el programador para configurar ALA.SCROLL (Alarm Scroll) y TBL.REMIND (Trouble Reminder)?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "NETWORK",
+    "B": "UTILITY",
+    "C": "FLASHSCAN POLL",
+    "D": "BASIC PROGRAM"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "ALA.SCROLL y TBL.REMIND son campos del Basic Program (System Settings) del manual de programación 52742.",
+   "ref": {
+    "doc": "52742",
+    "pag": 46
+   }
+  },
+  {
+   "id": "prog640-02",
+   "tema": "prog640",
+   "tipo": "vf",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, con TBL.REMIND = 2 el zumbador vuelve a sonar un tono de problema cada 24 horas a las 11:00 a.m. y envía un recordatorio cada sesenta segundos para los eventos ya reconocidos.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "Opción 2 de Trouble Reminder: resound a trouble tone every 24 hours at 11:00 AM y reminder every sixty seconds for acknowledged events.",
+   "ref": {
+    "doc": "52742SP",
+    "pag": 55
+   }
+  },
+  {
+   "id": "prog640-03",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, ¿qué valor de TBL.REMIND hace sonar un tono corto de recordatorio de problema cada minuto?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "0",
+    "B": "1",
+    "C": "2",
+    "D": "3"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Select 1 to sound a short trouble reminder tone every minute.",
+   "ref": {
+    "doc": "52742",
+    "pag": 46
+   }
+  },
+  {
+   "id": "prog640-04",
+   "tema": "prog640",
+   "tipo": "vf",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, poner ALA.SCROLL en Y requiere aprobación del AHJ.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "El manual 52742 marca Alarm Scroll con asterisco: Setting this field to Y requires AHJ approval.",
+   "ref": {
+    "doc": "52742",
+    "pag": 46
+   }
+  },
+  {
+   "id": "prog640-05",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640, en el menú 4=FLASHSCAN POLL, ¿qué significa la configuración FLASHSCAN: L1DET=Y, L1MOD=N?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Detectores del lazo 1 en FlashScan y módulos del lazo 1 en CLIP",
+    "B": "Lazo 1 completo en CLIP",
+    "C": "Lazo 1 completo en FlashScan",
+    "D": "No es una configuración válida: detectores FlashScan y módulos CLIP no pueden compartir el SLC"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "PPT03 s159: detectores FlashScan y módulos CLIP en el mismo SLC NO es una opción. Cada lazo se configura completo en un protocolo.",
+   "ref": {
+    "doc": "PPT03",
+    "pag": 159
+   }
+  },
+  {
+   "id": "prog640-06",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 configurado en 4=FLASHSCAN POLL como FLASHSCAN: L1DET=N, L1MOD=N, L2DET=Y, L2MOD=Y, ¿cuál afirmación es correcta?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Es posible instalar un detector FSP-951 en el SLC 1 y un FSP-951-IV en el SLC 2",
+    "B": "Es posible instalar detectores FlashScan en el SLC 1",
+    "C": "El SLC 2 queda en CLIP",
+    "D": "Ambos lazos quedan en CLIP"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "El lazo 1 queda en CLIP y el lazo 2 en FlashScan; la serie 951 opera en ambos protocolos, así que puede ir un FSP-951 en cada lazo. Las series 951 son compatibles con FlashScan y CLIP.",
+   "ref": {
+    "doc": "DN-60977",
+    "pag": 1
+   }
+  },
+  {
+   "id": "prog640-07",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, ¿qué Type Code sin alarma, sin enclavamiento (non-latching) y con activación de CBE se usa en un módulo monitor dedicado a supervisar fuentes auxiliares (administración de energía)?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "NON FIRE",
+    "B": "AREA MONITOR",
+    "C": "FIRE CONTROL",
+    "D": "POWER MONITR"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "Tabla de Type Codes del 52742: POWER MONITR, tipo trouble, non-latching N, monitors auxiliary power supplies.",
+   "ref": {
+    "doc": "52742",
+    "pag": 114
+   }
+  },
+  {
+   "id": "prog640-08",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En los FACP* NFS-320 y NFS2-640, ¿qué algoritmo identifica, compensa y suaviza los cambios de lectura analógica causados por la acumulación de polvo y suciedad en la cámara del detector de humo?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Self-optimizing Pre-Alarm",
+    "B": "Cooperative Multi-Detector Sensing",
+    "C": "Alarm Verification",
+    "D": "Drift Compensation"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "Drift Compensation (compensación a la deriva) ajusta el nivel de alarma frente a la suciedad acumulada y genera las señales de alerta y mantenimiento urgente.",
+   "ref": {
+    "doc": "PPT03",
+    "pag": 72
+   }
+  },
+  {
+   "id": "prog640-09",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, ¿en qué pantalla del Program Change se configuran las funciones especiales de Pre-Alarma Alert y Action?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "F8 Coding Function",
+    "B": "F9 Pre-Alarm",
+    "C": "Basic Program",
+    "D": "Utility"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Special Function F9 (Pre-Alarm) tiene los campos Alert y Action; F8 es la función de codificación.",
+   "ref": {
+    "doc": "52742",
+    "pag": 16
+   }
+  },
+  {
+   "id": "prog640-10",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, ¿cuál es la contraseña de programación por defecto que se introduce en ENTER PROG OR STAT PASSWORD?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "00000",
+    "B": "11111",
+    "C": "12345",
+    "D": "No tiene contraseña por defecto"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "Nivel Program Change: Default Password = 00000 (programación); la de estado es 11111.",
+   "ref": {
+    "doc": "PPT03",
+    "pag": 21
+   }
+  },
+  {
+   "id": "prog640-11",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, ¿cuál es el rango del tiempo de Alarm Verification en configuración estándar (sin REGION Canadá)?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "0 a 30 segundos",
+    "B": "0 a 60 segundos",
+    "C": "0 a 240 segundos",
+    "D": "0 a 600 segundos"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Tabla de System Settings del 52742: Alarm Verification Time 0 to 60 seconds (Canadá 0 a 240 por REGION).",
+   "ref": {
+    "doc": "52742",
+    "pag": 7
+   }
+  },
+  {
+   "id": "prog640-12",
+   "tema": "prog640",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, el panel ofrece dos métodos de programación en campo. ¿Cuáles son?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Program Change (teclado) y VeriFire Tools",
+    "B": "VeriFire Tools y ONYXWorks",
+    "C": "Autoprogram y CLSS",
+    "D": "Teclado y memoria USB"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "52742: the built-in Program Change interface y the VeriFire Tools Programming Utility; Autoprogram es una función del Program Change.",
+   "ref": {
+    "doc": "52742",
+    "pag": 9
+   }
+  },
+  {
+   "id": "zonas-01",
+   "tema": "zonas",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, ¿cuántas posiciones de CBE (Control por Evento) tiene cada dispositivo de entrada o salida para asignar zonas de software?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "3",
+    "B": "5",
+    "C": "10",
+    "D": "99"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Cada dispositivo cuenta con 5 espacios de CBE para asociar la activación de una entrada con la activación de una salida.",
+   "ref": {
+    "doc": "PPT03",
+    "pag": 37
+   }
+  },
+  {
+   "id": "zonas-02",
+   "tema": "zonas",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, al deshabilitar una Zona de software general ZXX se deshabilita cualquier dispositivo de entrada o salida que tenga esa zona asignada en su CBE número __.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "5to CBE",
+    "B": "1er CBE",
+    "C": "3ro CBE",
+    "D": "4to CBE"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "PPT03 s161 (Status Change, 1=DISABL): la deshabilitación de una Zona General desactiva todos los dispositivos de entrada y salida que tengan asignada dicha zona dentro de su primer CBE. Lo mismo indica el manual N16 (LS10239) para la primary zone.",
+   "ref": {
+    "doc": "PPT03",
+    "pag": 161
+   }
+  },
+  {
+   "id": "zonas-03",
+   "tema": "zonas",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-640 o NFS-320, en la lista de CBE de un módulo de control se pueden escribir hasta cinco zonas. ¿Qué tipos de zona admite?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Solo zonas generales 00-99",
+    "B": "Zonas generales 00-99, especiales F0-F9, lógicas L0-L9, de liberación R0-R9 y E0-E9",
+    "C": "Solo zonas lógicas L0-L9",
+    "D": "Zonas 00-99 y de liberación R0-R9"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Type the number of up to five zones, including E0-E9, F0-F9, L0-L9, R0-R9, and zones 00-99.",
+   "ref": {
+    "doc": "52742",
+    "pag": 21
+   }
+  },
+  {
+   "id": "zonas-04",
+   "tema": "zonas",
+   "tipo": "vf",
+   "pregunta": "El programa de Notifier ONYX University hace énfasis en el uso de Control por Evento (CBE) y zonas de software, pero no incluye los sistemas de evacuación por voz (DVC), workstations ni gateways.",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "PPT01 (Bienvenida): se hace énfasis en CBE y zonas de software; el programa NO incluye DVC, workstations ni gateways.",
+   "ref": {
+    "doc": "PPT01",
+    "pag": 19
+   }
+  },
+  {
+   "id": "nfs3030-01",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, un sistema de 6 lazos se arma con:\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "6 LCM-320",
+    "B": "3 LCM-320 y 3 LEM-320",
+    "C": "2 LCM-320 y 4 LEM-320",
+    "D": "1 LCM-320 y 5 LEM-320"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Cada LCM-320 (Loop Control Module) admite una LEM-320 (Loop Expander Module): 2L = 1+1, 4L = 2+2, 6L = 3+3, hasta 10L = 5+5.",
+   "ref": {
+    "doc": "PPT05",
+    "pag": 12
+   }
+  },
+  {
+   "id": "nfs3030-02",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030 aparece SOFTWARE MISMATCH. Según la presentación de hardware, ¿cuál es la causa?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Base de datos corrupta en el CPU",
+    "B": "Versión de firmware del CPU (ej. V22) incompatible con la versión de las LCM/LEM (ej. V8.0 o V12.0)",
+    "C": "Dirección de nodo duplicada en NotiFireNet",
+    "D": "Batería NVRAM descargada"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "PPT05 (Compatibilidad de Firmware): Software Mismatch cuando CPU V22 convive con LCM V8.0/V12.0; se resuelve actualizando firmware, no cambiando tarjetas.",
+   "ref": {
+    "doc": "PPT05",
+    "pag": 18
+   }
+  },
+  {
+   "id": "nfs3030-03",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, ¿cómo se muestra la versión de firmware desde el teclado?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Presionando la tecla de prueba de lámparas (Lamp Test) durante 5 segundos",
+    "B": "Desde VeriFire Tools únicamente",
+    "C": "Con el interruptor SW2 en posición 15",
+    "D": "Reiniciando el panel"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "PPT05 (Prueba de Lámpara): si se mantiene presionada la tecla durante 5 segundos se muestra la versión del firmware; también en READ STATUS → VERSION.",
+   "ref": {
+    "doc": "PPT05",
+    "pag": 8
+   }
+  },
+  {
+   "id": "nfs3030-04",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, la fuente AMPS-24 conectada al SLC ocupa:\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "1 dirección de detector",
+    "B": "5 direcciones de módulo consecutivas",
+    "C": "2 direcciones de módulo",
+    "D": "No ocupa direcciones; se supervisa por TB2"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "La AMPS-24 ocupa 5 direcciones de módulo en el SLC (General, AC Fail, Battery, Earth Fault, Charger). PPT05 s17: ocupa 5 direcciones de módulo.",
+   "ref": {
+    "doc": "PPT05",
+    "pag": 17
+   }
+  },
+  {
+   "id": "nfs3030-05",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "Para configurar la dirección SLC de una fuente AMPS-24/E se usan sus interruptores SW2 y SW3 y, para los puntos de monitoreo, el software:",
+   "opciones": {
+    "A": "VeriFire Tools",
+    "B": "PK-PPS",
+    "C": "ONYXWorks",
+    "D": "CLSS"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "El video Como Configurar una Fuente AMPS 24 usa el software PK-PPS (carpeta Power Supplies) para la configuración de la fuente; SW2/SW3 fijan la dirección base.",
+   "ref": {
+    "doc": "Como_Configurar_una_Fuente_AMPS_24",
+    "pag": 1
+   }
+  },
+  {
+   "id": "nfs3030-06",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "Según el datasheet DN-7070, ¿cuál es la corriente (standby/alarma) de la tarjeta CPU2-3030D?",
+   "opciones": {
+    "A": "0.120 A",
+    "B": "0.340 A",
+    "C": "0.600 A",
+    "D": "0.130 A"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "DN-7070: CPU2-3030D board 0.340 A; CPU2-3030ND 0.120 A; LCM-320 0.130 A; LEM-320 0.100 A; AMPS-24(E) 0.13 A.",
+   "ref": {
+    "doc": "DN-7070",
+    "pag": 8
+   }
+  },
+  {
+   "id": "nfs3030-07",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En la tarjeta madre de un FACP* NFS2-3030, ¿qué finalidad tiene la entrada tipo jumper J5?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Monitorear el cable de falla a tierra del circuito primario",
+    "B": "Conectar un sensor de inundación del cuarto de control",
+    "C": "Conectar el detector de apertura STS-1 de la puerta del gabinete",
+    "D": "Conectar y supervisar señales de problema provenientes de un bus de un equipo compatible"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "AUXILIARY TROUBLE REPORTING: Yes si se conectó un cable de bus de trouble en J5 del CPU2-3030; el trouble AUXILIARY TROUBLE indica que ese dispositivo auxiliar tiene problema o falta el cable.",
+   "ref": {
+    "doc": "52545SP",
+    "pag": 40
+   }
+  },
+  {
+   "id": "nfs3030-08",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, el trouble AUXILIARY TROUBLE de la tabla H.2 significa:\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "La entrada auxiliar supervisada está abierta",
+    "B": "El dispositivo auxiliar conectado al CPU2-3030 en J5 presenta problemas o le falta el cable",
+    "C": "La fuente AMPS-24 perdió AC",
+    "D": "La librería de audio es incompatible"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Tabla H.2 (descripciones de problemas de sistema): AUXILIARY TROUBLE = dispositivo auxiliar conectado al CPU2-3030 en J5 con problema o sin cable.",
+   "ref": {
+    "doc": "52545SP",
+    "pag": 157
+   }
+  },
+  {
+   "id": "nfs3030-09",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, ¿qué pasa con las velocidades 19200 y 57600 del CRT BAUD RATE cuando se instala una LCD-80 en modo terminal?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Son las únicas permitidas",
+    "B": "Quedan deshabilitadas (disallowed)",
+    "C": "Pasan a ser supervisadas automáticamente",
+    "D": "No cambia nada"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Nota del manual de programación 52545: cuando se instala LCD-80 Terminal Mode (LCD-80 en MORE Supervision), las selecciones 19200 y 57600 no están permitidas.",
+   "ref": {
+    "doc": "52545",
+    "pag": 40
+   }
+  },
+  {
+   "id": "nfs3030-10",
+   "tema": "nfs3030",
+   "tipo": "vf",
+   "pregunta": "En un FACP* NFS2-3030 los parámetros del panel se pueden configurar 100 % desde el teclado, sin VeriFire Tools.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Hay funciones del NFS2-3030 que solo se configuran desde VeriFire Tools (PPT06: configurados 100 % a través del software VeriFire Tools).",
+   "ref": {
+    "doc": "PPT06",
+    "pag": 120
+   }
+  },
+  {
+   "id": "red-01",
+   "tema": "red",
+   "tipo": "unica",
+   "pregunta": "¿Cuántos nodos admite NotiFireNet estándar (NCM-W / NCM-F)?",
+   "opciones": {
+    "A": "54",
+    "B": "103",
+    "C": "200",
+    "D": "256"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "NOTI-FIRE-NET estándar admite hasta 103 nodos (54 cuando se incluyen nodos DVC con paging en vivo).",
+   "ref": {
+    "doc": "51584",
+    "pag": 7
+   }
+  },
+  {
+   "id": "red-02",
+   "tema": "red",
+   "tipo": "unica",
+   "pregunta": "¿Cuántos nodos admite High-Speed NotiFireNet con tarjetas HS-NCM?",
+   "opciones": {
+    "A": "54",
+    "B": "103",
+    "C": "200",
+    "D": "400"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "High-Speed Noti-Fire-Net supports up to 200 nodes (54013).",
+   "ref": {
+    "doc": "54013",
+    "pag": 7
+   }
+  },
+  {
+   "id": "red-03",
+   "tema": "red",
+   "tipo": "unica",
+   "pregunta": "¿A cuántos nodos se reduce la capacidad de NotiFireNet estándar cuando la red circula paging en vivo desde un nodo DVC?",
+   "opciones": {
+    "A": "103",
+    "B": "54",
+    "C": "32",
+    "D": "16"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Supports up to 54 nodes when it is set up to circulate live paging from a DVC node.",
+   "ref": {
+    "doc": "51584",
+    "pag": 7
+   }
+  },
+  {
+   "id": "red-04",
+   "tema": "red",
+   "tipo": "unica",
+   "pregunta": "Cuando una HS-NCM se usa como repetidor, ¿qué dirección de nodo debe tener?",
+   "opciones": {
+    "A": "La misma del panel al que repite",
+    "B": "Cero (valor por defecto)",
+    "C": "La más alta de la red",
+    "D": "Cualquiera no usada"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "When using the HS-NCM as a repeater, the node address for the HS-NCM must be set to zero (default).",
+   "ref": {
+    "doc": "54013",
+    "pag": 9
+   }
+  },
+  {
+   "id": "red-05",
+   "tema": "red",
+   "tipo": "multiple",
+   "pregunta": "Seleccione todas las afirmaciones válidas sobre las tarjetas HS-NCM según el curso Fundamentos NotiFireNet:",
+   "opciones": {
+    "A": "Existen versiones de cable (W), fibra monomodo (SF), fibra multimodo (MF) e híbridas (WSF, WMF)",
+    "B": "Cada HS-NCM puede funcionar también como repetidor",
+    "C": "Son de distinto tamaño e instalación que las NCM estándar",
+    "D": "Una HS-NCM puede tener dos direcciones de nodo por tarjeta"
+   },
+   "correcta": [
+    "A",
+    "B",
+    "D"
+   ],
+   "explicacion": "PPT07 s67: HS-NCM-W/-SF/-MF/-WSF/-WMF; puede tener dos direcciones de nodo por tarjeta; idéntica en tamaño e instalación a la NCM estándar; cada HS-NCM puede ser también repetidor; no es compatible con NotiFireNet estándar.",
+   "ref": {
+    "doc": "PPT07",
+    "pag": 67
+   }
+  },
+  {
+   "id": "red-06",
+   "tema": "red",
+   "tipo": "unica",
+   "pregunta": "En NotiFireNet, ¿qué requiere cada nodo de la red?",
+   "opciones": {
+    "A": "Una dirección de nodo única y una tarjeta de interfaz de red",
+    "B": "Una LCM-320 adicional",
+    "C": "Un AMPS-24 dedicado",
+    "D": "Un DVC"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "Each network node requires a unique node address; the node communicates with other nodes via a network interface board.",
+   "ref": {
+    "doc": "54013",
+    "pag": 7
+   }
+  },
+  {
+   "id": "n16-01",
+   "tema": "n16",
+   "tipo": "unica",
+   "pregunta": "¿Cuántas tarjetas SLM-318 adicionales admite un panel INSPIRE N16 y cuántos dispositivos por tarjeta?",
+   "opciones": {
+    "A": "Hasta 9 adicionales (10 lazos en total), 318 dispositivos por tarjeta",
+    "B": "Hasta 4 adicionales, 159 dispositivos por tarjeta",
+    "C": "Hasta 2 adicionales, 318 dispositivos por tarjeta",
+    "D": "Hasta 16, 99 dispositivos por tarjeta"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "DN-62115: the N16 Series supports up to 9 additional SLM-318 cards for a total of 10 loop cards, with up to 318 devices per card.",
+   "ref": {
+    "doc": "DN-62115",
+    "pag": 1
+   }
+  },
+  {
+   "id": "n16-02",
+   "tema": "n16",
+   "tipo": "vf",
+   "pregunta": "Las tarjetas SLM-318 del N16 pueden operar en FlashScan y CLIP simultáneamente dentro del mismo panel.",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "DN-62115: FACPs can support cards operating in FlashScan and CLIP simultaneously.",
+   "ref": {
+    "doc": "DN-62115",
+    "pag": 1
+   }
+  },
+  {
+   "id": "n16-03",
+   "tema": "n16",
+   "tipo": "unica",
+   "pregunta": "Para convertir una base de datos de un panel ONYX a INSPIRE N16 en VeriFire Tools, el orden correcto es:",
+   "opciones": {
+    "A": "Convert Node directamente desde la versión actual del panel",
+    "B": "Importar en VFT 12.45 o superior, Upgrade Node a V27.0 o superior y luego Convert Node a N16 V5.0 o superior",
+    "C": "Exportar a CLSS y reimportar",
+    "D": "Usar VFT 11.xx y Convert Node"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "PPT08 s97: paso 2 importar en VFT 12.45+ y Upgrade Node a V27+; paso 3 Convert Node de V27.0 a N16 V5.0+. No utilizar VFT 11.xx.",
+   "ref": {
+    "doc": "PPT08",
+    "pag": 97
+   }
+  },
+  {
+   "id": "n16-04",
+   "tema": "n16",
+   "tipo": "vf",
+   "pregunta": "Para las conversiones de bases de datos a INSPIRE se puede usar cualquier versión de VeriFire Tools, incluida la 11.xx.",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "PPT08: NOTA: No utilizar VFT V11.xx para cualquier conversión de bases de datos a INSPIRE.",
+   "ref": {
+    "doc": "PPT08",
+    "pag": 97
+   }
+  },
+  {
+   "id": "n16-05",
+   "tema": "n16",
+   "tipo": "unica",
+   "pregunta": "En el gabinete CAB-5 del N16, ¿cuál es la capacidad máxima de baterías montadas en el fondo del gabinete?",
+   "opciones": {
+    "A": "12 AH",
+    "B": "18 AH",
+    "C": "26 AH",
+    "D": "55 AH"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "Infografía CAB-5: el gabinete soporta baterías de hasta 26 AH en el fondo (BP-5); baterías mayores requieren gabinete separado.",
+   "ref": {
+    "doc": "NOTIFIER INSPIRE CAB-5 Infographic [Rev C]",
+    "pag": 1
+   }
+  },
+  {
+   "id": "n16-06",
+   "tema": "n16",
+   "tipo": "unica",
+   "pregunta": "En la placa del N16, ¿qué conector lleva el bus AIO interno y cuál el externo?",
+   "opciones": {
+    "A": "TB4 interno y TB5 externo",
+    "B": "TB2 interno y TB3 externo",
+    "C": "J7 interno y J8 externo",
+    "D": "TB1 interno y TB2 externo"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "PPT08 s23: TB4 Internal AIO Bus, TB5 External AIO Bus, SW1 selección A/B para TB5, SW2 en Class B, TB2 relé de trouble, J7 trouble input, J8 tamper.",
+   "ref": {
+    "doc": "PPT08",
+    "pag": 23
+   }
+  },
+  {
+   "id": "n16-07",
+   "tema": "n16",
+   "tipo": "unica",
+   "pregunta": "¿Qué resistencia de fin de línea usa el circuito indicado en la hoja DN-62116 (PMB AUX) del N16?",
+   "opciones": {
+    "A": "47 kΩ",
+    "B": "4.7 kΩ",
+    "C": "2.2 kΩ 1/2 W (ELR-2.2K)",
+    "D": "10 kΩ"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "DN-62116: End-of-Line Resistor 2.2K 1/2 W (ELR-2.2K).",
+   "ref": {
+    "doc": "DN-62116",
+    "pag": 2
+   }
+  },
+  {
+   "id": "campo-01",
+   "tema": "campo",
+   "tipo": "unica",
+   "pregunta": "Según el datasheet DN-60977, ¿cuál es la corriente de standby máxima promedio del detector FSP-951 a 24 VDC?",
+   "opciones": {
+    "A": "200 µA",
+    "B": "300 µA",
+    "C": "2 mA",
+    "D": "7 mA"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "Standby Current (max. avg.): 200 µA @ 24 VDC, una comunicación cada cinco segundos con LED habilitado.",
+   "ref": {
+    "doc": "DN-60977",
+    "pag": 1
+   }
+  },
+  {
+   "id": "campo-02",
+   "tema": "campo",
+   "tipo": "vf",
+   "pregunta": "El detector FSP-951 es compatible con sistemas FlashScan y CLIP.",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "DN-60977: Compatible with FlashScan and CLIP protocol systems.",
+   "ref": {
+    "doc": "DN-60977",
+    "pag": 1
+   }
+  },
+  {
+   "id": "campo-03",
+   "tema": "campo",
+   "tipo": "unica",
+   "pregunta": "Según el datasheet DN-6927, ¿cuántos NAC tiene una FCPS-24S6/S8 y cómo pueden configurarse?",
+   "opciones": {
+    "A": "2 NAC Clase B",
+    "B": "4 NAC configurables como Clase B (Style Y) o Clase A (Style Z con módulo ZNAC-4)",
+    "C": "6 NAC Clase A",
+    "D": "4 NAC solo Clase A"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "DN-6927: four Class B (Style Y) or Class A (Style Z, with ZNAC-4 option module) NACs.",
+   "ref": {
+    "doc": "DN-6927",
+    "pag": 1
+   }
+  },
+  {
+   "id": "campo-04",
+   "tema": "campo",
+   "tipo": "unica",
+   "pregunta": "Según el datasheet DN-7070, ¿cuál es la corriente de la tarjeta LCM-320 que se suma al cálculo del NFS2-3030?",
+   "opciones": {
+    "A": "0.100 A",
+    "B": "0.130 A",
+    "C": "0.340 A",
+    "D": "0.035 A"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "DN-7070: LCM-320 0.130 A; LEM-320 0.100 A.",
+   "ref": {
+    "doc": "DN-7070",
+    "pag": 8
+   }
+  },
+  {
+   "id": "campo-05",
+   "tema": "campo",
+   "tipo": "unica",
+   "pregunta": "Un sistema NFS2-3030 utiliza módulos de control FCM-1 con código de tipo Strobe (FlashScan). ¿En qué bornes se conecta el relé de supervisión de potencia EOLR-1?",
+   "opciones": {
+    "A": "No es necesaria la supervisión de voltaje para este Tipo de código (Typecode)",
+    "B": "Para este Tipo de código, la supervisión de voltaje por medio de EOLR-1 se realiza en los bornes 1 y 2",
+    "C": "Para este Tipo de código, la supervisión de voltaje por medio de EOLR-1 se realiza en los bornes 3 y 4",
+    "D": "Para este Tipo de código, la supervisión de voltaje por medio de EOLR-1 se realiza en los bornes 6 y 7"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "52544 sección 4.2 Devices Requiring External Power Supervision: con LCM-320 rev 2.0 o superior, los type codes Strobe, Horn, Control, Gen Super, Release Ckt, Gen Alarm, etc. tienen la supervisión de alimentación externa incorporada en el software (solo FlashScan); el relé EOLR-1 no se requiere. El quiz de Honeywell marcó incorrecta la opción de bornes 3 y 4.",
+   "ref": {
+    "doc": "52544",
+    "pag": 43
+   }
+  },
+  {
+   "id": "bateria-01",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "Según NFPA 72, los sistemas Local, Proprietary y Central Station requieren baterías para:",
+   "opciones": {
+    "A": "24 horas de standby seguidas de 5 minutos en alarma",
+    "B": "4 horas de standby y 15 minutos de alarma",
+    "C": "60 horas de standby",
+    "D": "90 horas de standby"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "52745LD, tabla de potencia secundaria: Max. Standby Time 24 hours, Max. Alarm Duration 5 minutes standard, 15 minutes para sistemas de voz.",
+   "ref": {
+    "doc": "52745LD NFS-320 and NFS-320SYS Listing Document",
+    "pag": 44
+   }
+  },
+  {
+   "id": "bateria-02",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS-320 o NFS2-640, ¿cuál es el rango del cargador de baterías interno (CPS-24)?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "7 a 26 AH",
+    "B": "12 a 55 AH",
+    "C": "18 a 200 AH",
+    "D": "25 a 75 AH"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "DN-7112 / DN-7111: Battery charger range 18 AH – 200 AH; baterías sobre 26 AH requieren gabinete separado.",
+   "ref": {
+    "doc": "DN-7112",
+    "pag": 7
+   }
+  },
+  {
+   "id": "bateria-03",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "¿A partir de qué capacidad de batería se requiere un gabinete separado (NFS-LBB, BB-100, BB-200) en un NFS-320 o NFS2-640?",
+   "opciones": {
+    "A": "Más de 18 AH",
+    "B": "Más de 26 AH",
+    "C": "Más de 55 AH",
+    "D": "Más de 100 AH"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Use separate cabinet for batteries over 26 AH (DN-7112 / 52745LD nota 7).",
+   "ref": {
+    "doc": "DN-7111",
+    "pag": 9
+   }
+  },
+  {
+   "id": "bateria-04",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "¿Qué rango de baterías puede cargar la fuente AMPS-24?",
+   "opciones": {
+    "A": "7 a 18 AH",
+    "B": "7 a 200 AH",
+    "C": "12 a 200 AH",
+    "D": "25 a 75 AH"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "51907: the AMPS-24 includes a battery charger capable of charging 7 to 200 AH batteries.",
+   "ref": {
+    "doc": "51907",
+    "pag": 7
+   }
+  },
+  {
+   "id": "bateria-05",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "¿Qué rango de baterías carga la ACPS-610?",
+   "opciones": {
+    "A": "7 a 18 AH",
+    "B": "7 a 200 AH",
+    "C": "12 a 200 AH",
+    "D": "18 a 33 AH"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "53018: Charges 12 to 200 AH batteries; 4 salidas de 1.5 A como NAC, 6.0 A total (10.0 A con cargador deshabilitado).",
+   "ref": {
+    "doc": "53018",
+    "pag": 7
+   }
+  },
+  {
+   "id": "bateria-06",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "Según el manual 51977, ¿cuál es la capacidad máxima de batería que carga una FCPS-24S6/S8 y cuánto consume la fuente en standby desde las baterías?",
+   "opciones": {
+    "A": "18 AH y 65 mA",
+    "B": "26 AH y 100 mA",
+    "C": "33 AH y 41 mA",
+    "D": "200 AH y 130 mA"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "51977 especificaciones: Maximum Battery Capacity 18.0 AH, mínimo 7.0 AH, power supply draws maximum standby current of 65 mA from batteries.",
+   "ref": {
+    "doc": "51977",
+    "pag": 11
+   }
+  },
+  {
+   "id": "bateria-07",
+   "tema": "bateria",
+   "tipo": "vf",
+   "pregunta": "La fuente auxiliar APS2-6R tiene cargador de baterías propio.",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "53232: the APS2-6R is not equipped with a battery charger; batteries are charged by the system power supply.",
+   "ref": {
+    "doc": "53232",
+    "pag": 9
+   }
+  },
+  {
+   "id": "bateria-08",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "Según el manual de las PSE-6/PSE-10, ¿qué baterías admite el gabinete de la PSE y cuál es la capacidad máxima con el cargador integrado?",
+   "opciones": {
+    "A": "7 o 18 AH en gabinete; máximo 33 AH",
+    "B": "12 o 26 AH en gabinete; máximo 55 AH",
+    "C": "7 AH en gabinete; máximo 18 AH",
+    "D": "18 o 26 AH; máximo 200 AH"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "LS10227: the PSE only supports 7AH or 18AH batteries in the cabinet; Maximum Battery Capacity 33.0 AH with onboard charger; mínimo 7.0 AH.",
+   "ref": {
+    "doc": "LS10227-000NF-E",
+    "pag": 9
+   }
+  },
+  {
+   "id": "bateria-09",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "En el cálculo de batería NFPA 72 que aplica en Panamá (listado UL), ¿qué factor de envejecimiento (derating) se multiplica al amperaje-hora requerido?",
+   "opciones": {
+    "A": "1.0",
+    "B": "1.2",
+    "C": "1.5",
+    "D": "2.5"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Documento 52745LD, tabla de potencia secundaria: UL = 1.2 para todas las capacidades; los factores 1.5, 1.8 y 2.5 son ULC (Canadá).",
+   "ref": {
+    "doc": "52745LD NFS-320 and NFS-320SYS Listing Document",
+    "pag": 44
+   }
+  },
+  {
+   "id": "bateria-10",
+   "tema": "bateria",
+   "tipo": "unica",
+   "pregunta": "¿Qué rango de baterías atiende el cargador CHG-75?",
+   "opciones": {
+    "A": "7 a 26 AH",
+    "B": "18 a 55 AH",
+    "C": "25 a 75 AH",
+    "D": "55 a 200 AH"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "df-52220: CHG-75 rated for batteries 25 to 75 AH.",
+   "ref": {
+    "doc": "df-52220 CHG-75 Battery Charger",
+    "pag": 1
+   }
+  },
+  {
+   "id": "proc-01",
+   "tema": "procedimientos",
+   "tipo": "unica",
+   "pregunta": "Según el Device Compatibility Document (15378SUP), después de un cambio de programación o de componentes, además del 100 % de lo afectado, ¿qué porcentaje de dispositivos iniciadores no afectados debe probarse en la reaceptación?",
+   "opciones": {
+    "A": "5 %, hasta 25 dispositivos",
+    "B": "10 %, hasta un máximo de 50 dispositivos",
+    "C": "25 %, sin máximo",
+    "D": "No se requiere probar dispositivos no afectados"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "CAUTION – System Re-acceptance Test: at least 10 % of initiating devices that are not directly affected by the change, up to a maximum of 50 devices, must also be tested.",
+   "ref": {
+    "doc": "15378SUP",
+    "pag": 2
+   }
+  },
+  {
+   "id": "proc-02",
+   "tema": "procedimientos",
+   "tipo": "multiple",
+   "pregunta": "Seleccione todas las afirmaciones válidas sobre el procedimiento oficial de recuperación de contraseña de un panel Notifier serie ONYX:",
+   "opciones": {
+    "A": "Un empleado vigente de la empresa propietaria del panel debe llenar y firmar el NOTIFIER Password Agreement",
+    "B": "Se debe indicar un correo con dominio de la empresa propietaria",
+    "C": "Se puede cambiar el idioma del documento para facilitar su llenado",
+    "D": "Solo se modifican los datos en rojo y se agrega el sello de la compañía"
+   },
+   "correcta": [
+    "A",
+    "B",
+    "D"
+   ],
+   "explicacion": "PPT03 s22: representante empleado vigente firma el Password Agreement, correo de dominio de la compañía, no modificar el idioma, solo datos en rojo, sello de la compañía.",
+   "ref": {
+    "doc": "PPT03",
+    "pag": 22
+   }
+  },
+  {
+   "id": "proc-03",
+   "tema": "procedimientos",
+   "tipo": "unica",
+   "pregunta": "Al actualizar el firmware de un NFS2-640/NFS-320 con VeriFire Tools, ¿qué se debe hacer antes de iniciar la descarga?",
+   "opciones": {
+    "A": "Desconectar las baterías y dejar solo AC",
+    "B": "Leer las notas del firmware del modelo y respaldar (upload) la base de datos del panel",
+    "C": "Borrar la base de datos del panel",
+    "D": "Poner el nodo en dirección 0"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Procedimiento del video Firmware Upgrade NFS2-640 / NFS-320: leer las notas del firmware, respaldar la base de datos, y después del Upgrade Node verificar con Lamp Test la versión (ej. 29) de arranque, Application Code y base de datos.",
+   "ref": {
+    "doc": "Firmware_Upgrade_NFS2-640_-_NFS-320_HQ",
+    "pag": 1
+   }
+  },
+  {
+   "id": "proc-04",
+   "tema": "procedimientos",
+   "tipo": "vf",
+   "pregunta": "Durante la inicialización posterior a una actualización de firmware, el nodo queda sin servicio y el anunciador puede perder comunicación temporalmente.",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "Video Firmware Upgrade NFS2-640/NFS-320: durante la inicialización el nodo queda sin servicio y el anunciador puede perder comunicación; comprobar que el sistema se normalice.",
+   "ref": {
+    "doc": "Firmware_Upgrade_NFS2-640_-_NFS-320_HQ",
+    "pag": 1
+   }
+  },
+  {
+   "id": "proc-05",
+   "tema": "procedimientos",
+   "tipo": "unica",
+   "pregunta": "Antes de ejecutar un Walk Test en un edificio ocupado, ¿cuál es el primer paso del procedimiento mostrado en el curso?",
+   "opciones": {
+    "A": "Desconectar los NAC",
+    "B": "Avisar al responsable del edificio que el sistema estará en prueba",
+    "C": "Poner el panel en Autoprogram",
+    "D": "Retirar las baterías"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Video Walk Test, paso 1: avisar al responsable del edificio que el sistema estará inoperativo/en prueba durante el recorrido.",
+   "ref": {
+    "doc": "Walk_Test",
+    "pag": 1
+   }
+  },
+  {
+   "id": "proc-06",
+   "tema": "procedimientos",
+   "tipo": "unica",
+   "pregunta": "Ante una falla a tierra (ground fault) en un panel ONYX, ¿cuál es el primer paso del procedimiento del curso?",
+   "opciones": {
+    "A": "Reemplazar la CPU",
+    "B": "Confirmar en la lista de eventos que el panel indica falla a tierra y, para identificar el lazo afectado, desconectar los lazos del panel y reconectarlos uno a uno observando la condición",
+    "C": "Descargar la base de datos",
+    "D": "Cambiar las baterías"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "Video Falla Tierra: confirmar el evento, desconectar los lazos y reconectarlos uno a uno para identificar el afectado, dejarlo en clase B, abrir el lazo por la mitad y medir con multímetro repitiendo la división.",
+   "ref": {
+    "doc": "Falla_Tierra",
+    "pag": 1
+   }
+  },
+  {
+   "id": "proc-07",
+   "tema": "procedimientos",
+   "tipo": "vf",
+   "pregunta": "En un FACP* NFS2-3030, mientras se inicializa un detector recién agregado o cambiado, ese detector no realiza funciones de protección contra incendio durante aproximadamente 2,5 minutos.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "52545: the detector initialization routine takes approximately 2.5 minutes; during this time the detector being initialized does not perform fire protection functions.",
+   "ref": {
+    "doc": "52545",
+    "pag": 157
+   }
+  },
+  {
+   "id": "hw640-10",
+   "tema": "hw640",
+   "tipo": "unica",
+   "pregunta": "¿Qué controlador con características de evacuación por voz se puede integrar directamente con el FACP* NFS-320 sin necesidad de una tarjeta de red NCM?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Un controlador DVC",
+    "B": "El panel NFS-320 no puede conectarse con ningún controlador de evacuación por voz",
+    "C": "Un controlador de la serie FirstCommand",
+    "D": "Un controlador de la serie AMG-1"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "PPT02 y DN-7112: opción de integración directa con evacuación por voz con FirstCommand (ver DN-60772); el DVC requiere NCA-2/NCD y red.",
+   "ref": {
+    "doc": "PPT02",
+    "pag": 4
+   }
+  },
+  {
+   "id": "nfs3030-11",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En la tarjeta madre de un FACP* NFS2-3030, ¿qué finalidad tiene la entrada tipo jumper J6?\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Conectar y supervisar señales de problema provenientes de un bus de un equipo compatible",
+    "B": "Conectar el detector de apertura STS-1 para supervisar la puerta del gabinete CAB-4 donde está instalado el FACP",
+    "C": "Monitorear el cable de falla a tierra del circuito primario del FACP",
+    "D": "Conectar un sensor de inundación del cuarto de control"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "52544 pág. 14: J6 Security switch connection; pág. 47: conectar el STS-1 a J6 Security en el CPU y programar Tamper Input = Yes. J5 es el trouble bus.",
+   "ref": {
+    "doc": "52544",
+    "pag": 47
+   }
+  },
+  {
+   "id": "nfs3030-12",
+   "tema": "nfs3030",
+   "tipo": "multiple",
+   "pregunta": "El número de parte CPU2-3030D incluye la tarjeta madre del FACP* más su pantalla/teclado y el CPU2-3030ND no incluye pantalla/teclado. ¿Qué debo hacer si compro un CPU2-3030ND por equivocación y requiero pantalla/teclado? Seleccione todas las respuestas válidas.\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Adquirir una NCA-2 para conexión NUP to NUP o vía NotiFireNet; la configuración del sistema se hace 100 % vía VeriFire Tools",
+    "B": "Adquirir una NCD para conexión NUP to NUP o vía NotiFireNet; la configuración del sistema se hace 100 % vía VeriFire Tools",
+    "C": "Adquirir una FDU-80 para conexión NUP to NUP o vía NotiFireNet",
+    "D": "Adquirir una KDM-R2 para conexión NUP to NUP o vía NotiFireNet"
+   },
+   "correcta": [
+    "A",
+    "B"
+   ],
+   "explicacion": "DN-7070: la pantalla primaria del CPU2-3030ND puede ser una NCA-2, NCS/NCD u ONYXWorks; con NCA-2 como display primario la programación se hace desde VeriFire Tools. La FDU-80 es un anunciador EIA-485 y la KDM-R2 es el teclado del NFS-320/NFS2-640.",
+   "ref": {
+    "doc": "DN-7070",
+    "pag": 2
+   }
+  },
+  {
+   "id": "nfs3030-13",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "El FACP* NFS2-3030 se instala en un gabinete de la serie CAB-4 utilizando un chasis CHS-M3 o un chasis:\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "BB-XP",
+    "B": "CHS-4N",
+    "C": "CHS2-M2",
+    "D": "CA-2"
+   },
+   "correcta": [
+    "D"
+   ],
+   "explicacion": "52544 pág. 22: el NFS2-3030 se monta en un backbox CAB-4 usando CHS-M3 o CA-2 (chasis de audio); CHS-4, CHS-4N y CHS-4L son para filas adicionales de módulos.",
+   "ref": {
+    "doc": "52544",
+    "pag": 22
+   }
+  },
+  {
+   "id": "nfs3030-14",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "En un FACP* NFS2-3030, el CPU y los módulos de la primera fila se montan en el chasis:\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "CHS-M3",
+    "B": "CHS-4N",
+    "C": "CHS-4L",
+    "D": "BB-100"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "52544 pág. 16: the CPU and adjacent first-row modules mount in chassis CHS-M3; filas adicionales en CHS-4, CHS-4N o CHS-4L.",
+   "ref": {
+    "doc": "52544",
+    "pag": 16
+   }
+  },
+  {
+   "id": "nfs3030-15",
+   "tema": "nfs3030",
+   "tipo": "vf",
+   "pregunta": "En un FACP* NFS2-3030, dos NCM pueden conectarse entre sí por sus puertos NUP (NUP to NUP).\n*FACP (Fire Alarm Control Panel)",
+   "opciones": {
+    "A": "Verdadero",
+    "B": "Falso"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "52544 pág. 28: conectar J1 del CPU a J3 de la NCM o J6 de la HS-NCM con el cable 75556; do not connect two NCMs via NUP ports (NUP to NUP).",
+   "ref": {
+    "doc": "52544",
+    "pag": 28
+   }
+  },
+  {
+   "id": "campo-06",
+   "tema": "campo",
+   "tipo": "unica",
+   "pregunta": "Según el manual 52544 (sección 4.2), ¿a partir de qué revisión de la LCM-320 ciertos type codes incorporan la supervisión de alimentación externa en el software?",
+   "opciones": {
+    "A": "Revisión 1.0",
+    "B": "Revisión 2.0 y superior",
+    "C": "Revisión 8.0",
+    "D": "Revisión 12.0"
+   },
+   "correcta": [
+    "B"
+   ],
+   "explicacion": "With LCM-320 revision 2.0 and higher, certain type codes have external power supervision (FlashScan only) built into the software.",
+   "ref": {
+    "doc": "52544",
+    "pag": 43
+   }
+  },
+  {
+   "id": "nfs3030-16",
+   "tema": "nfs3030",
+   "tipo": "unica",
+   "pregunta": "Después de instalar el interruptor de seguridad STS-1 en J6 del CPU2-3030, ¿qué se debe programar en el panel?",
+   "opciones": {
+    "A": "Tamper Input = Yes en la supervisión del panel",
+    "B": "Auxiliary Trouble Reporting = Yes",
+    "C": "Un módulo monitor con type code Tamper",
+    "D": "Nada; se detecta automáticamente"
+   },
+   "correcta": [
+    "A"
+   ],
+   "explicacion": "52544 pág. 47, paso 4: Program panel supervision for Tamper Input Yes.",
+   "ref": {
+    "doc": "52544",
+    "pag": 47
+   }
+  },
+  {
+   "id": "n16-08",
+   "tema": "n16",
+   "tipo": "unica",
+   "pregunta": "En un panel INSPIRE N16, al deshabilitar una zona, ¿qué dispositivos quedan deshabilitados?",
+   "opciones": {
+    "A": "Todos los dispositivos que tengan esa zona en cualquier posición de su mapa de zonas",
+    "B": "Solo los dispositivos de entrada",
+    "C": "Los dispositivos de entrada y salida cuya zona primaria (primera posición del mapa de zonas) es la zona deshabilitada",
+    "D": "Ninguno; la deshabilitación de zona solo afecta al display"
+   },
+   "correcta": [
+    "C"
+   ],
+   "explicacion": "LS10239 pág. 137: when a zone is disabled, any input and output devices mapped to the zone are disabled if the zone is the point's primary zone (the zone in the first position of the zone map).",
+   "ref": {
+    "doc": "LS10239-000NF-E",
+    "pag": 137
+   }
+  }
+ ],
+ "nota_verificar": "Las preguntas con \"verificar\": true no se sirven en el modo Examen hasta que un humano confirme la respuesta y quite el campo."
+}
